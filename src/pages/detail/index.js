@@ -74,7 +74,7 @@ export default class Detail extends React.Component{
                 rightNav.push(item.title)
                 if(type==="edit" || type==="new"){
                     item.fields.forEach((it)=>{
-                        if(it.type==="select" || it.type==="label"){
+                        if(it.type==="select" || it.type==="multiselect" || it.type==="preselect"){
                             requestSelectArr.push(it.fieldId)
                         }
                     })

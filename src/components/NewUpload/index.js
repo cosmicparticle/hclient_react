@@ -12,6 +12,7 @@ export default class NewUpload extends React.Component{
             fileList,
         });
         this.triggerChange(fileList[0]);
+        return false;
     }
     triggerChange = (changedValue) => {
         const {onChange} = this.props
@@ -20,15 +21,16 @@ export default class NewUpload extends React.Component{
         }
       }
     beforeUpload=(file)=>{
-        const isJPG = file.type === 'image/jpeg';
-        const isPNG = file.type === 'image/png';
-        if (!(isJPG || isPNG)) {
-            message.error('只能上传JPG 、JPEG 、PNG格式的图片~')
-        }
+        // const isJPG = file.type === 'image/jpeg';
+        // const isPNG = file.type === 'image/png';
+        // if (!(isJPG || isPNG)) {
+        //     message.error('只能上传JPG 、JPEG 、PNG格式的图片~')
+        // }
         const isLt5M = file.size / 1024 / 1024 < 5;
         if (!isLt5M) {
             message.error('超过5M限制 不允许上传~')
         }
+        return false
     }
     render(){
         const {width}=this.props
@@ -37,7 +39,7 @@ export default class NewUpload extends React.Component{
             <div>                                           
                 <Upload    
                     action="image/*"               
-                    listType= 'picture'
+                    listType= 'text'
                     beforeUpload={this.beforeUpload}
                     onChange={this.handleChange}
                 >    

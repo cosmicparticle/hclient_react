@@ -66,6 +66,7 @@ export default class Detail extends React.Component{
         Super.super({url}).then((res)=>{ 
             const rightNav=[]
             const premises=res.config.premises
+            console.log(premises);
             const actions=res.config.actions
             const menuTitle=menuId==="user"?"用户":res.menu.title
             const requestSelectArr=[] //下拉菜单选项fieldId数组
@@ -128,7 +129,7 @@ export default class Detail extends React.Component{
         }).then((res)=>{
             if(res.status==="suc"){
                 const arrayMap=res.entity.arrayMap
-                const fieldMap=Units.forPic(res.entity.fieldMap)          
+                const fieldMap=res.entity.fieldMap
                 dtmplGroup.forEach((item)=>{
                     if(!item.composite){
                         item.fields.forEach((item)=>{
@@ -149,7 +150,7 @@ export default class Detail extends React.Component{
                         }
                     })
                     arrayMap[k].forEach((item)=>{
-                        const fieldMap=Units.forFile(item.fieldMap) //有图片，转化为图片
+                        const fieldMap=item.fieldMap
                         fieldMap["code"]=item.code //为了后面操作修改
                         fieldMap["key"]=item.code
                         fieldMap["groupId"]=k
@@ -708,17 +709,17 @@ export default class Detail extends React.Component{
                 byDfieldIds.code=item['唯一编码']
                 byDfieldIds.groupId=templateGroupId.toString()
                 byDfieldIds.totalName=totalName
-                for(let k in byDfieldIds){
-                    if(byDfieldIds[k]&&byDfieldIds[k].includes("download-files")) {
-                        const url = Units.api() + byDfieldIds[k]
-                        byDfieldIds[k] = <img
-                            style={{width: 55}}
-                            src={url}
-                            alt=""/>
-                    }
-                }
+                // for(let k in byDfieldIds){
+                //     if(byDfieldIds[k]&&byDfieldIds[k].includes("download-files")) {
+                //         const url =  byDfieldIds[k]
+                //         byDfieldIds[k] = <img
+                //             style={{width: 55}}
+                //             src={url}
+                //             alt=""/>
+                //     }
+                // }
                 if(relationSubdomain.length===1){ //默认关系只有一个选项时，自动添加
-                    item.byDfieldIds['10000']=relationSubdomain[0]
+                    byDfieldIds['10000']=relationSubdomain[0]
                 }
                 let list={
                     code:item['唯一编码'],

@@ -2,9 +2,23 @@ import React from 'react'
 import {Button,Upload,Icon,message} from 'antd'
 
 export default class NewUpload extends React.Component{
+    constructor(props){
+        super(props)
+        // console.log(props)
+        // console.log(this.props)
+        this.state={
+            fileList:[],
+            removed:false
+        }
 
-    state={
-        fileList:[]
+    }
+    handleRemove=(info)=>{
+        let fileList = []
+        this.setState({
+            fileList,
+            removed:true
+        });
+        this.triggerChange({removed:true});
     }
     handleChange=(info)=>{
         let fileList = info.fileList.slice(-1)
@@ -34,16 +48,22 @@ export default class NewUpload extends React.Component{
     }
     render(){
         const {width}=this.props
-        const {fileList}=this.state
+
+        const {removed,fileList}=this.state
+//        console.log(this.props);
+        const fileList1=this.props.fileList && removed===false?this.props.fileList:fileList;
+
         return (
             <div>                                           
                 <Upload    
                     action="image/*"               
                     listType= 'text'
+                    fileList={fileList1}
                     beforeUpload={this.beforeUpload}
                     onChange={this.handleChange}
-                >    
-                {fileList.length>=1?"":
+                    onRemove={this.handleRemove}
+                >
+                {fileList1.length>=1?"":
                     <Button style={{width:width}}>
                         <Icon type="upload" /> 点击上传
                     </Button>}                                                                                                                                                   

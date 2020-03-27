@@ -23,11 +23,25 @@ export default class BaseInfoForm extends React.Component{
             })
         }
     }
-    changeFile=(e)=>{
-        this.setState({
-            close:"none"
-        })
-    }
+
+     fileNormalize = (value, prevValue) => {
+        if(!value){
+            return undefined;
+        }
+        const {removed}=value;
+        if(removed===true){
+            return ' ';
+        }else{
+            return value;
+        }
+    };
+
+
+    // changeFile=(e)=>{
+    //     this.setState({
+    //         close:"none"
+    //     })
+    // }
     changePass=(e,fieldValue)=>{
         e.target.value=fieldValue
         this.props.setPassword(fieldValue)
@@ -44,13 +58,13 @@ export default class BaseInfoForm extends React.Component{
         const { getFieldDecorator } = this.props.form?this.props.form:"";
         const { formList,width,type }=this.props
         const formItemList=[]; 
-        //console.log(formList)
+        console.log(formList)
         if(formList && formList.length>0){
             formList.forEach((item,index)=>{
                 const title=item.title;
                 const field=item.code?item.code+index:item.fieldId
                 const fieldValue=item.value;
-                const available=item.additionAccess!="读" && item.fieldAvailable ;
+                const available=item.fieldAccess!=="读" && item.fieldAvailable ;
                 const fieldName=item.name
                 if(item.type==="date"){
                     const DATE= <FormItem label={title} key={field} className='labelcss'>
@@ -61,7 +75,7 @@ export default class BaseInfoForm extends React.Component{
                                                     required: true, message: `请选择${title}`,
                                                   }]:"",
                                         })(
-                                            <DatePicker 
+                                            <DatePicker
                                                 style={{width:width}} 
                                                 locale={locale} 
                                                 placeholder={`请选择${title}`}
@@ -71,6 +85,27 @@ export default class BaseInfoForm extends React.Component{
                                     )}
                                 </FormItem>
                     formItemList.push(DATE)                
+                }else if(item.type==="datetime"){
+                    const DATETIME= <FormItem label={title} key={field} className='labelcss'>
+                        {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
+                            getFieldDecorator(fieldName,{
+                                initialValue:fieldValue?moment(fieldValue,'YYYY-MM-DD hh:mm:ss'):null,
+                                rules:item.validators?[{
+                                    required: true, message: `请选择${title}`,
+                                }]:"",
+                            })(
+                                <DatePicker
+                                    showTime={true}
+                                    format='YYYY-MM-DD hh:mm:ss'
+                                    style={{width:width}}
+                                    locale={locale}
+                                    placeholder={`请选择${title}`}
+                                    getCalendarContainer={trigger => trigger.parentNode}
+                                    disabled={!available}
+                                />
+                            )}
+                    </FormItem>
+                    formItemList.push(DATETIME)
                 }else if(item.type==="text"){
                     const TEXT= <FormItem label={title} key={field} className='labelcss'>
                                     {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
@@ -118,7 +153,7 @@ export default class BaseInfoForm extends React.Component{
                                         })(
                                             <Select 
                                                 style={{width:width}} 
-                                                onFocus={()=>this.props.getOptions(field)}
+                                                onFocus={()=>{this.props.getOptions(field);}}
                                                 placeholder={`请选择${title}`}
                                                 getPopupContainer={trigger => trigger.parentNode}
                                                 disabled={!available}                                              
@@ -131,26 +166,7 @@ export default class BaseInfoForm extends React.Component{
                                         )}
                                     </FormItem> 
                     formItemList.push(SELECT)    
-                }else if(item.type==="relation"){ //modelForm里面的关系下拉框
-                    const SELECT= <FormItem label={title} key={field} className='labelcss'>
-                                        {getFieldDecorator("relation",{
-                                            initialValue:fieldValue,
-                                            rules:item.validators?[{
-                                                    required: true, message: `请选择${title}`,
-                                                    }]:"",
-                                        })(
-                                            <Select 
-                                                style={{width:width}}
-                                                placeholder={`请选择${title}`}
-                                                getPopupContainer={trigger => trigger.parentNode}  
-                                                notFoundContent="暂无选项"
-                                                allowClear={true}
-                                                >
-                                                    {Units.getSelectList(item.options)}
-                                            </Select>)}
-                                    </FormItem> 
-                    formItemList.push(SELECT)    
-                }else if(item.type==="label"){            
+                }else if(item.type==="multiselect"){
                     const LABEL= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                             getFieldDecorator(fieldName,{
@@ -159,13 +175,13 @@ export default class BaseInfoForm extends React.Component{
                                                         required: true, message: `请选择${title}`,
                                                       }]:"",
                                             })(
-                                            <Select 
-                                                mode="multiple" 
-                                                style={{width:width}} 
-                                                onMouseEnter={()=>this.props.getOptions(field)}
+                                            <Select
+                                                mode="multiple"
+                                                style={{width:width}}
+                                                onFocus={()=>{this.props.getOptions(field);}}
                                                 placeholder={`请选择${title}`}
                                                 getPopupContainer={trigger => trigger.parentNode}
-                                                disabled={!available}                                               
+                                                disabled={!available}
                                                 notFoundContent="暂无选项"
                                                 allowClear={true}
                                                 >
@@ -204,37 +220,55 @@ export default class BaseInfoForm extends React.Component{
                                         )}
                                 </FormItem>
                     formItemList.push(CASELECT)   
+                }else if(item.type==="relation") { //modelForm里面的关系下拉框
+                    const SELECT = <FormItem label={title} key={field} className='labelcss'>
+                        {getFieldDecorator("relation", {
+                            initialValue: fieldValue,
+                            rules: item.validators ? [{
+                                required: true, message: `请选择${title}`,
+                            }] : "",
+                        })(
+                            <Select
+                                style={{width: width}}
+                                placeholder={`请选择${title}`}
+                                getPopupContainer={trigger => trigger.parentNode}
+                                notFoundContent="暂无选项"
+                                allowClear={true}
+                            >
+                                {Units.getSelectList(item.options)}
+                            </Select>)}
+                    </FormItem>
+                    formItemList.push(SELECT)
                 }else if(item.type==="file"){
-                    const url=fieldValue?fieldValue.props.src:""
+                    console.log("file:"+fieldValue)
+                    let url=fieldValue?fieldValue.props.src:"";
+                    let obj=url.lastIndexOf("/");
+                    const fileName=url.substr(obj+1);
+                   let fileList1=[{
+                        uid:'-3',
+                        name: fileName,
+                        status: 'done',
+                        url: url,
+                    },];
+
                     const FILE= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?
-                                            fieldValue && fieldValue!=="无文件"?<span className="downAvatar">
-                                                {fieldValue}
-                                                <Button href={url} download="logo.png" size="small"><Icon type="download"/></Button>
+                                            fieldValue && fieldValue!=="无文件"?<span className='labelcss'>
+                                                <Button width={width} href={url}  size="default">SVG type="download"/>{ fileName}</Button>
                                                 </span>:<span className="downAvatar">无文件</span>
                                         :
-                                        fieldValue && fieldValue!=="无文件"?
-                                        <div>
-                                            <span className="downAvatar" style={{display:this.state.close}}>
-                                               {fieldValue}
-                                                <Button onClick={()=>this.setState({close:'none'})} size="small"><Icon type="close" /></Button>
-                                            </span>
-                                            {this.state.close==="none"?getFieldDecorator(fieldName,{
-                                                    rules:item.validators?[{
-                                                        required: true, message: `请输入${title}`,
-                                                        }]:"",
-                                                })(
-                                                    <NewUpload
-                                                        width={width}
-                                                    />
-                                                ):""}
-                                        </div>
+                                            (fieldValue && fieldValue!=="无文件"?
+                                            getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                                            <NewUpload fileList={fileList1}
+                                                       width={width}
+                                            />
+                                        )
                                         :
-                                        getFieldDecorator(fieldName)(
+                                        getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
                                             <NewUpload
                                                 width={width}
                                             />
-                                        )}
+                                        ))}
                                 </FormItem>
                     formItemList.push(FILE)   
                 }else if(item.type==="decimal"){

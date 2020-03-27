@@ -18,21 +18,13 @@ class ModelForm extends React.Component{
         let fieldsValue=form.getFieldsValue()[totalName]
         for(let k in fieldsValue){
             if(fieldsValue[k]){
-                fieldsValue[k+"*"]=fieldsValue[k].constructor!==Object?fieldsValue[k]:<img 
-                                                                                        style={{width:55}} 
-                                                                                        src={fieldsValue[k].thumbUrl} 
-                                                                                        owlner={fieldsValue[k].originFileObj} 
-                                                                                        alt="" />
+                fieldsValue[k+"*"]=fieldsValue[k].constructor!==Object?fieldsValue[k]:"本来是转换file"
                 formList.forEach((item)=>{
                     if(k===item.name.split(".")[1]){
                         if(fieldsValue[k].constructor!==Object){
                             fieldsValue[item.id]=fieldsValue[k]
                         }else{
-                            fieldsValue[item.id]=<img 
-                                                style={{width:55}} 
-                                                src={fieldsValue[k].thumbUrl} 
-                                                owlner={fieldsValue[k].originFileObj} 
-                                                alt="" />
+                            fieldsValue[item.id]="本来是转换file"
                         }
                     }
                 })

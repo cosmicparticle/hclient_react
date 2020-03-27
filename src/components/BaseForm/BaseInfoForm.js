@@ -240,8 +240,8 @@ export default class BaseInfoForm extends React.Component{
                     </FormItem>
                     formItemList.push(SELECT)
                 }else if(item.type==="file"){
-                    console.log("file:"+fieldValue)
-                    let url=fieldValue?fieldValue.props.src:"";
+                    console.log(fieldValue)
+                    let url=fieldValue?fieldValue:"";
                     let obj=url.lastIndexOf("/");
                     const fileName=url.substr(obj+1);
                    let fileList1=[{
@@ -253,9 +253,7 @@ export default class BaseInfoForm extends React.Component{
 
                     const FILE= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?
-                                            fieldValue && fieldValue!=="无文件"?<span className='labelcss'>
-                                                <Button width={width} href={url}  size="default">SVG type="download"/>{ fileName}</Button>
-                                                </span>:<span className="downAvatar">无文件</span>
+                                            Units.packFile2Show(url,width)
                                         :
                                             (fieldValue && fieldValue!=="无文件"?
                                             getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(

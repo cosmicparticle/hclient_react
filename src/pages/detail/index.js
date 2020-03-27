@@ -149,7 +149,7 @@ export default class Detail extends React.Component{
                         }
                     })
                     arrayMap[k].forEach((item)=>{
-                        const fieldMap=Units.forPic(item.fieldMap) //有图片，转化为图片
+                        const fieldMap=Units.forFile(item.fieldMap) //有图片，转化为图片
                         fieldMap["code"]=item.code //为了后面操作修改
                         fieldMap["key"]=item.code
                         fieldMap["groupId"]=k
@@ -591,11 +591,11 @@ export default class Detail extends React.Component{
         const groupId=fieldsValue.groupId.toString()
         let { dataSource,isNew,columns }=this.state;
         const data={}
-        for(let k in fieldsValue){
-            if(fieldsValue[k]!==null&&typeof fieldsValue[k]==='object'){
-                fieldsValue[k]=moment(fieldsValue[k]).format("YYYY-MM-DD")
-            }
-        }
+        // for(let k in fieldsValue){
+        //     if(fieldsValue[k]!==null&&typeof fieldsValue[k]==='object'){
+        //         fieldsValue[k]=moment(fieldsValue[k]).format("YYYY-MM-DD")
+        //     }
+        // }
         columns.forEach((item)=>{
             data[item.id]=[]
         })

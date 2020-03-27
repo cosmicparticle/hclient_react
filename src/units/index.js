@@ -216,16 +216,20 @@ export default {
     forFile(fieldMap){
         for(let i in fieldMap){
             if(fieldMap[i] && fieldMap[i].includes("download-files")){
-                const url=api+ fieldMap[i];
-                let obj=url.lastIndexOf("/");
-                const fileName=url.substr(obj+1);
-                fieldMap[i]=<span className='labelcss'>
-                       <Button width={200}  href={url}  size="default">SVG type="download"/>{ fileName}</Button>
-                    </span>
-
+                fieldMap[i]=this.packFile2Show(fieldMap[i],55)
             }
         }
         return fieldMap
-    }
+    },
+
+     packFile2Show(filePath,width){
+         const url=api+ filePath;
+         let obj=url.lastIndexOf("/");
+         const fileName=url.substr(obj+1);
+        return filePath && filePath!=="无文件"?<span className='labelcss'>
+                                                <Button width={width} href={url}  size="default"><Icon type="download"/>{ fileName}</Button>
+                                                </span>:<span className="downAvatar">无文件</span>
+
+}
 
     }

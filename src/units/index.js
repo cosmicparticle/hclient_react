@@ -1,5 +1,5 @@
 import React from 'react'
-import {Select,Radio,message} from 'antd'
+import {Select, Radio, message, Button, Icon} from 'antd'
 const Option = Select.Option;
 
 const api = process.env.hydrocarbonServer;
@@ -211,6 +211,21 @@ export default {
                 }
             }
             return fieldMap
+        },
+
+    forFile(fieldMap){
+        for(let i in fieldMap){
+            if(fieldMap[i] && fieldMap[i].includes("download-files")){
+                const url=api+ fieldMap[i];
+                let obj=url.lastIndexOf("/");
+                const fileName=url.substr(obj+1);
+                fieldMap[i]=<span className='labelcss'>
+                       <Button width={200}  href={url}  size="default">SVG type="download"/>{ fileName}</Button>
+                    </span>
+
+            }
         }
+        return fieldMap
+    }
 
     }

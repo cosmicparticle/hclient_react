@@ -11,7 +11,7 @@ import TemplateList from '../../components/templateList';
 import EditAddTemplate from '../../components/editAddTemplate';
 import Storage from './../../units/storage'
 import Formi from './../../components/FormCard/formi'
-import moment from 'moment';
+//import moment from 'moment';
 import SetPasswords from '../../components/SetPasswords';
 const confirm = Modal.confirm;
 
@@ -71,6 +71,7 @@ export default class Detail extends React.Component{
             const menuTitle=menuId==="user"?"用户":res.menu.title
             const requestSelectArr=[] //下拉菜单选项fieldId数组
             const dtmplGroup=res.config.dtmpl.groups
+            console.log(dtmplGroup)
             dtmplGroup.forEach((item)=>{
                 rightNav.push(item.title)
                 if(type==="edit" || type==="new"){
@@ -150,7 +151,8 @@ export default class Detail extends React.Component{
                         }
                     })
                     arrayMap[k].forEach((item)=>{
-                        const fieldMap=item.fieldMap
+ //                       console.log(item)
+                        const fieldMap=Units.forFile(item.fieldMap)
                         fieldMap["code"]=item.code //为了后面操作修改
                         fieldMap["key"]=item.code
                         fieldMap["groupId"]=k
@@ -242,7 +244,7 @@ export default class Detail extends React.Component{
                         }
                     }
                     if(item.type==="refselect" || item.type==="relselect" ){
-                        item['render']= (text, record) => (record[item.id]===null?null:record[item.id].split('@R@')[1])
+                        item['render']= (text, record) => ((record[item.id]===null ||record[item.id]===undefined) ?record[item.id]:record[item.id].split('@R@')[1])
                     }
                 })
  //               console.log(item);
@@ -353,24 +355,26 @@ export default class Detail extends React.Component{
         })
     }
     handleOk = (actionId) => {
-        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,columns,nodeId }=this.state
+        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId }=this.state
         const {menuId,code,type}=this.props.match?this.props.match.params:this.props
-        const arr=[]
-        let dfieldIds
-        if(columns&&columns.length>0){
-            columns.forEach((item)=>{
-                if(item.id.toString()===fieldGroupId){
-                    item.fields.forEach((it)=>{
-                        if(it.additionAccess){
-                            arr.push(it.id)
-                        }
-                    })
-                }
-            })   
-            dfieldIds=arr.join(',')
-        }else{
-            dfieldIds=this.state.dfieldIds
-        }   
+
+        let dfieldIds=this.state.dfieldIds;
+        //在頁面中创建dfieldIds的情况暂没有想到，于是乎注释掉20200328
+        //  const arr=[]
+        // if(columns&&columns.length>0){
+        //     columns.forEach((item)=>{
+        //         if(item.id.toString()===fieldGroupId){
+        //             item.fields.forEach((it)=>{
+        //                 if(it.additionAccess){
+        //                     arr.push(it.id)
+        //                 }
+        //             })
+        //         }
+        //     })
+        //     dfieldIds=arr.join(',')
+        // }else{
+        //     dfieldIds=this.state.dfieldIds
+        // }
         const formData = new FormData(); 
         if(actionId){
             formData.append("%actionId%", actionId)
@@ -409,9 +413,11 @@ export default class Detail extends React.Component{
                 })
             }
         }
+        let  isNew=true
         if(type!=="new"){
             formData.append('唯一编码', type==="new"?"":code);
             formData.append('%fuseMode%',fuseMode);
+            isNew=false
         }
         let url
         if(nodeId){
@@ -428,13 +434,14 @@ export default class Detail extends React.Component{
             if(res && res.status==="suc"){
                 message.success("保存成功!")
                 Storage[`${menuId}`]=null
-                if(type!=='new'){
-                    this.fresh(res.code)
-                }
+                let code=res.entityCode?res.entityCode:res.code
                 if(!this.props.match){
-                    this.props.TemplatehandleOk(res.code,fieldGroupId,true,dfieldIds)
+                    this.props.TemplatehandleOk(code,fieldGroupId,isNew,dfieldIds)
                     this.props.handleCancel()
-                    this.props.fresh()
+                    //this.props.fresh()
+                }else if(type!=='new'){
+
+                    this.fresh(code)
                 }
             }else{
                 message.error("保存失败!")
@@ -547,24 +554,25 @@ export default class Detail extends React.Component{
         const code=Units.RndNum(9)
         columns.forEach((item)=>{
             if(item.type){
-                const list={
+                const editItem={
                     title:item.title,
                     name:item.name,
                     fieldAvailable:item.fieldAvailable,
                     type:item.type,
                     groupId:item.groupId,
                     id:item.id,
+                    fieldId:item.fieldId,
                     code:isNew?code:record.code,
                     key:item.key
                 }
                 if(!isNew){
                     for(let k in record){
                         if(k===item.id.toString()){
-                            list.value=record[k]
+                            editItem.value=Units.getFileUrl(record[k]);
                         }
                     }
                 }else{
-                    list.value="";
+                    editItem.value="";
                 }
                 if(item.type==="relation"){
                     const options=[]
@@ -575,9 +583,10 @@ export default class Detail extends React.Component{
                         }
                         options.push(op)
                     })
-                    list["options"]=options
+                    editItem["options"]=options
+                    editItem.defaultValue=options.length==1?options[0].value:null;
                 }
-                editFormList.push(list)
+                editFormList.push(editItem)
             }
         })
         this.setState({
@@ -709,13 +718,10 @@ export default class Detail extends React.Component{
                 byDfieldIds.code=item['唯一编码']
                 byDfieldIds.groupId=templateGroupId.toString()
                 byDfieldIds.totalName=totalName
+                Units.forFile(byDfieldIds)//处理文件
                 // for(let k in byDfieldIds){
                 //     if(byDfieldIds[k]&&byDfieldIds[k].includes("download-files")) {
-                //         const url =  byDfieldIds[k]
-                //         byDfieldIds[k] = <img
-                //             style={{width: 55}}
-                //             src={url}
-                //             alt=""/>
+                //         byDfieldIds[k] =Units.packFile2Show(byDfieldIds[k],55)
                 //     }
                 // }
                 if(relationSubdomain.length===1){ //默认关系只有一个选项时，自动添加

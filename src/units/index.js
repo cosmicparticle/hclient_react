@@ -222,14 +222,44 @@ export default {
         return fieldMap
     },
 
-     packFile2Show(filePath,width){
-         const url=api+ filePath;
-         let obj=url.lastIndexOf("/");
-         const fileName=url.substr(obj+1);
-        return filePath && filePath!=="无文件"?<span className='labelcss'>
+     packFile2Show(file,width){
+        if(!file){
+            return file
+        }else if((file).constructor === String ){
+            const url=api+ file;
+            let obj=url.lastIndexOf("/");
+            const fileName=url.substr(obj+1);
+            return file && file!=="无文件"?<span className='labelcss'>
                                                 <Button width={width} href={url}  size="default"><Icon type="download"/>{ fileName}</Button>
                                                 </span>:<span className="downAvatar">无文件</span>
+        }else if((file).constructor ===File){
+            file.uid=new Date().getTime()+"-1";
+            return <div id={new Date().getTime()}
+                owlner={file}
+            >{file.name}</div>
+        }else if((file).constructor ===Object){
+         return <div
+                owlner={file.originFileObj}
+         > {file.name}</div>
+        }},
+     getFileUrl(file){
+        if(!file){return file;
+        }else if((file).constructor === String ){return file;
+         }else if((file).constructor ===Object ){
+            if( file.props.children.props){
+                const {href}= file.props.children.props;
+                return href;
+            }else if(file.props.owlner){
+                return file.props.owlner;
+            }else{
+                return file;
+            }
+         }else{
+            return  file;
+        }
 
-}
+
+         }
+
 
     }

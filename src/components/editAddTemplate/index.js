@@ -5,7 +5,7 @@ import Detail from './../../pages/detail'
 export default class EditAddTemplate extends React.Component{
     
     handleOk=()=>{
-        const {code,editAddGroupId,columns}=this.props
+        const {editAddGroupId,columns}=this.props
         //console.log(columns)
         const arr=[]
         columns.forEach((item)=>{
@@ -20,9 +20,9 @@ export default class EditAddTemplate extends React.Component{
         //console.log(arr)
         let dfieldIds=arr.join(',')
         this.detail.showModal(dfieldIds)
-        if(code){
-            this.detail.TemplatehandleOk(code,editAddGroupId,false,dfieldIds)
-        }
+        // if(code){
+        //     this.detail.TemplatehandleOk(code,editAddGroupId,false,dfieldIds)
+        // }
     }
     onRef3=(ref)=>{
 		this.detail=ref

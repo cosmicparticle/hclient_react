@@ -1,5 +1,5 @@
 import React from 'react'
-import {Input,Form,Select,DatePicker,Icon,InputNumber,Button} from 'antd'
+import {Input,Form,Select,DatePicker,InputNumber} from 'antd'
 import Units from "../../units";
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -36,6 +36,8 @@ export default class BaseInfoForm extends React.Component{
         }
     };
 
+
+    getplaceholder=(available,title)=>{ return available?`请选择${title}`:"无需选填"}
 
     // changeFile=(e)=>{
     //     this.setState({
@@ -78,7 +80,7 @@ export default class BaseInfoForm extends React.Component{
                                             <DatePicker
                                                 style={{width:width}} 
                                                 locale={locale} 
-                                                placeholder={`请选择${title}`}
+                                                placeholder={this.getplaceholder(available,title)}
                                                 getCalendarContainer={trigger => trigger.parentNode}
                                                 disabled={!available}
                                                 />
@@ -99,7 +101,7 @@ export default class BaseInfoForm extends React.Component{
                                     format='YYYY-MM-DD hh:mm:ss'
                                     style={{width:width}}
                                     locale={locale}
-                                    placeholder={`请选择${title}`}
+                                    placeholder={this.getplaceholder(available,title)}
                                     getCalendarContainer={trigger => trigger.parentNode}
                                     disabled={!available}
                                 />
@@ -118,7 +120,7 @@ export default class BaseInfoForm extends React.Component{
                                             <Input 
                                                 type="text" 
                                                 style={{width:width}}
-                                                placeholder={`请输入${title}`}
+                                                placeholder={available?`请输入${title}`:"无需输入"}
                                                 disabled={!available}
                                                 />
                                     )}
@@ -136,13 +138,15 @@ export default class BaseInfoForm extends React.Component{
                                             <Input 
                                                 type="password" 
                                                 style={{width:width}}
-                                                placeholder={`请输入${title}`}
+                                                placeholder={available?`请输入${title}`:"无需输入"}
                                                 onChange={(e)=>this.changePass(e,fieldValue)}
                                                 />
                                     )}
                                 </FormItem> 
                     formItemList.push(TEXT)                
                 }else if(item.type==="select"){
+ //                   console.log(item.fieldId)
+
                     const SELECT= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                             getFieldDecorator(fieldName,{
@@ -153,8 +157,8 @@ export default class BaseInfoForm extends React.Component{
                                         })(
                                             <Select 
                                                 style={{width:width}} 
-                                                onFocus={()=>{this.props.getOptions(field);}}
-                                                placeholder={`请选择${title}`}
+                                                onFocus={()=>{this.props.getOptions(item.fieldId);}}
+                                                placeholder={this.getplaceholder(available,title)}
                                                 getPopupContainer={trigger => trigger.parentNode}
                                                 disabled={!available}                                              
                                                 notFoundContent="暂无选项"
@@ -178,8 +182,8 @@ export default class BaseInfoForm extends React.Component{
                                             <Select
                                                 mode="multiple"
                                                 style={{width:width}}
-                                                onFocus={()=>{this.props.getOptions(field);}}
-                                                placeholder={`请选择${title}`}
+                                                onFocus={()=>{this.props.getOptions(item.fieldId);}}
+                                                placeholder={this.getplaceholder(available,title)}
                                                 getPopupContainer={trigger => trigger.parentNode}
                                                 disabled={!available}
                                                 notFoundContent="暂无选项"
@@ -223,7 +227,7 @@ export default class BaseInfoForm extends React.Component{
                 }else if(item.type==="relation") { //modelForm里面的关系下拉框
                     const SELECT = <FormItem label={title} key={field} className='labelcss'>
                         {getFieldDecorator("relation", {
-                            initialValue: fieldValue,
+                            initialValue: fieldValue?fieldValue:item.defaultValue,
                             rules: item.validators ? [{
                                 required: true, message: `请选择${title}`,
                             }] : "",
@@ -240,49 +244,63 @@ export default class BaseInfoForm extends React.Component{
                     </FormItem>
                     formItemList.push(SELECT)
                 }else if(item.type==="file"){
-                    console.log(fieldValue)
-                    let url=fieldValue?fieldValue:"";
-                    let obj=url.lastIndexOf("/");
-                    const fileName=url.substr(obj+1);
-                   let fileList1=[{
-                        uid:'-3',
-                        name: fileName,
-                        status: 'done',
-                        url: url,
-                    },];
+ //                   console.log(fieldValue)
+                    if(item.value && item.value.constructor ===File){
+                        const FILE= <FormItem label={title} key={field} className='labelcss'>
+                            {  getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                            <NewUpload fileList={[item.value]}
+                                width={width}
+                            />
+                        )}
+                        </FormItem>
+                        formItemList.push(FILE)
+                    }else{
+                        const fieldValue1=fieldValue===" "?"无文件":fieldValue;
+                        let url=fieldValue1?fieldValue1:"";
+                        let obj=url.lastIndexOf("/");
+                        const fileName=url.substr(obj+1);
+                        let fileList1=[{
+                            uid:'-3',
+                            name: fileName,
+                            status: 'done',
+                            url: url,
+                        },];
 
-                    const FILE= <FormItem label={title} key={field} className='labelcss'>
-                                        {type==="detail"?
-                                            Units.packFile2Show(url,width)
-                                        :
-                                            (fieldValue && fieldValue!=="无文件"?
-                                            getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
-                                            <NewUpload fileList={fileList1}
-                                                       width={width}
-                                            />
-                                        )
-                                        :
-                                        getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
-                                            <NewUpload
-                                                width={width}
-                                            />
-                                        ))}
-                                </FormItem>
-                    formItemList.push(FILE)   
-                }else if(item.type==="decimal"){
-                    const decimal= <FormItem label={title} key={field} className='labelcss'>
-                                        {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
-                                        getFieldDecorator(fieldName,{
-                                            initialValue:fieldValue,
-                                        })(
-                                            <InputNumber 
-                                                placeholder={`请输入${title}`}  
-                                                style={{width:width}} 
-                                                step={0.1}
-                                                disabled={!available}
-                                                min={0}/>
-                                        )}
-                                    </FormItem>
+                        const FILE= <FormItem label={title} key={field} className='labelcss'>
+                            {type==="detail"?
+                                Units.packFile2Show(url,width)
+                                :
+                                (fieldValue1 && fieldValue1!=="无文件"?
+                                    getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                                        <NewUpload fileList={fileList1}
+                                                   width={width}
+                                        />
+                                    )
+                                    :
+                                    getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                                        <NewUpload
+                                            width={width}
+                                        />
+                                    ))}
+                        </FormItem>
+                        formItemList.push(FILE)
+                    }
+
+                    }else if(item.type==="decimal"){
+                        const decimal= <FormItem label={title} key={field} className='labelcss'>
+                            {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
+                                getFieldDecorator(fieldName,{
+                                    initialValue:fieldValue,
+                                })(
+                                    <InputNumber
+                                        placeholder={available?`请输入${title}`:"无需输入"}
+                                        style={{width:width}}
+                                        step={0.1}
+                                        disabled={!available}
+                                        min={0}/>
+                                )}
+                        </FormItem>
+
                     formItemList.push(decimal)   
                 }else if(item.type==="int"){
                     const int= <FormItem label={title} key={field} className='labelcss'>
@@ -291,7 +309,7 @@ export default class BaseInfoForm extends React.Component{
                                             initialValue:fieldValue,
                                         })(
                                             <InputNumber 
-                                                placeholder={`请输入${title}`}  
+                                                placeholder={available?`请输入${title}`:"无需输入"}
                                                 style={{width:width}} 
                                                 disabled={!available}
                                                 onKeyUp={this.changeInt}
@@ -306,7 +324,7 @@ export default class BaseInfoForm extends React.Component{
                                             initialValue:fieldValue,
                                         })(
                                             <TextArea 
-                                                placeholder={`请输入${title}`}  
+                                                placeholder={available?`请输入${title}`:"无需输入"}
                                                 style={{width:width}} 
                                                 disabled={!available}
                                                 />
@@ -321,7 +339,7 @@ export default class BaseInfoForm extends React.Component{
                                             initialValue:value
                                         })(
                                             <Input
-                                                placeholder={`请输入${title}`}  
+                                                placeholder={available?`请输入${title}`:"无需输入"}
                                                 style={{width:width}} 
                                                 disabled={!available}
                                                 />

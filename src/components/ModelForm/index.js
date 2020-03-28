@@ -2,6 +2,7 @@ import React from 'react'
 import {Form,Modal} from 'antd'
 import moment from 'moment';
 import BaseInfoForm from '../BaseForm/BaseInfoForm'
+import Units from "../../units";
 
 class ModelForm extends React.Component{
 
@@ -18,13 +19,13 @@ class ModelForm extends React.Component{
         let fieldsValue=form.getFieldsValue()[totalName]
         for(let k in fieldsValue){
             if(fieldsValue[k]){
-                fieldsValue[k+"*"]=fieldsValue[k].constructor!==Object?fieldsValue[k]:"本来是转换file"
+                fieldsValue[k+"*"]=fieldsValue[k].constructor!==Object?fieldsValue[k]:Units.packFile2Show(fieldsValue[k],55)
                 formList.forEach((item)=>{
                     if(k===item.name.split(".")[1]){
                         if(fieldsValue[k].constructor!==Object){
                             fieldsValue[item.id]=fieldsValue[k]
                         }else{
-                            fieldsValue[item.id]="本来是转换file"
+                            fieldsValue[item.id]=Units.packFile2Show(fieldsValue[k],55)
                         }
                     }
                 })
@@ -33,7 +34,16 @@ class ModelForm extends React.Component{
                 }else if(!fieldsValue[k]){ //去除undefined
                     fieldsValue[k]=""
                 }
-            }            
+            }  else{
+                formList.forEach((item)=>{
+                    if(k===item.name.split(".")[1]){
+                        if(item.type==='file' ){
+                            fieldsValue[item.id]=Units.packFile2Show(item.value,55)
+                            fieldsValue[k]=item.value;
+                        }
+                    }
+                })
+            }
         }
         fieldsValue["code"]=code
         fieldsValue["key"]=code

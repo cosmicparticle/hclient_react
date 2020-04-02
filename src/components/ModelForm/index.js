@@ -71,7 +71,7 @@ class ModelForm extends React.Component{
                 okText="确认"
                 cancelText="取消"
                 destroyOnClose
-                width={900}
+                width={930}
                 maskClosable={maskClosable}
                 >
                 <Form layout="inline" autoComplete="off"> 

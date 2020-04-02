@@ -27,12 +27,14 @@ export default class Detail extends React.Component{
         visibleTemplateList:false,
         isNew:false,
         showSetPass:false,
+        ratmplId:"无效的",
+        rootCode:null,
     }
     componentDidMount(){        
         if(!this.props.match){
             this.props.onRef3(this)
         } 
-        const {menuId,code,type}=this.props.match?this.props.match.params:this.props
+        const {menuId,code,type,ratmplId,rootCode}=this.props.match?this.props.match.params:this.props
         const nodeId=this.props.match?this.props.match.params.nodeId:null
         const fieldGroupId=this.props.match?null:this.props.fieldGroupId
         this.setState({
@@ -40,9 +42,9 @@ export default class Detail extends React.Component{
             type,
             code,
             nodeId,
-            fieldGroupId,
+            fieldGroupId,ratmplId,rootCode
         })
-        this.loadltmpl(menuId,code,type,"",nodeId,fieldGroupId)      
+        this.loadltmpl(menuId,{code,type,versionCode:"",nodeId,fieldGroupId,ratmplId,rootCode})
     }
     componentWillReceiveProps(nextProps){
         console.log(99)
@@ -52,11 +54,14 @@ export default class Detail extends React.Component{
             type:path[2],
             code:path[3],
         })
-        this.loadltmpl(path[1],path[3],path[2])
+        this.loadltmpl({menuId:path[1],type:path[3],code:path[2]})
     }
-    loadltmpl=(menuId,code,type,versionCode,nodeId,fieldGroupId)=>{
+    loadltmpl=(menuId,params)=>{
+       let {code,type,versionCode,nodeId,fieldGroupId,ratmplId,rootCode}=params
         let url
-        if(nodeId){
+        if(ratmplId){
+            url=`api2/meta/tmpl/dtmpl_config/relation/${menuId}/${ratmplId}`
+        }else if(nodeId){
             url=`api2/meta/tmpl/dtmpl_config/node/${menuId}/${nodeId}`
         }else if(fieldGroupId){
             url=`api2/meta/tmpl/dtmpl_config/rabc/${menuId}/${fieldGroupId}`
@@ -103,7 +108,7 @@ export default class Detail extends React.Component{
                 menuTitle,
                 actions,
                 rightNav,
-                premises,
+                premises,ratmplId,rootCode
             })
         })  
     }
@@ -119,9 +124,13 @@ export default class Detail extends React.Component{
         })
     }
     loadRequest=(dtmplGroup,versionCode)=>{
-        const {menuId,type,code,nodeId,fieldGroupId}=this.props.match?this.props.match.params:this.props 
-        Super.super({
-            url:`api2/entity/curd/detail/${menuId}/${code}`, 
+        const {menuId,type,code,nodeId,fieldGroupId,ratmplId}=this.props.match?this.props.match.params:this.props
+
+        let url_=ratmplId?`api2/entity/curd/detail/${menuId}/${ratmplId}/${code}`:`api2/entity/curd/detail/${menuId}/${code}`;
+
+
+            Super.super({
+          url:url_,
             data:{
                 versionCode,
                 nodeId,
@@ -355,7 +364,7 @@ export default class Detail extends React.Component{
         })
     }
     handleOk = (actionId) => {
-        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId }=this.state
+        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId,ratmplId,rootCode }=this.state
         const {menuId,code,type}=this.props.match?this.props.match.params:this.props
 
         let dfieldIds=this.state.dfieldIds;
@@ -390,7 +399,7 @@ export default class Detail extends React.Component{
                 dataSource[k].forEach((item)=>{
                     const fieldMap=item.fieldMap
                     const totalName=fieldMap.totalName
-                    const order=fieldMap.order-1
+                    const order=fieldMap.order
                     const key=fieldMap.key
                     if(key && key.length>9){ //有key证明数据本来就有,没有修改
                         formData.append(`${totalName}[${order}].唯一编码`,fieldMap.code);
@@ -420,7 +429,9 @@ export default class Detail extends React.Component{
             isNew=false
         }
         let url
-        if(nodeId){
+        if(ratmplId){
+            url=`api2/entity/curd/save/relation/${menuId}/${ratmplId}/${rootCode}`
+        }else if(nodeId){
             url=`api2/entity/curd/save/node/${menuId}/${nodeId}`
         }else if(fieldGroupId){
             url=`api2/entity/curd/save/rabc/${menuId}/${fieldGroupId}`
@@ -431,17 +442,23 @@ export default class Detail extends React.Component{
             url:url, 
             data:formData
         },'formdata').then((res)=>{
-            if(res && res.status==="suc"){
-                message.success("保存成功!")
-                Storage[`${menuId}`]=null
-                let code=res.entityCode?res.entityCode:res.code
-                if(!this.props.match){
-                    this.props.TemplatehandleOk(code,fieldGroupId,isNew,dfieldIds)
-                    this.props.handleCancel()
-                    //this.props.fresh()
-                }else if(type!=='new'){
+            if(res){
+                if( res.status==="suc"){
+                    message.success("保存成功!")
+                    Storage[`${menuId}`]=null
+                    let code=res.entityCode?res.entityCode:res.code
+                    if(!this.props.match){
+                        this.props.TemplatehandleOk(code,fieldGroupId,isNew,dfieldIds)
+                        this.props.handleCancel()
+                        //this.props.fresh()
+                    }else if(type!=='new'){
 
-                    this.fresh(code)
+                        this.fresh(code)
+                    }
+                }else if(res.status==="refuse"){
+                    message.error("保存失败："+res.refuseMsg);
+                }else {
+                    message.error("保存失败!");
                 }
             }else{
                 message.error("保存失败!")
@@ -584,7 +601,7 @@ export default class Detail extends React.Component{
                         options.push(op)
                     })
                     editItem["options"]=options
-                    editItem.defaultValue=options.length==1?options[0].value:null;
+                    editItem.defaultValue=options.length===1?options[0].value:null;
                 }
                 editFormList.push(editItem)
             }
@@ -757,10 +774,10 @@ export default class Detail extends React.Component{
         })
     }
     fresh=(codei)=>{
-        let {menuId,code,type,nodeId}=this.state
+        let {menuId,code,type,nodeId,ratmplId,rootCode}=this.state
         code=codei?codei:code
         this.baseinfo.reset()
-        this.loadltmpl(menuId,code,type,"",nodeId)
+        this.loadltmpl(menuId,{code,type,versionCode:"",nodeId,ratmplId,rootCode})
     }
     showSetPass=(oldPass)=>{
         this.setState({
@@ -777,7 +794,7 @@ export default class Detail extends React.Component{
     render(){
         const { menuTitle,detailsTitle,fuseMode,loading,visibleForm,dtmplGroup,editFormList,visibleEditAddTemplate,showSetPass,
             actions,premises,templateDtmpl,rightNav,columns,dataSource,editAddGroupId,visibleDrawer,detailHistory,oldPass,
-            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId}=this.state
+            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode}=this.state
         let content
         if(actions && actions.length>0){
             content = (
@@ -816,7 +833,7 @@ export default class Detail extends React.Component{
             <div className="detailPage">
                 <h3>
                     {type==="new"&& menuTitle ? menuTitle+"--创建":detailsTitle }   
-                    {type==="detail"?
+                    {type==="detail" && !rootCode?
                         <div className="fr pad">
                             <Button 
                                 className="hoverbig" 
@@ -856,8 +873,8 @@ export default class Detail extends React.Component{
                                         >保存
                                     </Button>:""}
                                 </div>
-                                {code?
-                                    <Switch 
+                                {code && !rootCode?
+                                  <Switch
                                         checkedChildren="开" 
                                         unCheckedChildren="关" 
                                         style={{marginRight:10}} 

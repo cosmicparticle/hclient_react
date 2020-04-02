@@ -9,8 +9,7 @@ const commandArgs = require('yargs').argv;
 module.exports = {
     //从入口JS的参数appKey中获得对应的appKey值
     appKey              : commandArgs.appKey || 'defaultAppKey',
-    //   hydrocarbonServer   : commandArgs.hydrocarbonServer || 'http://116.62.163.143:81/stdempinfo/'
+   //    hydrocarbonServer   : commandArgs.hydrocarbonServer || 'http://116.62.163.143:81/stdempinfo/'
     // hydrocarbonServer   : commandArgs.hydrocarbonServer || 'http://localhost:9184/stdempinfo'
-
-    hydrocarbonServer   : commandArgs.hydrocarbonServer || 'http://localhost:8080/hydrocarbon/'
+//    hydrocarbonServer   : commandArgs.hydrocarbonServer || 'http://localhost:8080/hydrocarbon/'
 }

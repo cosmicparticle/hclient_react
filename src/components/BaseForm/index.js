@@ -110,7 +110,7 @@ class BaseForm extends React.Component{
         return formItemList;
     }
     render(){
-        const {actions,hideDelete,hideQuery}=this.props
+        const {actions,jumps,hideDelete,hideQuery}=this.props
         return(
             <Form layout="inline">
                 {this.initFormList()}
@@ -122,6 +122,13 @@ class BaseForm extends React.Component{
                         actions.map(item =>
                             <Button type="primary" key={item.id} onClick={()=>this.props.handleActions(item.id)}  disabled={this.props.disabled}>{item.title}</Button>
                         ):""
+                    }
+
+                    {
+                        jumps && jumps.length>0?
+                            jumps.map(item =>
+                                <Button type="primary" key={item.id} onClick={()=>this.props.handleJumps(item.id)}  disabled={this.props.disabled}>{item.title}</Button>
+                            ):""
                     }
                     {/* <Button type="primary" onClick={this.props.reset}>清空</Button> */}
                 </FormItem>

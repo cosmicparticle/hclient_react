@@ -8,6 +8,7 @@ import Storage from './../../units/storage';
 import './index.css'
 import moment from 'moment';
 import DisableCols from './../../components/DisableCols'
+import ModalActTable from './../modalActTable'
 const confirm = Modal.confirm;
 
 export default class actTable extends React.Component{
@@ -19,28 +20,45 @@ export default class actTable extends React.Component{
         pageSize:10,
         selectedRowKeys: [], 
         actions:[],
+        ractions:[],
+        jumps:[],
         fieldIds:[],
+        ratmplId:"无效的",
+        rootCode:null,
+        parentUrl:null,
+        parentDate:null
     }
     componentDidMount(){
-        const {menuId}=this.props.match.params;
+        const {menuId,ratmplId,rootCode}=this.props.match.params;
         const url=decodeURI(this.props.history.location.search)//获取url参数，并解码
         this.setState({menuId})
         if(!url){
-            this.requestLtmpl(menuId)
+            if(ratmplId){
+                this.requestLtmpl(menuId,null,ratmplId,rootCode)
+            }else{
+                this.requestRootLtmpl(menuId)
+            }
+
         }else{
             this.searchList(Units.urlToObj(url),menuId)//更新筛选列表
         }
     }
     componentWillReceiveProps(nextProps){
-        const menuId=nextProps.match.params.menuId
+        const {menuId,ratmplId,rootCode}=nextProps.match.params
         const url=decodeURI(nextProps.location.search)//前进后退获取url参数
         this.setState({
             menuId,
             isSeeTotal:false,
             currentPage:1
         })
+        this.forceUpdate();
         if(!url){
-            this.requestLtmpl(menuId)
+            if(ratmplId){
+                this.requestRelationLtmpl(menuId,null,ratmplId,rootCode)
+            }else{
+                this.requestRootLtmpl(menuId)
+            }
+
         }else{
             Storage[`${menuId}`]=null //刷新列表数据
             this.searchList(Units.urlToObj(url),menuId)//更新筛选列表
@@ -49,17 +67,44 @@ export default class actTable extends React.Component{
     handleFilter=(params)=>{
         this.props.searchParams(params)
     }
-    requestLtmpl=(menuId,data)=>{
+
+    requestRootLtmpl=(menuId,data)=>{
+        this.requestLtmplRunner(menuId,data)
+    }
+
+    requestRelationLtmpl=(menuId,data,ratmplId,rootCode)=>{
+        this.requestLtmplRunner(menuId,data,ratmplId,rootCode)
+    }
+
+    requestLtmpl=(menuId,data,ratmplId,rootCode)=>{
+        let ratmplId_=ratmplId?ratmplId:this.state.ratmplId;
+        let recordCode_=rootCode?rootCode:this.state.rootCode;
+        this.requestLtmplRunner(menuId,data,ratmplId_,recordCode_);
+    }
+
+    requestLtmplRunner=(menuId,data,ratmplId,rootCode)=>{
+
+        let url_=`api2/entity/curd/start_query/${menuId}`
+        if(ratmplId){
+            url_=`api2/entity/curd/start_query/${menuId}/${ratmplId}/${rootCode}`
+        }
+
         Super.super({
-            url:`api2/entity/curd/start_query/${menuId}`, 
+            url:url_,
             data           
         }).then((res)=>{
-            if(Storage[`${menuId}`] && !data){
-                const res= Storage[`${menuId}`]
-                this.sessionTodo(res)
-            }else{
+            if(ratmplId){
                 this.queryList(res.queryKey,data)
+            }else{
+                //临时去掉
+                // if(Storage[`${menuId}`] && !data && (!this.state.ratmplId  || this.state.ratmplId==="无效的") ){
+                //     const res= Storage[`${menuId}`]
+                //     this.sessionTodo(res)
+                // }else{
+                    this.queryList(res.queryKey,data)
+               // }
             }
+
             const fieldIds=[]
             res.ltmpl.criterias.forEach((item)=>{
                 if(item.inputType==="select"){
@@ -98,15 +143,19 @@ export default class actTable extends React.Component{
                     plainOptions.push(list)
                 }
             })
+
             this.setState({
                 moduleTitle:res.menu.title,
-                columns:this.renderColumns(res.ltmpl.columns),
+                columns:this.renderColumns(res.ltmpl.columns,res.tmplGroup.ractions),
                 queryKey:res.queryKey,
                 formList:res.ltmpl.criterias,
                 tmplGroup:res.tmplGroup,
                 statView:res.statView, //用作统计页面
                 disabledColIds:res.disabledColIds,
-                plainOptions
+                plainOptions,
+                ratmplId:res.ratmplId,
+                rootCode:res.rootCode,
+                ratmplTitle:res.ratmplTitle
             })
         })
     }
@@ -141,7 +190,7 @@ export default class actTable extends React.Component{
             pageSize:data.pageInfo.pageSize,
         })
     }
-    renderColumns=(columns)=>{
+    renderColumns=(columns,ractions)=>{
         columns.forEach((item)=>{
             if(item.title==="序号"){
                 item['render']= (text, record,index) => (
@@ -149,7 +198,7 @@ export default class actTable extends React.Component{
                                 )
             }
             if(item.viewOption==="refselect" || item.viewOption==="relselect" ){
-                item['render']= (text, record) => (record[item.id]===null?null:record[item.id].split('@R@')[1])
+                item['render']= (text, record) => (record[item.id]?record[item.id].split('@R@')[1]:null)
             }
             if(item.title==="操作"){
                 item['render']= (text, record) => (
@@ -168,6 +217,12 @@ export default class actTable extends React.Component{
                                         onClick={()=>this.handleOperate("edit",record)}>
                                         修改
                                     </Button>
+                                    {
+                                        ractions && ractions.length>0?
+                                            ractions.map(it =>
+                                                <Button type="dashed" key={it.ratmplId} size="small"  onClick={()=>this.handleRAction(it.ratmplId,record.code)}>{it.title}</Button>
+                                            ):""
+                                    }
                                 </span>
                                 )
             }
@@ -186,11 +241,20 @@ export default class actTable extends React.Component{
             })
 		})
     }
-    
+
+    handleRAction=(ratmplId,recordCode)=>{
+        const { menuId}=this.state
+        this.props.history.push(`/relation/${menuId}/${ratmplId}/${recordCode}`)
+       // this.setState({loading:false,Loading:false,ratmplId:ratmplId,rootCode:recordCode})
+        this.setState({loading:false,Loading:false})
+
+    }
+
     handleOperate=(type,record)=>{
-        const { menuId,selectCodes }=this.state
+        const { menuId,selectCodes,ratmplId,rootCode }=this.state
         const code=record.code
         this.setState({Loading:true})
+        let url_=rootCode?`api2/entity/curd/remove/${menuId}/${ratmplId}`:`api2/entity/curd/remove/${menuId}`
         if(type==="delete"){
             Modal.confirm({
 				title:"删除提示",
@@ -199,7 +263,7 @@ export default class actTable extends React.Component{
 				cancelText:"取消",
 				onOk:()=>{
 					Super.super({
-                        url:`api2/entity/curd/remove/${menuId}`,
+                        url:url_,
                         data:{
                             codes:selectCodes
                         }            
@@ -220,7 +284,12 @@ export default class actTable extends React.Component{
                 }
 			})
 		}else{
-            this.props.history.push(`/${menuId}/${type}/${code}`)
+            if(this.state.rootCode){
+                this.props.history.push(`/relation/${menuId}/${this.state.ratmplId}/${this.state.rootCode}/${type}/${code}`)
+            }else{
+                this.props.history.push(`/${menuId}/${type}/${code}`)
+            }
+
             this.setState({loading:false,Loading:false})
 		}
     } 
@@ -265,7 +334,13 @@ export default class actTable extends React.Component{
         })			
     }
     handleNew=(menuId)=>{
-        this.props.history.push(`/${menuId}/new`)
+        const { ratmplId,rootCode }=this.state
+        if(rootCode){
+            this.props.history.push(`/${menuId}/new/relation/${ratmplId}/${rootCode}`)
+        }else{
+            this.props.history.push(`/${menuId}/new`)
+        }
+
     }
     handleImport=(menuId)=>{
         this.props.history.push(`/${menuId}/import`)
@@ -288,6 +363,26 @@ export default class actTable extends React.Component{
             })
             if(res && res.status==="suc"){
                 this.fresh('操作成功!')
+            }else{
+                message.error(res.status)
+            }
+        })
+    }
+    handleJumps=(jumpId)=>{
+        const {menuId,selectCodes}=this.state;
+        this.setState({Loading:true})
+        Super.super({
+            url:`api2/entity/curd/do_jump/${menuId}/${jumpId}`,
+            data:{
+                codes:selectCodes
+            }
+        }).then((res)=>{
+            this.setState({
+                Loading:false,
+                selectedRowKeys:[],
+            })
+            if(res && res.status==="suc"){
+                window.open(res.url);
             }else{
                 message.error(res.status)
             }
@@ -321,7 +416,12 @@ export default class actTable extends React.Component{
             this.searchList(Units.urlToObj(url),menuId)
         }else{
             this.child.reset()//搜索栏重置
-            this.props.history.push(`/${menuId}`)
+            if(this.state.rootCode && this.state.ratmplId){
+                this.props.history.push(`/relation/${menuId}/${this.state.ratmplId}/${this.state.rootCode}`)
+            }else{
+                this.props.history.push(`/${menuId}`)
+            }
+
         }
     }
     recalc=(menuId)=>{
@@ -356,7 +456,7 @@ export default class actTable extends React.Component{
     render(){
         let {selectedRowKeys,filterOptions,moduleTitle,list,loading,pageInfo,statView,
             disabledColIds,plainOptions,downloadTitle,pageSize,formList,tmplGroup,columns,
-            Loading,currentPage,menuId,pageCount,isSeeTotal,optionsMap,queryKey } = this.state;
+            Loading,currentPage,menuId,pageCount,isSeeTotal,optionsMap,queryKey,rootCode,ratmplTitle } = this.state;
         if(statView!==null&&columns){
             columns.forEach((item,index)=>{             
                 if(disabledColIds){
@@ -401,14 +501,16 @@ export default class actTable extends React.Component{
           };
         let hideCreate=tmplGroup&&tmplGroup.hideCreateButton!==1?false:true
         let hideDelete=tmplGroup&&tmplGroup.hideDeleteButton!==1?false:true
-        let hideExport=tmplGroup&&tmplGroup.hideExportButton!==1?false:statView===null?true:false
-        let hideImport=tmplGroup&&tmplGroup.hideImportButton!==1?false:true
+        let hideExport=tmplGroup&&tmplGroup.hideExportButton!==1&& !rootCode?false:statView===null?true:false
+        let hideImport=tmplGroup&&tmplGroup.hideImportButton!==1 && !rootCode ?false:true
         let hideQuery=tmplGroup&&tmplGroup.hideQueryButton!==1?false:statView===null?true:false
         let hideTreeToggle=tmplGroup&&tmplGroup.treeTemplateId&&!tmplGroup.hideTreeToggleButton?false:true
         return(
             <div className="actTable">
                 <h3>
-                    {moduleTitle?moduleTitle+"-列表":null}
+
+                    {moduleTitle?moduleTitle:null}{ratmplTitle?"-"+ratmplTitle:null}{ "-列表"}
+
                     <p className="fr">
                         {hideCreate?"":<Button 
                             className="hoverbig" 
@@ -469,6 +571,8 @@ export default class actTable extends React.Component{
                         handleOperate={this.handleOperate}
                         actions={tmplGroup?tmplGroup.actions:""}
                         handleActions={this.handleActions}
+                        jumps={tmplGroup?tmplGroup.jumps:""}
+                        handleJumps={this.handleJumps}
                         disabled={selectedRowKeys.length>0?false:true}
                         menuId={menuId}
                         hideDelete={hideDelete}
@@ -478,7 +582,7 @@ export default class actTable extends React.Component{
                         />          
                 </Card>
                 <Table
-                    rowSelection={hideDelete && (!tmplGroup || tmplGroup.actions.length===0)?null:rowSelection}
+                    rowSelection={hideDelete && (!tmplGroup || tmplGroup.actions.length===0) && (!tmplGroup || tmplGroup.jumps.length===0)?null:rowSelection}
                     columns={columns?columns:[]}
                     dataSource={list}
                     bordered
@@ -505,6 +609,8 @@ export default class actTable extends React.Component{
                         total={pageCount}
                         />
                 </div>
+                <ModalActTable {...this.props}
+                ></ModalActTable>
             </div>
            
         )

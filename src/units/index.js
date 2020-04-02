@@ -1,13 +1,43 @@
 import React from 'react'
 import {Select, Radio, message, Button, Icon} from 'antd'
+import ProgramConfig from '../programConfig.json'
+import Axios from "axios";
+import Logo from "./logo.png"
+
 const Option = Select.Option;
 
-const api = process.env.hydrocarbonServer;
+const api = ProgramConfig.hydrocarbonServer;
+const programName = ProgramConfig.programName;
+const programName_sub=ProgramConfig.programName_sub;
+const programName_NavLeft=ProgramConfig.programName_NavLeft;
 let storageKeyPrefix = undefined;
+
+//加载本地配置
+Axios.create().get('programConfig.json').then((result) => {
+    window.localStorage['programName'] = result.data.programName
+    window.localStorage['hydrocarbonServer'] = result.data.hydrocarbonServer
+    window.localStorage['programName_NavLeft'] = result.data.programName_NavLeft
+    window.localStorage['programName_sub'] = result.data.programName_sub
+    window.localStorage['programName_Logo'] = result.data.programName_Logo
+}).catch((error) => { console.log(error) });
+
 export default {
     api(){
-        return api
+        return window.localStorage['hydrocarbonServer']?window.localStorage['hydrocarbonServer']:api
     },
+    programName(){
+        return window.localStorage['programName']?window.localStorage['programName']:programName
+    },
+    programName_sub(){
+        return window.localStorage['programName_sub']?window.localStorage['programName_sub']:programName_sub
+    },
+    programName_NavLeft(){
+        return window.localStorage['programName_NavLeft']?window.localStorage['programName_NavLeft']:programName_NavLeft
+    },
+    programName_Logo(){
+        return window.localStorage['programName_Logo']?window.localStorage['programName_Logo']:Logo
+    },
+
     formateDate(time){
         if(!time) return '';
         const date=new Date(time);

@@ -41,7 +41,7 @@ export default class EditAddTemplate extends React.Component{
                     onOk={this.handleOk}
                     onCancel={handleCancel}
                     destroyOnClose
-                    width={930}
+                    width={960}
                     maskClosable={maskClosable}
                     bodyStyle={{height:430,overflow:'auto'}}
                     >

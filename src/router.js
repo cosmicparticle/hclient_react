@@ -11,8 +11,9 @@ import ActTree from "./pages/actTree"
 import CustomPageRouter from "./pages/customPage/CustomPageRouter";
 
 export default class iRouter extends React.Component{
+
     render(){
-        //console.log(process.env);
+
         return (
             <HashRouter>
                 <App>                  
@@ -24,11 +25,14 @@ export default class iRouter extends React.Component{
                                     <Route path='/home' component={Home} exact/>
                                     <Route path='/customPage/:menuId/:pageName(.+)' component={CustomPageRouter}/>
                                     <Route path="/:menuId" component={ActTable} exact />
+                                    <Route path="/relation/:menuId/:ratmplId/:rootCode" component={ActTable} exact />
                                     <Route path="/:menuId/search" component={ActTable} exact />
                                     <Route path="/:menuId/import" component={Import} exact />
                                     <Route path="/:menuId/ActTree" component={ActTree} exact />
+                                    <Route path="/:menuId/:type/relation/:ratmplId/:rootCode" component={Detail} exact />
                                     <Route path="/:menuId/:type" component={Detail} exact />
                                     <Route path="/:menuId/:type/:code" component={Detail} exact/>
+                                    <Route path="/relation/:menuId/:ratmplId/:rootCode/:type/:code" component={Detail} exact/>
                                     <Route path="/:menuId/:type/:code/:nodeId" component={Detail} exact/>
                                     <Route path="/user/:type/:code" component={Detail}/>
                                     <Redirect to="/home"/>

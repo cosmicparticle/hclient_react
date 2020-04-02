@@ -21,6 +21,8 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+const programConfig = require('../src/programConfig');
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -103,6 +105,10 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
   }
   return loaders;
 };
+
+const createJson = function(compilation) {
+  return JSON.stringify(programConfig)
+}
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
@@ -454,6 +460,12 @@ module.exports = {
         minifyJS: true,
         minifyCSS: true,
         minifyURLs: true,
+      },
+    }),
+    new GenerateAssetPlugin({
+      filename: 'programConfig.json',
+      fn: (compilation, cb) => {
+        cb(null, createJson(compilation));
       },
     }),
     // Inlines the webpack runtime script. This script is too small to warrant

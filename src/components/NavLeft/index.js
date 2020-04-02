@@ -3,6 +3,7 @@ import { Menu} from 'antd';
 //import Super from "./../../super"
 import { NavLink,withRouter } from 'react-router-dom'
 import './index.css'
+import Units from '../../units'
 const SubMenu = Menu.SubMenu;
 
 class NavLeft extends React.Component{
@@ -15,7 +16,7 @@ class NavLeft extends React.Component{
 	getCurrentMenuId(){
         const pathname = this.props.history.location.pathname;
         let menuId = pathname.split("/")[1];
-        console.log('ssssssssss');
+//        console.log('ssssssssss');
         const execResult = /\/customPage\/(\d+)\//.exec(pathname);
         if(execResult) menuId = execResult[1];
         return menuId;
@@ -91,7 +92,7 @@ class NavLeft extends React.Component{
 		return (
 			<div>
 				<div className="logo">
-					<a href="#/home"><h1>HYDROCARBON</h1></a>
+					<a href="#/home"><h1>{Units.programName_NavLeft()}</h1></a>
 				</div>
 				<Menu 
 					mode="inline"

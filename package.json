@@ -141,5 +141,8 @@
 		"presets": [
 			"react-app"
 		]
+	},
+	"devDependencies": {
+		"generate-asset-webpack-plugin": "^0.3.0"
 	}
 }

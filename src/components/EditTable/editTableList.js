@@ -104,7 +104,7 @@ export default class EditTableList extends React.Component {
               onClick={this.props.handleAdd} 
               style={{marginBottom:10,marginRight:10}}
               >新增</Button>}
-              {!isModal&&haveTemplate && type!=="detail"?
+              {haveTemplate && type!=="detail"?
               <Button 
                 type='primary' 
                 icon="snippets" 

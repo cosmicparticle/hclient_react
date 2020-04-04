@@ -747,24 +747,29 @@ export default class Detail extends React.Component{
                 let list={
                     code:item['唯一编码'],
                     fieldMap:item.byDfieldIds,                   
-                }               
-                for(let k in dataSource){
-                    if(k===templateGroupId.toString()){
-                        if(!isNew){
-                            dataSource[k].forEach((it,index)=>{
-                                if(it.code===item['唯一编码']){
-                                    dataSource[k].splice(index,1,list); 
-                                }
-                            })
-                        }else{
-                            dataSource[k].push(list)
-                            dataSource[k].forEach((item)=>{
-                                item.fieldMap.current=Math.ceil(dataSource[k].length/5)
-                            })
-                        }
-                        
-                    }
                 }
+
+                // for(let k in dataSource){
+                //     if(k===templateGroupId.toString()){
+                let k=templateGroupId;
+                if(!dataSource[k]){
+                    dataSource[k]=[];
+                }
+                if(!isNew){
+                    dataSource[k].forEach((it,index)=>{
+                        if(it.code===item['唯一编码']){
+                            dataSource[k].splice(index,1,list);
+                        }
+                    })
+                }else{
+                    dataSource[k].push(list)
+                    dataSource[k].forEach((item)=>{
+                        item.fieldMap.current=Math.ceil(dataSource[k].length/5)
+                    })
+                }
+                        
+                //     }
+                // }
             })
             this.setState({
                 visibleTemplateList:false,

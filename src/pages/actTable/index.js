@@ -77,7 +77,7 @@ export default class actTable extends React.Component{
     }
 
     requestLtmpl=(menuId,data,ratmplId,rootCode)=>{
-        let ratmplId_=ratmplId?ratmplId:this.state.ratmplId;
+        let ratmplId_=rootCode?ratmplId?ratmplId:this.state.ratmplId:null;
         let recordCode_=rootCode?rootCode:this.state.rootCode;
         this.requestLtmplRunner(menuId,data,ratmplId_,recordCode_);
     }

@@ -35,13 +35,14 @@ export default class EditAddTemplate extends React.Component{
                 <Modal
                     title={title}
                     visible={visibleEditAddTemplate}
-                    okText={"保存"}
+                    okText={type==="detail"?"确定":"保存"}
                     cancelText="取消"
                     centered
-                    onOk={this.handleOk}
+                    onOk={type==="detail"?handleCancel:this.handleOk}
                     onCancel={handleCancel}
                     destroyOnClose
                     width={960}
+
                     maskClosable={maskClosable}
                     bodyStyle={{height:430,overflow:'auto'}}
                     >
@@ -50,6 +51,7 @@ export default class EditAddTemplate extends React.Component{
                         fieldGroupId={editAddGroupId}
                         type={type}
                         code={code}
+                        isModal={true}
                         onRef3={this.onRef3}
                         handleCancel={handleCancel}
                         fresh={fresh}

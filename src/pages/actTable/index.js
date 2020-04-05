@@ -18,7 +18,7 @@ export default class actTable extends React.Component{
         radioValue:1,
         currentPage:1,
         pageSize:10,
-        selectedRowKeys: [], 
+        selectedRowKeys: [],
         actions:[],
         ractions:[],
         jumps:[],
@@ -49,7 +49,8 @@ export default class actTable extends React.Component{
         this.setState({
             menuId,
             isSeeTotal:false,
-            currentPage:1
+            currentPage:1,
+            selectedRowKeys: []
         })
         this.forceUpdate();
         if(!url){
@@ -573,7 +574,7 @@ export default class actTable extends React.Component{
                         handleActions={this.handleActions}
                         jumps={tmplGroup?tmplGroup.jumps:""}
                         handleJumps={this.handleJumps}
-                        disabled={selectedRowKeys.length>0?false:true}
+                        selectedRowKeys={selectedRowKeys.length}
                         menuId={menuId}
                         hideDelete={hideDelete}
                         hideQuery={hideQuery}
@@ -609,8 +610,6 @@ export default class actTable extends React.Component{
                         total={pageCount}
                         />
                 </div>
-                <ModalActTable {...this.props}
-                ></ModalActTable>
             </div>
            
         )

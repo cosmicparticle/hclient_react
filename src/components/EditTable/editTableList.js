@@ -96,7 +96,7 @@ export default class EditTableList extends React.Component {
               />:""}
           >
           <div className="editTableList">
-            {type==="detail" || unallowedCreate===1?"":
+            {type==="detail" || unallowedCreate===1 ?"":
             <Button 
               type='primary' 
               icon="plus" 

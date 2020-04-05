@@ -110,24 +110,26 @@ class BaseForm extends React.Component{
         return formItemList;
     }
     render(){
-        const {actions,jumps,hideDelete,hideQuery}=this.props
+        const {actions,jumps,hideDelete,hideQuery,selectedRowKeys}=this.props
+        const anyDisabled=selectedRowKeys>0?false:true
+        const onlyOneDisabled=selectedRowKeys!==1?true:false
         return(
             <Form layout="inline">
                 {this.initFormList()}
                 <FormItem className="btns">
                     {hideQuery?"":<Button type="primary" onClick={this.handleFilterSubmit}>查询</Button>}
-                    {hideDelete?"":<Button type="danger" disabled={this.props.disabled} onClick={(e)=>this.props.handleOperate("delete","",e)}>删除选中</Button>}
+                    {hideDelete?"":<Button type="danger" disabled={anyDisabled} onClick={(e)=>this.props.handleOperate("delete","",e)}>删除选中</Button>}
                     {
                         actions && actions.length>0?
                         actions.map(item =>
-                            <Button type="primary" key={item.id} onClick={()=>this.props.handleActions(item.id)}  disabled={this.props.disabled}>{item.title}</Button>
+                            <Button type="primary" key={item.id} onClick={()=>this.props.handleActions(item.id)}  disabled={item.multiple===0?onlyOneDisabled:anyDisabled}>{item.title}</Button>
                         ):""
                     }
 
                     {
                         jumps && jumps.length>0?
                             jumps.map(item =>
-                                <Button type="primary" key={item.id} onClick={()=>this.props.handleJumps(item.id)}  disabled={this.props.disabled}>{item.title}</Button>
+                                <Button type="primary" key={item.id} onClick={()=>this.props.handleJumps(item.id)}  disabled={item.multiple===0?onlyOneDisabled:anyDisabled}>{item.title}</Button>
                             ):""
                     }
                     {/* <Button type="primary" onClick={this.props.reset}>清空</Button> */}

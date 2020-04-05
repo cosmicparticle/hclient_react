@@ -840,11 +840,11 @@ export default class Detail extends React.Component{
             content = (
                 <div className="btns">
                     {actions.map(item =>
-                        <Button 
-                            key={item.id} 
-                            type="primary" 
-                            onClick={()=>this.visibleModal(item.id,'handleOk','确实要执行这项操作吗？')}
-                            >{item.title}</Button>
+                   <Button
+                        key={item.id}
+                        type="primary"
+                        onClick={()=>this.visibleModal(item.id,'handleOk','确实要执行这项操作吗？')}
+                    >{item.title}</Button>
                         )}
                 </div>
             );

@@ -37,12 +37,17 @@ export default class TemplateList extends React.Component{
                 treeData:nextProps.templateData.entities,
                 nodeTmpl:nextProps.templateDtmpl.config.nodeTmpl,
             })
+        }else{
+            this.setState({
+                isSeeTotal:false
+            })
         }
     }
+
     handleOk=()=>{
         const {selectCodes}=this.state
         this.props.TemplatehandleOk(selectCodes,null,true)
-        this.setState({selectedRowKeys:[]})     
+        this.setState({selectedRowKeys:[]})
     }
     seeTotal=()=>{
         const {isSeeTotal}=this.state

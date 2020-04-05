@@ -60,7 +60,7 @@ class Loginit extends React.Component{
                                     initialValue:username,
                                     rules: [
                                         { required: true, message: '请输入用户名!' },
-                                        {max:5,min:0,message:'输入0-5个字符'},
+                                        {max:16,min:0,message:'输入0-16个字符'},
                                     ],
                                 })(
                                     <Input 

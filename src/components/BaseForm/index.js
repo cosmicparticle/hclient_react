@@ -122,7 +122,9 @@ class BaseForm extends React.Component{
                     {
                         actions && actions.length>0?
                         actions.map(item =>
+                            item.face==="list"?
                             <Button type="primary" key={item.id} onClick={()=>this.props.handleActions(item.id)}  disabled={item.multiple===0?onlyOneDisabled:anyDisabled}>{item.title}</Button>
+                                :""
                         ):""
                     }
 

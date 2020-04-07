@@ -322,6 +322,9 @@ export default class BaseInfoForm extends React.Component{
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                         getFieldDecorator(fieldName,{
                                             initialValue:fieldValue,
+                                            rules:item.validators?[{
+                                                required: true, message: `请选择${title}`,
+                                            }]:"",
                                         })(
                                             <TextArea 
                                                 placeholder={available?`请输入${title}`:"无需输入"}

@@ -39,7 +39,8 @@ export default class TemplateList extends React.Component{
             })
         }else{
             this.setState({
-                isSeeTotal:false
+                isSeeTotal:false,
+                selectedRowKeys:[]
             })
         }
     }

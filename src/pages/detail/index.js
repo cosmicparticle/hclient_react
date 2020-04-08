@@ -516,15 +516,16 @@ export default class Detail extends React.Component{
             showSetPass:false,
         });
     }
-    showModal = (dfieldIds) => {
+    showModal = (dfieldIds,actionId) => {
         this.baseinfo.handleBaseInfoSubmit() //获取BaseInfo数据
+        this.visibleModal(actionId,'handleOk','确定要保存修改吗')//弹出确认框
         this.setState({
             dfieldIds
         })
     }
     baseInfo=(baseValue)=>{  
         const {newPass,dtmplGroup}=this.state
-        this.visibleModal(null,'handleOk','确定要保存修改吗')//弹出确认框 
+
         if(newPass){
             let name
             dtmplGroup.forEach((item)=>{
@@ -843,7 +844,8 @@ export default class Detail extends React.Component{
                    <Button
                         key={item.id}
                         type="primary"
-                        onClick={()=>this.visibleModal(item.id,'handleOk','确实要执行这项操作吗？')}
+                       // onClick={()=>this.visibleModal(item.id,'handleOk','确实要执行这项操作吗？')}
+                       onClick={()=>{this.showModal(null,item.id)}}
                     >{item.title}</Button>
                         )}
                 </div>

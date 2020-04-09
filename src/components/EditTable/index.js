@@ -4,7 +4,7 @@ import EditTableList from './editTableList'
 export default class EditTable extends React.Component{
     
     initDetailsList=()=>{
-        const { type,dataSource,columns,getTemplate,getFormTmpl,isModal, }=this.props
+        const { type,dataSource,columns,getTemplate,getFormTmpl,isModal,maxDataCount }=this.props
 
         const unallowedCreate=columns.unallowedCreate
         const selectionTemplateId=columns.selectionTemplateId
@@ -23,6 +23,7 @@ export default class EditTable extends React.Component{
         })              
         return <EditTableList               
                     key={Math.random()}
+                    maxDataCount={maxDataCount}
                     type={type}
                     columns={columns.fields}
                     dataSource={data}

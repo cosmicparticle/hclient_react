@@ -51,6 +51,7 @@ class Formi extends React.Component{
                 return <EditTable 
                             type={type}
                             columns={column}
+                            maxDataCount={item.composite.maxDataCount?item.composite.maxDataCount:0}
                             dataSource={data}
                             key={item.title}
                             handleAdd={this.props.getForm}

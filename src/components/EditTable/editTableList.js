@@ -9,9 +9,21 @@ export default class EditTableList extends React.Component {
     dataSource:this.props.dataSource,
     searchText:"",
     current:this.props.dataSource&&this.props.dataSource.length>0?this.props.dataSource[0].current:1,
+    maxDataCount:0,
   }
+
+  componentDidMount(){
+    const {maxDataCount}=this.props
+    if(maxDataCount){
+      this.setState({
+        maxDataCount:maxDataCount,
+      })
+    }
+
+  }
+
   searchValue=(e)=>{
-    const {columns,dataSource}=this.props
+    const {columns,dataSource,maxDataCount}=this.props
     const txt=e.target.value
     const data=[]
     columns.forEach((item)=>{
@@ -48,7 +60,8 @@ export default class EditTableList extends React.Component {
     })
     this.setState({
       searchText:e.target.value,
-      dataSource:data
+      dataSource:data,
+      maxDataCount:maxDataCount?maxDataCount:this.state.maxDataCount,
     })
   }
   tabChange=(pagination)=>{
@@ -65,11 +78,12 @@ export default class EditTableList extends React.Component {
   }
   render() {
     let { cardTitle,columns,type,haveTemplate,rabcTemplatecreatable,isModal,unallowedCreate }=this.props
-    const {current,dataSource}=this.state
+    const {current,dataSource, maxDataCount}=this.state
     const page={pageSize:5,hideOnSinglePage:true,defaultCurrent:current,total:dataSource.length,showTotal:this.showTotal}
     let groupId
     const arr1=[]
     const arr2=[]
+
     if(columns){     
       columns.forEach((item)=>{
         if(item.groupId){
@@ -81,6 +95,7 @@ export default class EditTableList extends React.Component {
     dataSource.forEach((item)=>{
       arr1.push(item.code)
     })
+    const cardButtonDisabled=arr1.length>=1 && maxDataCount===1?true:false;
     let excepts=arr1.join(',')
     let dfieldIds=arr2.join(',')
     return (
@@ -97,7 +112,8 @@ export default class EditTableList extends React.Component {
           >
           <div className="editTableList">
             {type==="detail" || unallowedCreate===1 ?"":
-            <Button 
+            <Button
+                disabled={cardButtonDisabled}
               type='primary' 
               icon="plus" 
               size="small"
@@ -105,7 +121,8 @@ export default class EditTableList extends React.Component {
               style={{marginBottom:10,marginRight:10}}
               >新增</Button>}
               {haveTemplate && type!=="detail"?
-              <Button 
+              <Button
+                  disabled={cardButtonDisabled}
                 type='primary' 
                 icon="snippets" 
                 size="small"
@@ -113,7 +130,8 @@ export default class EditTableList extends React.Component {
                 style={{marginBottom:10,marginRight:10}}
                 >选择</Button>:""}
               {!isModal&&rabcTemplatecreatable && type!=="detail"?
-              <Button 
+              <Button
+                  disabled={cardButtonDisabled}
                 type='primary' 
                 icon="plus-square" 
                 size="small"

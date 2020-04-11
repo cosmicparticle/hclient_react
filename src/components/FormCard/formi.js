@@ -70,6 +70,7 @@ class Formi extends React.Component{
                             baseInfo={this.props.baseInfo}
                             loading={loading}
                             getOptions={this.props.getOptions}
+                            getTemplate={this.props.getTemplate}
                             getDetailFormTmpl={this.props.getDetailFormTmpl} //关系点选,
                             options={options}
                             form={form}
@@ -80,7 +81,7 @@ class Formi extends React.Component{
     }
     render(){
         return(
-            <Form layout="inline" autoComplete="off">  
+            <Form   layout="inline" autoComplete="off">
                 {this.initDetailsList()}          
             </Form>           
         )

@@ -48,16 +48,16 @@ export default class Detail extends React.Component{
         })
         this.loadltmpl(menuId,{code,type,versionCode:"",nodeId,fieldGroupId,ratmplId,rootCode,rfieldId})
     }
-    componentWillReceiveProps(nextProps){
-        console.log(99)
-        const path=nextProps.location?nextProps.location.pathname.split("/"):null
-        this.setState({
-            menuId:path[1],
-            type:path[2],
-            code:path[3],
-        })
-        this.loadltmpl(path[1],{type:path[3],code:path[2]})
-    }
+   // componentWillReceiveProps(nextProps){
+   //     console.log(99)
+   //     const path=nextProps.location?nextProps.location.pathname.split("/"):null
+   //      const {type,code,menuId}=nextProps
+   //      this.setState({
+   //          menuId,
+   //          type,
+   //          code,
+   //      })
+   //  this.loadltmpl(menuId,{type,code})}
     loadltmpl=(menuId,params)=>{
        let {code,type,versionCode,nodeId,fieldGroupId,ratmplId,rootCode,rfieldId}=params
         let url
@@ -180,7 +180,7 @@ export default class Detail extends React.Component{
                     dtmplGroup,
                     columns:this.renderColumns(dtmplGroup),
                     dataSource:arrayMap,
-                })     
+                })
            }else{
                message.error("实体不存在！")
            }             
@@ -332,7 +332,7 @@ export default class Detail extends React.Component{
                                             type='primary'
                                             icon="align-left"
                                             size="small"
-                                            onClick={this.getDetailFormTmpl({modalType:"detail"},record)}
+                                            onClick={()=>{this.getDetailFormTmpl({modalType:"detail"},record)}}
                                         ></Button>:""}
                                 </div>)}}
                     item.fields.push(act)
@@ -641,7 +641,8 @@ export default class Detail extends React.Component{
                     id:item.id,
                     fieldId:item.fieldId,
                     code:isNew?code:record.code,
-                    key:item.key
+                    key:item.key,
+                    fieldAccess:item.fieldAccess
                 }
                 if(!isNew){
                     for(let k in record){

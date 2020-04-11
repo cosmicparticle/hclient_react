@@ -1,5 +1,5 @@
 import React from 'react'
-import {Input,Form,Select,DatePicker,InputNumber,Button} from 'antd'
+import {Input,Form,Select,DatePicker,InputNumber,Button,Row,Col} from 'antd'
 import Units from "../../units";
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -7,6 +7,7 @@ import moment from 'moment';
 import NewUpload from './../NewUpload'
 import NewCascader from './../NewCascader'
 import EditTable from "../EditTable";
+import {util} from "echarts/src/export";
 moment.locale('zh-cn');
 const FormItem=Form.Item
 const { TextArea } = Input;
@@ -67,7 +68,7 @@ export default class BaseInfoForm extends React.Component{
                 const title=item.title;
                 const field=item.code?item.code+index:item.fieldId
                 const fieldValue=item.value;
-                const available=item.fieldAccess!=="读" && item.fieldAvailable ;
+                const available=item.fieldAccess && item.fieldAccess!=="读" && item.fieldAvailable ;
                 const fieldName=item.name
                 if(item.type==="date"){
                     const DATE= <FormItem label={title} key={field} className='labelcss'>
@@ -264,7 +265,7 @@ export default class BaseInfoForm extends React.Component{
                             uid:'-3',
                             name: fileName,
                             status: 'done',
-                            url: url,
+                            url: Units.api()+url,
                         },];
 
                         const FILE= <FormItem label={title} key={field} className='labelcss'>
@@ -338,38 +339,81 @@ export default class BaseInfoForm extends React.Component{
                 } else if(item.type==="relselect" || item.type==="refselect" ){
                     let value=fieldValue==null?null:fieldValue.split('@R@')[1];
                     let code=fieldValue==null?undefined:fieldValue.split('@R@')[0];
-                    const refselect= <FormItem label={title} key={field} className='labelcss'>
+                    let refGroupId=item.refGroupId;
+                    let refselect=null;
+                    if(!refGroupId){
+                        refselect= <FormItem label={title} key={field} className='labelcss'>
+                            {type==="detail"?<span className="infoStyle">{value}</span>:
+                                getFieldDecorator(fieldName,{
+                                    initialValue:value,
+                                    rules:item.validators?[{
+                                        required: true, message: `请输入${title}`,
+                                    }]:"",
+                                })(
+                                    <Input
+                                        type="text"
+                                        style={{width:width}}
+                                        placeholder={available?`请输入${title}`:"无需输入"}
+                                        disabled={!available}
+                                    />
+                                )}
+                        </FormItem>
+
+                    }else{
+                        refselect= <FormItem label={title} key={field} className='labelcss'>
                             {type==="detail"?<span className="infoStyle"> <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
                                                 {value}
                                             </Button>
-                            </span>:
+                            </span> :
                                 getFieldDecorator(fieldName,{
                                     initialValue:fieldValue,
                                     rules:item.validators?[{
                                         required: true, message: `请选择${title}`,
                                     }]:"",
                                 })(<div>
-                                        {value? <div>
-                                            <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                                        {value? available? <div>
+                                            <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"edit",fieldId:item.id},{code})}>
                                                 {value}
                                             </Button>
                                             <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
                                             </Button>
-                                        </div> :
+                                        </div> :  <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                                            {value}
+                                        </Button> : available?
                                             <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
                                                 {value?value:"请选择"+title}
-                                            </Button>
+                                            </Button>:<TextArea
+                                                placeholder={"无需输入"}
+                                                style={{width:width}}
+                                                disabled={true}
+                                            />
                                         }
 
-                                </div>
+                                    </div>
                                 )}
                         </FormItem>
+                    }
+
                     formItemList.push(refselect)
                 }
                 return false
             })
         }
-        return formItemList;
+        const rowList=[];
+        for(let i=0;i<formItemList.length; i=i+2 ){
+            const row=
+                <Row>
+                    <Col span={12}>
+                        {formItemList[i]}
+                    </Col>
+                    <Col span={12}>
+                        {formItemList[i+1]}
+                    </Col>
+                </Row>
+            rowList.push(row);
+        }
+
+        return rowList;
     }
     render(){
         return(

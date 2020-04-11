@@ -10,7 +10,7 @@ export default class FormCard extends React.Component{
         if(formList && formList.fields.length>0){ 
             const title=formList.title
             const fields=formList.fields
-            return <Card 
+            return <Card
                         title={title} 
                         key={title} 
                         id={title} 

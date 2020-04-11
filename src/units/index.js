@@ -83,7 +83,7 @@ export default {
     downloadFile(url) { 
         try{ 
             let elemIF = document.createElement("iframe");   
-            elemIF.src = api+url;   
+            elemIF.src = this.api()+url;
             elemIF.style.display = "none";   
             document.body.appendChild(elemIF);   
         }catch(e){ 
@@ -233,7 +233,7 @@ export default {
         forPic(fieldMap){ //原始数据的图片url转化为图片
             for(let i in fieldMap){
                 if(fieldMap[i] && fieldMap[i].includes("download-files")){
-                    const url=api+ fieldMap[i]
+                    const url=this.api()+ fieldMap[i]
                     fieldMap[i]=<img 
                                     style={{width:55}} 
                                     src={url} 
@@ -256,7 +256,7 @@ export default {
         if(!file){
             return file
         }else if((file).constructor === String ){
-            const url=api+ file;
+            const url=this.api()+ file;
             let obj=url.lastIndexOf("/");
             const fileName=url.substr(obj+1);
             return file && file!=="无文件"?<span className='labelcss'>

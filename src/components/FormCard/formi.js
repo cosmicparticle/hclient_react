@@ -14,6 +14,9 @@ class Formi extends React.Component{
             if(!err){
                 const result={}
                 for(let k in values){
+                    if("唯一编码"===k){
+                        continue;
+                    }
                     if(values[k] && moment(values[k],moment.ISO_8601).isValid()){ //日期格式转换
                         result[k]=moment(values[k]).format("YYYY-MM-DD")
                     }else if(values[k] && values[k].originFileObj){
@@ -55,8 +58,8 @@ class Formi extends React.Component{
                             dataSource={data}
                             key={item.title}
                             handleAdd={this.props.getForm}
-                            getTemplate={this.props.getTemplate} //新增选择实体模板
-                            getFormTmpl={this.props.getFormTmpl}//新增修改实体模板
+                            getTemplate={this.props.getTemplate} //选择实体模板
+                            getDetailFormTmpl={this.props.getDetailFormTmpl}//新增,修改实体模板
                             isModal={this.props.match?false:true}
                         />   
             }else{
@@ -67,6 +70,7 @@ class Formi extends React.Component{
                             baseInfo={this.props.baseInfo}
                             loading={loading}
                             getOptions={this.props.getOptions}
+                            getDetailFormTmpl={this.props.getDetailFormTmpl} //关系点选,
                             options={options}
                             form={form}
                             setPassword={this.props.setPassword}

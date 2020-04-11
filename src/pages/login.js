@@ -51,7 +51,7 @@ class Loginit extends React.Component{
         const {username,password}=this.state
         const { getFieldDecorator } = this.props.form;
 		return(
-			<Row className="container login">
+			<Row  type="flex" justify="center"  align="middle" className="login">
 				<Col>
 					<Form style={{width:350}}>
 					    <h3>欢迎登录</h3>
@@ -63,12 +63,12 @@ class Loginit extends React.Component{
                                         {max:16,min:0,message:'输入0-16个字符'},
                                     ],
                                 })(
-                                    <Input 
-                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} 
-                                        placeholder="用户名" 
+                                    <Input
+                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        placeholder="用户名"
                                         onChange={this.handleChange("username")}
                                         />
-                                )}                        
+                                )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('password', {
@@ -77,18 +77,18 @@ class Loginit extends React.Component{
                                         { required: true, message: '请输入密码!' },
                                     ],
                                 })(
-                                    <Input 
-                                        type="password" 
-                                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} 
+                                    <Input
+                                        type="password"
+                                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                         placeholder="密码"
                                         onChange={this.handleChange("password")}
                                         />
-                                )}                             
+                                )}
                         </FormItem>
                         <FormItem>
-                            <Button 
-                                style={{width:'100%'}} 
-                                type="primary" 
+                            <Button
+                                style={{width:'100%'}}
+                                type="primary"
                                 onClick={this.handleSubmit}
                                 >
                                 登录

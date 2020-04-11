@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal,Table,Pagination, message,Tree,Icon } from 'antd';
+import {Modal, Table, Pagination, message, Tree, Icon, Button} from 'antd';
 import Super from './../../super'
 import BaseForm from './../BaseForm'
 const { TreeNode } = Tree;
@@ -47,7 +47,7 @@ export default class TemplateList extends React.Component{
 
     handleOk=()=>{
         const {selectCodes}=this.state
-        this.props.TemplatehandleOk(selectCodes,null,true)
+        this.props.TemplatehandleOk({codes:selectCodes,isNew:true})
         this.setState({selectedRowKeys:[]})
     }
     seeTotal=()=>{
@@ -92,7 +92,7 @@ export default class TemplateList extends React.Component{
             data:formData       
         },'formdata').then((res)=>{
             if(res.status==="suc"){
-                this.props.TemplatehandleOk(res.code,formTmplGroupId,code?false:true) //为了后面新增的push
+                this.props.TemplatehandleOk({codes:res.code,formTmplGroupId,isNew:code?false:true}) //为了后面新增的push
             }else{
                 message.error("操作失败")
             }
@@ -256,13 +256,35 @@ export default class TemplateList extends React.Component{
     };
     handleTreeOk=()=>{
         const {selectedTreeCodes}=this.state       
-        this.props.TemplatehandleOk(selectedTreeCodes,null,true)
+        this.props.TemplatehandleOk({codes:selectedTreeCodes,isNew:true})
         console.log(selectedTreeCodes)
     }
+
+
+
+    renderColumns=(columns)=>{
+        let tmpIndex=0, opsIndex=0;
+
+        columns.forEach((item)=>{
+            if(item.viewOption==="refselect" || item.viewOption==="relselect" ){
+                item['render']= (text, record) => (record[item.id]?record[item.id].split('@R@')[1]:null)
+            }
+            if(item.title==='操作'){
+                opsIndex=tmpIndex;
+            }
+            tmpIndex++;
+        })
+        if(opsIndex>0){
+            columns.splice(opsIndex,1);
+        }
+        return columns
+    }
+
     render(){
         const {templateDtmpl,visibleTemplateList,handleCancel,templateData,menuId,title,maskClosable}=this.props
         let {selectedRowKeys,isSeeTotal,currentPage,pageCount,formList,treeData}=this.state
-        let columns=templateDtmpl&&templateDtmpl.config?templateDtmpl.config.columns:[] 
+        let columns=templateDtmpl&&templateDtmpl.config?templateDtmpl.config.columns:[]
+        this.renderColumns(columns)
         //console.log(templateDtmpl)
         const rowSelection = {
             selectedRowKeys,

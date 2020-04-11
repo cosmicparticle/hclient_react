@@ -4,7 +4,7 @@ import EditTableList from './editTableList'
 export default class EditTable extends React.Component{
     
     initDetailsList=()=>{
-        const { type,dataSource,columns,getTemplate,getFormTmpl,isModal,maxDataCount }=this.props
+        const { type,dataSource,columns,getTemplate,getDetailFormTmpl,isModal,maxDataCount }=this.props
 
         const unallowedCreate=columns.unallowedCreate
         const selectionTemplateId=columns.selectionTemplateId
@@ -31,7 +31,7 @@ export default class EditTable extends React.Component{
                     cardTitle={title}
                     handleAdd={()=>this.props.handleAdd(columns.fields,true)}
                     getTemplate={getTemplate}
-                    getFormTmpl={getFormTmpl}
+                    getDetailFormTmpl={getDetailFormTmpl}
                     rabcTemplatecreatable={rabcTemplatecreatable}
                     isModal={isModal}
                     unallowedCreate={unallowedCreate}

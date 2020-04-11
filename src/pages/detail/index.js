@@ -38,14 +38,15 @@ export default class Detail extends React.Component{
         const {menuId,code,type,ratmplId,rootCode,isModal}=this.props.match?this.props.match.params:this.props
         const nodeId=this.props.match?this.props.match.params.nodeId:null
         const fieldGroupId=this.props.match?null:this.props.fieldGroupId
+        const rfieldId=this.props.match?null:this.props.rfieldId
         this.setState({
             menuId,
             type,
             code,
             nodeId,
-            fieldGroupId,ratmplId,rootCode,isModal
+            fieldGroupId,ratmplId,rootCode,isModal,rfieldId
         })
-        this.loadltmpl(menuId,{code,type,versionCode:"",nodeId,fieldGroupId,ratmplId,rootCode})
+        this.loadltmpl(menuId,{code,type,versionCode:"",nodeId,fieldGroupId,ratmplId,rootCode,rfieldId})
     }
     componentWillReceiveProps(nextProps){
         console.log(99)
@@ -55,10 +56,10 @@ export default class Detail extends React.Component{
             type:path[2],
             code:path[3],
         })
-        this.loadltmpl({menuId:path[1],type:path[3],code:path[2]})
+        this.loadltmpl(path[1],{type:path[3],code:path[2]})
     }
     loadltmpl=(menuId,params)=>{
-       let {code,type,versionCode,nodeId,fieldGroupId,ratmplId,rootCode}=params
+       let {code,type,versionCode,nodeId,fieldGroupId,ratmplId,rootCode,rfieldId}=params
         let url
         if(ratmplId){
             url=`api2/meta/tmpl/dtmpl_config/relation/${menuId}/${ratmplId}`
@@ -66,6 +67,8 @@ export default class Detail extends React.Component{
             url=`api2/meta/tmpl/dtmpl_config/node/${menuId}/${nodeId}`
         }else if(fieldGroupId){
             url=`api2/meta/tmpl/dtmpl_config/rabc/${menuId}/${fieldGroupId}`
+        }else if(rfieldId){
+            url=`api2/meta/tmpl/dtmpl_config/rfield/${menuId}/${rfieldId}`
         }else{
             url=`api2/meta/tmpl/dtmpl_config/normal/${menuId}/`
         }
@@ -125,9 +128,10 @@ export default class Detail extends React.Component{
         })
     }
     loadRequest=(dtmplGroup,versionCode)=>{
-        const {menuId,type,code,nodeId,fieldGroupId,ratmplId}=this.props.match?this.props.match.params:this.props
+        const {menuId,type,code,nodeId,fieldGroupId,ratmplId,rfieldId}=this.props.match?this.props.match.params:this.props
 
-        let url_=ratmplId?`api2/entity/curd/detail/${menuId}/${ratmplId}/${code}`:`api2/entity/curd/detail/${menuId}/${code}`;
+        let url_=ratmplId?`api2/entity/curd/detail/${menuId}/${ratmplId}/${code}`:
+            `api2/entity/curd/detail/${menuId}/${code}`;
 
 
             Super.super({
@@ -135,7 +139,7 @@ export default class Detail extends React.Component{
             data:{
                 versionCode,
                 nodeId,
-                fieldGroupId,
+                fieldGroupId,rfieldId
             }          
         }).then((res)=>{
             if(res.status==="suc"){
@@ -219,7 +223,7 @@ export default class Detail extends React.Component{
         const {menuId,code,type}=this.state
         const versionCode=e.target.getAttribute("code");
         this.renderHistoryList(versionCode)
-        this.loadltmpl(menuId,code,type,versionCode)
+        this.loadltmpl(menuId,{code,type,versionCode})
     }
     detailTitle=(dataTitle,type)=>{
         const {menuTitle}=this.state
@@ -304,7 +308,7 @@ export default class Detail extends React.Component{
                                     type='primary' 
                                     icon="form" 
                                     size="small"  
-                                    onClick={()=>this.getFormTmpl(record)}
+                                    onClick={()=>this.getDetailFormTmpl({modalType:"edit"},record)}
                                     ></Button>:""}
                             {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>9?
                                 <Button
@@ -312,7 +316,7 @@ export default class Detail extends React.Component{
                                     type='primary'
                                     icon="align-left"
                                     size="small"
-                                    onClick={()=>this.getFormTmplForDetail(record)}
+                                    onClick={()=>this.getDetailFormTmpl({modalType:"detail"},record)}
                                 ></Button>:""}
                         </div>
                         ),
@@ -328,7 +332,7 @@ export default class Detail extends React.Component{
                                             type='primary'
                                             icon="align-left"
                                             size="small"
-                                            onClick={()=>this.getFormTmplForDetail(record)}
+                                            onClick={this.getDetailFormTmpl({modalType:"detail"},record)}
                                         ></Button>:""}
                                 </div>)}}
                     item.fields.push(act)
@@ -470,7 +474,7 @@ export default class Detail extends React.Component{
                     Storage[`${menuId}`]=null
                     let code=res.entityCode?res.entityCode:res.code
                     if(!this.props.match){
-                        this.props.TemplatehandleOk(code,fieldGroupId,isNew,dfieldIds)
+                        this.props.TemplatehandleOk({code,fieldGroupId,isNew,ddfieldIds:dfieldIds})
                         this.props.handleCancel()
                         //this.props.fresh()
                     }else if(type!=='new'){
@@ -568,29 +572,50 @@ export default class Detail extends React.Component{
             }
         }        
     }
-    getFormTmpl=(record,isCreate)=>{ //创建实体（修改实体）
-        const editAddGroupId=record.groupId.toString()           
-        this.setState({
-            editAddGroupId,
-            visibleEditAddTemplate:true,
-            title:isCreate?"创建实体":"修改实体",
-            modalType:isCreate?"new":"edit",
-            code:record.code,
-        })
+    // getFormTmpl=(record,isCreate)=>{ //创建实体（修改实体）
+    //     const editAddGroupId=record.groupId.toString()
+    //     this.setState({
+    //         editAddGroupId,
+    //         visibleEditAddTemplate:true,
+    //         title:isCreate?"创建实体":"修改实体",
+    //         modalType:isCreate?"new":"edit",
+    //         code:record.code,
+    //     })
         
-    }
+//    }
 
-    getFormTmplForDetail=(record)=>{ //查实体）
-        const editAddGroupId=record.groupId.toString()
+    getDetailFormTmpl=(params,record)=>{ //查实体）
+       const {groupId,code}=record
+       const {fieldId,modalType}=params
+        //{groupid,fieldId,code,modalType:{detail,edit,new}}
+
+        const title_=modalType==="edit"?"修改实体":modalType==="detail"?"查看实体":"创建实体";
+
         this.setState({
-            editAddGroupId,
+            editAddGroupId:groupId,
+            fieldId,
             visibleEditAddTemplate:true,
-            title:"查看实体",
-            modalType:"detail",
-            code:record.code,
+            title:title_,
+            modalType,
+           code,
         })
 
     }
+
+    // getFormTmplForDetail=(params)=>{ //实体）
+    //
+    //     //{groupid,fieldId,code,modalType:{detail,edit,new}}
+    //     const {groupId,code}=params
+    //     this.setState({
+    //         editAddGroupId:groupId.toString(),
+    //         fieldId,
+    //         visibleEditAddTemplate:true,
+    //         title:"查看实体",
+    //         modalType:"detail",
+    //         code:code,
+    //     })
+    //
+    // }
 
     getForm=(record,isNew)=>{
         let {columns}=this.state
@@ -696,25 +721,33 @@ export default class Detail extends React.Component{
             visibleForm:false,
         })
     }
-    getTemplate=(templateGroupId,excepts,dfieldIds,searchParams)=>{
+    getTemplate=(params)=>{
         let {menuId}=this.state;
+        let {templateGroupId,fieldId,ddfieldNames,dfieldIds,excepts}=params
+        const url_0=fieldId?`api2/meta/tmpl/select_config/rfield/${menuId}/${fieldId}`:`api2/meta/tmpl/select_config/detailGroup/${menuId}/${templateGroupId}`
         Super.super({
-            url:`api2/meta/tmpl/select_config/${menuId}/${templateGroupId}`,               
+            url:url_0,
         }).then((res)=>{
             //console.log(res)
             this.setState({
                 templateDtmpl:res,
-                templateGroupId, //选择模板groupId
+                templateGroupId: templateGroupId, //选择模板groupId
                 dfieldIds,
                 excepts,
+                ddfieldNames,
+                fieldId,
                 fileType:res.config.type//ltmlp/ttmpl
             })
         })
+
+
+        const url_1=fieldId?`/api2/entity/curd/entityQuery/rfield/${menuId}/${fieldId}`:`/api2/entity/curd/entityQuery/detailGroup/${menuId}/${templateGroupId}`
+
         Super.super({
-            url:`/api2/entity/curd/query_select_entities/${menuId}/${templateGroupId}`, 
+            url:url_1,
             data:{
-                excepts,
-                ...searchParams,
+                excepts:params.excepts,
+                ...params.searchParams,
             }              
         }).then((res)=>{
             if(res){
@@ -736,22 +769,60 @@ export default class Detail extends React.Component{
     }
     templateSearch=(params)=>{
         let {templateGroupId,excepts,dfieldIds}=this.state;
-        this.getTemplate(templateGroupId,excepts,dfieldIds,params)
+        this.getTemplate({templateGroupId,excepts,dfieldIds,searchParams:params})
     }
-    TemplatehandleOk=(codes,formTmplGroupId,isNew,ddfieldIds)=>{
-        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup}=this.state
+    TemplatehandleOk=(params)=>{
+        let {codes,formTmplGroupId,isNew,ddfieldIds}=params
+        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,ddfieldNames,fieldId}=this.state
         if(formTmplGroupId){
             templateGroupId=formTmplGroupId
         }
         if(ddfieldIds){
             dfieldIds=ddfieldIds
         }
+
+        fieldId? Super.super({
+            url:`api2/entity/curd/load_entities/rfield/${menuId}/${fieldId}`,
+        data:{
+            codes,
+                fieldNames:ddfieldNames
+        }
+    }).then((res)=>{
+
+
+        let continueMark=true;
+        //columns值
+            columns.forEach((column)=>{
+                if(!continueMark){
+                    return ;
+                }
+                if(column.fields){
+                    column.fields.forEach(field=>{
+                        if(!continueMark){
+                            return ;
+                        }
+                        if(field.id===fieldId){
+                            field.value=res.value;
+                            continueMark=false;
+                    }
+                })
+                }
+            })
+
+                this.setState({
+                    visibleTemplateList:false,
+                    columns,
+                    dataSource,
+                    dtmplGroup,
+                    fieldId:null
+                })
+            })
+           :
         Super.super({
-            url:`api2/entity/curd/load_entities/${menuId}/${templateGroupId}`,  
+            url:`api2/entity/curd/load_entities/detailGroup/${menuId}/${templateGroupId}`,
             data:{
                 codes,
-                dfieldIds,
-            }                
+                dfieldIds}
         }).then((res)=>{
             // console.log(res)
             // console.log(columns)
@@ -764,48 +835,45 @@ export default class Detail extends React.Component{
                 }
             })
  //           console.log(res)
-            res.entities.forEach((item)=>{
+            res.entities.forEach((item)=> {
 //                console.log(item)
-                const byDfieldIds=item.byDfieldIds
-                byDfieldIds.key=item['唯一编码']
-                byDfieldIds.code=item['唯一编码']
-                byDfieldIds.groupId=templateGroupId.toString()
-                byDfieldIds.totalName=totalName
+                const byDfieldIds = item.byDfieldIds
+                byDfieldIds.key = item['唯一编码']
+                byDfieldIds.code = item['唯一编码']
+                byDfieldIds.groupId = templateGroupId.toString()
+                byDfieldIds.totalName = totalName
                 Units.forFile(byDfieldIds)//处理文件
                 // for(let k in byDfieldIds){
                 //     if(byDfieldIds[k]&&byDfieldIds[k].includes("download-files")) {
                 //         byDfieldIds[k] =Units.packFile2Show(byDfieldIds[k],55)
                 //     }
                 // }
-                if(relationSubdomain.length===1){ //默认关系只有一个选项时，自动添加
-                    byDfieldIds['10000']=relationSubdomain[0]
+                if (relationSubdomain.length === 1) { //默认关系只有一个选项时，自动添加
+                    byDfieldIds['10000'] = relationSubdomain[0]
                 }
-                let list={
-                    code:item['唯一编码'],
-                    fieldMap:item.byDfieldIds,                   
+                let list = {
+                    code: item['唯一编码'],
+                    fieldMap: item.byDfieldIds,
                 }
 
                 // for(let k in dataSource){
                 //     if(k===templateGroupId.toString()){
-                let k=templateGroupId+"";
-                if(!dataSource[k]){
-                    dataSource[k]=[];
+                let k = templateGroupId + "";
+                if (!dataSource[k]) {
+                    dataSource[k] = [];
                 }
-                if(!isNew){
-                    dataSource[k].forEach((it,index)=>{
-                        if(it.code===item['唯一编码']){
-                            dataSource[k].splice(index,1,list);
+                if (!isNew) {
+                    dataSource[k].forEach((it, index) => {
+                        if (it.code === item['唯一编码']) {
+                            dataSource[k].splice(index, 1, list);
                         }
                     })
-                }else{
+                } else {
                     dataSource[k].push(list)
-                    dataSource[k].forEach((item)=>{
-                        item.fieldMap.current=Math.ceil(dataSource[k].length/5)
+                    dataSource[k].forEach((item) => {
+                        item.fieldMap.current = Math.ceil(dataSource[k].length / 5)
                     })
                 }
-                        
-                //     }
-                // }
             })
             this.setState({
                 visibleTemplateList:false,
@@ -835,7 +903,7 @@ export default class Detail extends React.Component{
     render(){
         const { menuTitle,detailsTitle,fuseMode,loading,visibleForm,dtmplGroup,editFormList,visibleEditAddTemplate,showSetPass,
             actions,premises,templateDtmpl,rightNav,columns,dataSource,editAddGroupId,visibleDrawer,detailHistory,oldPass,
-            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode,modalType,isModal}=this.state
+            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode,modalType,isModal,fieldId}=this.state
         let content
         if(actions && actions.length>0){
             content = (
@@ -961,7 +1029,7 @@ export default class Detail extends React.Component{
                         onRef={this.onRef}
                         getForm={this.getForm}
                         getTemplate={this.getTemplate}
-                        getFormTmpl={this.getFormTmpl}
+                        getDetailFormTmpl={this.getDetailFormTmpl}
                         match={this.props.match}
                         baseInfo={this.baseInfo}
                         getOptions={this.getOptions}
@@ -1009,6 +1077,7 @@ export default class Detail extends React.Component{
                     handleCancel={this.handleCancel}
                     menuId={menuId}
                     editAddGroupId={editAddGroupId}
+                    fieldId={fieldId}
                     type={modalType?modalType:type}
                     title={title}
                     code={code}

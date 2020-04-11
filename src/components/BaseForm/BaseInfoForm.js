@@ -1,11 +1,12 @@
 import React from 'react'
-import {Input,Form,Select,DatePicker,InputNumber} from 'antd'
+import {Input,Form,Select,DatePicker,InputNumber,Button} from 'antd'
 import Units from "../../units";
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
 import NewUpload from './../NewUpload'
 import NewCascader from './../NewCascader'
+import EditTable from "../EditTable";
 moment.locale('zh-cn');
 const FormItem=Form.Item
 const { TextArea } = Input;
@@ -58,7 +59,7 @@ export default class BaseInfoForm extends React.Component{
     ;
     initFormList=()=>{
         const { getFieldDecorator } = this.props.form?this.props.form:"";
-        const { formList,width,type }=this.props
+        const { formList,width,type,getTemplate,getDetailFormTmpl }=this.props
         const formItemList=[]; 
         console.log(formList)
         if(formList && formList.length>0){
@@ -336,19 +337,34 @@ export default class BaseInfoForm extends React.Component{
                     formItemList.push(textarea)   
                 } else if(item.type==="relselect" || item.type==="refselect" ){
                     let value=fieldValue==null?null:fieldValue.split('@R@')[1];
-                    const textarea= <FormItem label={title} key={field} className='labelcss'>
-                                        {type==="detail"?<span className="infoStyle">{value}</span>:
-                                        getFieldDecorator(fieldName,{
-                                            initialValue:value
-                                        })(
-                                            <Input
-                                                placeholder={available?`请输入${title}`:"无需输入"}
-                                                style={{width:width}} 
-                                                disabled={!available}
-                                                />
-                                        )}
-                                    </FormItem>
-                    formItemList.push(textarea)   
+                    let code=fieldValue==null?undefined:fieldValue.split('@R@')[0];
+                    const refselect= <FormItem label={title} key={field} className='labelcss'>
+                            {type==="detail"?<span className="infoStyle"> <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                                                {value}
+                                            </Button>
+                            </span>:
+                                getFieldDecorator(fieldName,{
+                                    initialValue:fieldValue,
+                                    rules:item.validators?[{
+                                        required: true, message: `请选择${title}`,
+                                    }]:"",
+                                })(<div>
+                                        {value? <div>
+                                            <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                                                {value}
+                                            </Button>
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                            </Button>
+                                        </div> :
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                                {value?value:"请选择"+title}
+                                            </Button>
+                                        }
+
+                                </div>
+                                )}
+                        </FormItem>
+                    formItemList.push(refselect)
                 }
                 return false
             })

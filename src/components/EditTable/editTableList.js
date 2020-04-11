@@ -126,7 +126,7 @@ export default class EditTableList extends React.Component {
                 type='primary' 
                 icon="snippets" 
                 size="small"
-                onClick={()=>this.props.getTemplate(groupId,excepts,dfieldIds)}
+                onClick={()=>this.props.getTemplate({templateGroupId:groupId,excepts,dfieldIds})}
                 style={{marginBottom:10,marginRight:10}}
                 >选择</Button>:""}
               {!isModal&&rabcTemplatecreatable && type!=="detail"?
@@ -135,7 +135,7 @@ export default class EditTableList extends React.Component {
                 type='primary' 
                 icon="plus-square" 
                 size="small"
-                onClick={()=>this.props.getFormTmpl({groupId},true)} 
+                onClick={()=>this.props.getDetailFormTmpl({modalType:"new"},{groupId})}
                 style={{marginBottom:10,marginRight:10}}
                 >新增</Button>:""}
               <Table

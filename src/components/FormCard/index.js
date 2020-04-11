@@ -1,6 +1,7 @@
 import React from 'react'
 import {Card} from 'antd'
 import BaseInfoForm from './../BaseForm/BaseInfoForm'
+import EditTable from "../EditTable";
 
 export default class FormCard extends React.Component{
 
@@ -24,6 +25,8 @@ export default class FormCard extends React.Component{
                             form={form}
                             width={220}
                             getOptions={this.props.getOptions}
+                            getTemplate={this.props.getTemplate} //关系点选模板
+                            getDetailFormTmpl={this.props.getDetailFormTmpl}
                             options={options}
                             setPassword={this.props.setPassword}
                             />

@@ -361,7 +361,7 @@ export default class BaseInfoForm extends React.Component{
 
                     }else{
                         refselect= <FormItem label={title} key={field} className='labelcss'>
-                            {type==="detail"?<span className="infoStyle"> <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                            {type==="detail"?<span className="infoStyle"> <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",rfieldId:item.id},{code})}>
                                                 {value}
                                             </Button>
                             </span> :
@@ -372,15 +372,15 @@ export default class BaseInfoForm extends React.Component{
                                     }]:"",
                                 })(<div>
                                         {value? available? <div>
-                                            <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"edit",fieldId:item.id},{code})}>
+                                            <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"edit",rfieldId:item.id},{code})}>
                                                 {value}
                                             </Button>
-                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
                                             </Button>
-                                        </div> :  <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",fieldId:item.id},{code})}>
+                                        </div> :  <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",rfieldId:item.id},{code})}>
                                             {value}
                                         </Button> : available?
-                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({fieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
                                                 {value?value:"请选择"+title}
                                             </Button>:<TextArea
                                                 placeholder={"无需输入"}

@@ -390,7 +390,7 @@ export default class Detail extends React.Component{
         })
     }
     handleOk = (actionId) => {
-        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId,ratmplId,rootCode }=this.state
+        const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId,ratmplId,rootCode,rfieldId }=this.state
         const {menuId,code,type}=this.props.match?this.props.match.params:this.props
 
         let dfieldIds=this.state.dfieldIds;
@@ -461,7 +461,10 @@ export default class Detail extends React.Component{
             url=`api2/entity/curd/save/node/${menuId}/${nodeId}`
         }else if(fieldGroupId){
             url=`api2/entity/curd/save/rabc/${menuId}/${fieldGroupId}`
-        }else{
+        }else if(rfieldId){
+            url=`api2/entity/curd/save/rfield/${menuId}/${rfieldId}`
+        }
+        else{
             url=`api2/entity/curd/save/normal/${menuId}`
         }
         Super.super({
@@ -474,7 +477,7 @@ export default class Detail extends React.Component{
                     Storage[`${menuId}`]=null
                     let code=res.entityCode?res.entityCode:res.code
                     if(!this.props.match){
-                        this.props.TemplatehandleOk({codes:code,formTmplGroupId:fieldGroupId,isNew,ddfieldIds:dfieldIds})
+                        this.props.TemplatehandleOk({codes:code,formTmplGroupId:fieldGroupId,formRfieldId:rfieldId,isNew,ddfieldIds:dfieldIds})
                         this.props.handleCancel()
                         //this.props.fresh()
                     }else if(type!=='new'){
@@ -586,14 +589,14 @@ export default class Detail extends React.Component{
 
     getDetailFormTmpl=(params,record)=>{ //查实体）
        const {groupId,code}=record
-       const {fieldId,modalType}=params
+       const {rfieldId,modalType}=params
         //{groupid,fieldId,code,modalType:{detail,edit,new}}
 
         const title_=modalType==="edit"?"修改实体":modalType==="detail"?"查看实体":"创建实体";
 
         this.setState({
             editAddGroupId:groupId,
-            fieldId,
+            rfieldId,
             visibleEditAddTemplate:true,
             title:title_,
             modalType,
@@ -724,8 +727,8 @@ export default class Detail extends React.Component{
     }
     getTemplate=(params)=>{
         let {menuId}=this.state;
-        let {templateGroupId,fieldId,ddfieldNames,dfieldIds,excepts}=params
-        const url_0=fieldId?`api2/meta/tmpl/select_config/rfield/${menuId}/${fieldId}`:`api2/meta/tmpl/select_config/detailGroup/${menuId}/${templateGroupId}`
+        let {templateGroupId,rfieldId,ddfieldNames,dfieldIds,excepts}=params
+        const url_0=rfieldId?`api2/meta/tmpl/select_config/rfield/${menuId}/${rfieldId}`:`api2/meta/tmpl/select_config/detailGroup/${menuId}/${templateGroupId}`
         Super.super({
             url:url_0,
         }).then((res)=>{
@@ -736,13 +739,13 @@ export default class Detail extends React.Component{
                 dfieldIds,
                 excepts,
                 ddfieldNames,
-                fieldId,
+                rfieldId,
                 fileType:res.config.type//ltmlp/ttmpl
             })
         })
 
 
-        const url_1=fieldId?`/api2/entity/curd/entityQuery/rfield/${menuId}/${fieldId}`:`/api2/entity/curd/entityQuery/detailGroup/${menuId}/${templateGroupId}`
+        const url_1=rfieldId?`/api2/entity/curd/entityQuery/rfield/${menuId}/${rfieldId}`:`/api2/entity/curd/entityQuery/detailGroup/${menuId}/${templateGroupId}`
 
         Super.super({
             url:url_1,
@@ -773,17 +776,20 @@ export default class Detail extends React.Component{
         this.getTemplate({templateGroupId,excepts,dfieldIds,searchParams:params})
     }
     TemplatehandleOk=(params)=>{
-        let {codes,formTmplGroupId,isNew,ddfieldIds}=params
-        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,ddfieldNames,fieldId}=this.state
+        let {codes,formTmplGroupId,isNew,ddfieldIds,formRfieldId}=params
+        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,ddfieldNames,rfieldId}=this.state
         if(formTmplGroupId){
             templateGroupId=formTmplGroupId
+        }
+        if(formRfieldId){
+            rfieldId=formRfieldId;
         }
         if(ddfieldIds){
             dfieldIds=ddfieldIds
         }
 
-        fieldId? Super.super({
-            url:`api2/entity/curd/load_entities/rfield/${menuId}/${fieldId}`,
+        rfieldId? Super.super({
+            url:`api2/entity/curd/load_entities/rfield/${menuId}/${rfieldId}`,
         data:{
             codes,
                 fieldNames:ddfieldNames
@@ -802,7 +808,7 @@ export default class Detail extends React.Component{
                         if(!continueMark){
                             return ;
                         }
-                        if(field.id===fieldId){
+                        if(field.id===rfieldId){
                             field.value=res.value;
                             continueMark=false;
                     }
@@ -815,7 +821,7 @@ export default class Detail extends React.Component{
                     columns,
                     dataSource,
                     dtmplGroup,
-                    fieldId:null
+                    rfieldId:null
                 })
             })
            :
@@ -904,7 +910,7 @@ export default class Detail extends React.Component{
     render(){
         const { menuTitle,detailsTitle,fuseMode,loading,visibleForm,dtmplGroup,editFormList,visibleEditAddTemplate,showSetPass,
             actions,premises,templateDtmpl,rightNav,columns,dataSource,editAddGroupId,visibleDrawer,detailHistory,oldPass,
-            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode,modalType,isModal,fieldId}=this.state
+            type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode,modalType,isModal,rfieldId,formRfieldId}=this.state
         let content
         if(actions && actions.length>0){
             content = (
@@ -1065,6 +1071,7 @@ export default class Detail extends React.Component{
                     templateData={templateData}
                     menuId={menuId}
                     formTmplGroupId={formTmplGroupId}
+                    formRfieldId={formRfieldId}
                     type="edit"
                     templateSearch={this.templateSearch}
                     TemplatehandleOk={this.TemplatehandleOk}
@@ -1078,7 +1085,7 @@ export default class Detail extends React.Component{
                     handleCancel={this.handleCancel}
                     menuId={menuId}
                     editAddGroupId={editAddGroupId}
-                    fieldId={fieldId}
+                    rfieldId={rfieldId}
                     type={modalType?modalType:type}
                     title={title}
                     code={code}

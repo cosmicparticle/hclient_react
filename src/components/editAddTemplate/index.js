@@ -5,7 +5,7 @@ import Detail from './../../pages/detail'
 export default class EditAddTemplate extends React.Component{
     
     handleOk=()=>{
-        const {editAddGroupId,fieldId,columns}=this.props
+        const {editAddGroupId,columns}=this.props
         //console.log(columns)
         const arr=[]
         columns.forEach((item)=>{
@@ -28,7 +28,7 @@ export default class EditAddTemplate extends React.Component{
 		this.detail=ref
     }
     render(){
-        const {visibleEditAddTemplate,handleCancel,type,title,menuId,editAddGroupId,code,fresh,maskClosable,fieldId,
+        const {visibleEditAddTemplate,handleCancel,type,title,menuId,editAddGroupId,code,fresh,maskClosable,rfieldId,
             TemplatehandleOk}=this.props
         return (
             <div>               
@@ -48,7 +48,7 @@ export default class EditAddTemplate extends React.Component{
                     <Detail
                         menuId={menuId}
                         fieldGroupId={editAddGroupId}
-                        rfieldId={fieldId}
+                        rfieldId={rfieldId}
                         type={type}
                         code={code}
                         isModal={true}

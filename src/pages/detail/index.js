@@ -112,7 +112,7 @@ export default class Detail extends React.Component{
                 menuTitle,
                 actions,
                 rightNav,
-                premises,ratmplId,rootCode
+                premises,ratmplId,rootCode,
             })
         })  
     }
@@ -474,7 +474,7 @@ export default class Detail extends React.Component{
                     Storage[`${menuId}`]=null
                     let code=res.entityCode?res.entityCode:res.code
                     if(!this.props.match){
-                        this.props.TemplatehandleOk({code,fieldGroupId,isNew,ddfieldIds:dfieldIds})
+                        this.props.TemplatehandleOk({codes:code,formTmplGroupId:fieldGroupId,isNew,ddfieldIds:dfieldIds})
                         this.props.handleCancel()
                         //this.props.fresh()
                     }else if(type!=='new'){

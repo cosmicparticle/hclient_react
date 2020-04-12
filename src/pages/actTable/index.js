@@ -365,7 +365,7 @@ export default class actTable extends React.Component{
             if(res && res.status==="suc"){
                 this.fresh('操作成功!')
             }else{
-                message.error(res.status)
+                message.error(res.status+"。"+res.message)
             }
         })
     }

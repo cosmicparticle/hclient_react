@@ -402,7 +402,7 @@ export default class BaseInfoForm extends React.Component{
         const rowList=[];
         for(let i=0;i<formItemList.length; i=i+2 ){
             const row=
-                <Row>
+                <Row key={i}>
                     <Col span={12}>
                         {formItemList[i]}
                     </Col>

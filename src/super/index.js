@@ -2,7 +2,6 @@ import superagent from 'superagent'
 import { message } from 'antd';
 import Units from './../units'
 
-const api = Units.api();
 export default class Superagent{
     static super(options,type,load){
         const tokenName=Units.getLocalStorge("tokenName")
@@ -19,7 +18,7 @@ export default class Superagent{
         }
         return new Promise((resolve,reject)=>{
             superagent
-                .post(api+options.url)
+                .post(Units.api()+options.url)
                 .type(ty)
                 .set("hydrocarbon-token",tokenName)
                 .query(options.query||'')
@@ -49,7 +48,7 @@ export default class Superagent{
     static get(options){
         return new Promise((resolve,reject)=>{
             superagent
-                .get(api+options.url)               
+                .get(Units.api()+options.url)
                 .query(options.query||'')
                 .end((req,res)=>{ 
                     if(res.status===200){

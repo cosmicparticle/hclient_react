@@ -382,7 +382,8 @@ export default class BaseInfoForm extends React.Component{
                                         </Button> : available?
                                             <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
                                                 {value?value:"请选择"+title}
-                                            </Button>:<TextArea
+                                            </Button> :
+                                            <TextArea
                                                 placeholder={"无需输入"}
                                                 style={{width:width}}
                                                 disabled={true}

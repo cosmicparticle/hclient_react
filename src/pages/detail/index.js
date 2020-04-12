@@ -484,10 +484,8 @@ export default class Detail extends React.Component{
 
                         this.fresh(code)
                     }
-                }else if(res.status==="refuse"){
-                    message.error("保存失败："+res.refuseMsg);
                 }else {
-                    message.error("保存失败!");
+                    message.error("保存失败："+res.message);
                 }
             }else{
                 message.error("保存失败!")

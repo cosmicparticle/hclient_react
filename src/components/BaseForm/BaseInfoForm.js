@@ -257,11 +257,11 @@ export default class BaseInfoForm extends React.Component{
                         </FormItem>
                         formItemList.push(FILE)
                     }else{
-                        const fieldValue1=fieldValue===" "?"无文件":fieldValue;
-                        let url=fieldValue1?fieldValue1:"";
+                        const fieldValue_=fieldValue===" "?"无文件":fieldValue;
+                        let url=fieldValue_?fieldValue_:"";
                         let obj=url.lastIndexOf("/");
                         const fileName=url.substr(obj+1);
-                        let fileList1=[{
+                        let fileList_=[{
                             uid:'-3',
                             name: fileName,
                             status: 'done',
@@ -271,10 +271,11 @@ export default class BaseInfoForm extends React.Component{
                         const FILE= <FormItem label={title} key={field} className='labelcss'>
                             {type==="detail"?
                                 Units.packFile2Show(url,width)
-                                :
-                                (fieldValue1 && fieldValue1!=="无文件"?
+                                : !available?Units.packFile2Show(url,width)
+                                    :
+                                (fieldValue_ && fieldValue_!=="无文件"?
                                     getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
-                                        <NewUpload fileList={fileList1}
+                                        <NewUpload fileList={fileList_}
                                                    width={width}
                                         />
                                     )
@@ -375,12 +376,12 @@ export default class BaseInfoForm extends React.Component{
                                             <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"edit",rfieldId:item.id},{code})}>
                                                 {value}
                                             </Button>
-                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[]})}>
                                             </Button>
                                         </div> :  <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",rfieldId:item.id},{code})}>
                                             {value}
                                         </Button> : available?
-                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[],ddfieldNames:item.name})}>
+                                            <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[]})}>
                                                 {value?value:"请选择"+title}
                                             </Button> :
                                             <TextArea

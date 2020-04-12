@@ -725,7 +725,7 @@ export default class Detail extends React.Component{
     }
     getTemplate=(params)=>{
         let {menuId}=this.state;
-        let {templateGroupId,rfieldId,ddfieldNames,dfieldIds,excepts}=params
+        let {templateGroupId,rfieldId,dfieldIds,excepts}=params
         const url_0=rfieldId?`api2/meta/tmpl/select_config/rfield/${menuId}/${rfieldId}`:`api2/meta/tmpl/select_config/detailGroup/${menuId}/${templateGroupId}`
         Super.super({
             url:url_0,
@@ -736,7 +736,6 @@ export default class Detail extends React.Component{
                 templateGroupId: templateGroupId, //选择模板groupId
                 dfieldIds,
                 excepts,
-                ddfieldNames,
                 rfieldId,
                 fileType:res.config.type//ltmlp/ttmpl
             })
@@ -775,7 +774,7 @@ export default class Detail extends React.Component{
     }
     TemplatehandleOk=(params)=>{
         let {codes,formTmplGroupId,isNew,ddfieldIds,formRfieldId}=params
-        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,ddfieldNames,rfieldId}=this.state
+        let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,rfieldId}=this.state
         if(formTmplGroupId){
             templateGroupId=formTmplGroupId
         }
@@ -790,7 +789,6 @@ export default class Detail extends React.Component{
             url:`api2/entity/curd/load_entities/rfield/${menuId}/${rfieldId}`,
         data:{
             codes,
-                fieldNames:ddfieldNames
         }
     }).then((res)=>{
 

@@ -22,7 +22,7 @@ export default class ColTypeEchart extends  React.Component{
                 x: 'center',
                 textStyle: {
                     color:'#fff',
-                    fontSize: 25,
+                    fontSize: 22,
                 }
             },
             xAxis: {

@@ -7,12 +7,12 @@ export default class ThreeTypeEchart extends  React.Component{
 
        const textStyle= {
             color: '#fff',
-                fontSize: 20
+                fontSize: 22
         }
 
         const countStyle= {
             color: '#fff',
-            fontSize: 30
+            fontSize: 28
         }
 
         const countData=[20,50,3];
@@ -161,7 +161,7 @@ export default class ThreeTypeEchart extends  React.Component{
                                 }]),
                             }
                         },
-                        name: '红码',
+                        name: '有困难',
                         label: {
                             normal: {
                                 textStyle: textStyle

@@ -28,7 +28,7 @@ export default class LiquidFillEchart extends React.Component{
                             return '就业率:30%\n\n已就业:25\n\n总人数:306';
                         },
                         textStyle: {
-                            fontSize: 25,
+                            fontSize: 22,
                             color: '#D94854'
                         }
                     }

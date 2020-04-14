@@ -24,7 +24,7 @@ export default class ThreeTypeEchart extends  React.Component{
         }) {
             return [{
                 value: 0,
-                name: v.value,
+                name:v.text +"\n\n"+ v.value,
                 itemStyle: {
                     normal: {
                         color: new echarts.graphic.LinearGradient(
@@ -43,7 +43,7 @@ export default class ThreeTypeEchart extends  React.Component{
                 label: {
                     normal: {
                         textStyle: {
-                            fontSize: 30,
+                            fontSize: 22,
                             fontWeight: 500,
                             color: '#fff'
                         }
@@ -52,41 +52,8 @@ export default class ThreeTypeEchart extends  React.Component{
             }]
         }
 
-        function childrenFun(str = '按钮') {
-            return [{
-                type: 'rect',
-                left: 'center',
-                top: 'center',
-                shape: {
-                    width: 100,
-                    height: 40,
-                    r: 20
-                },
-                style: {
-                    fill: '#4709f9',
-                    shadowColor:'#f909a1',
-                    shadowOffsetX:3,
-                    shadowOffsetY:3,
-                    lineWidth:2,
-                    shadowBlur:10
-                    //   stroke: '#00feff'
-                }
-            }, {
-                type: 'text',
-                left: 'center',
-                top: 'center',
-                style: {
-                    fill: '#fff',
-                    text: str,
-                    font: '16px Microsoft YaHei'
-                }
-            }]
-        }
-
-
         const  option = {
             backgroundColor:'#04184A',
-
             legend: {
                 show: false
             },
@@ -95,8 +62,8 @@ export default class ThreeTypeEchart extends  React.Component{
             },
             series: [{
                 type: 'pie',
-                radius: [35, 50],
-                center: ['18%', '40%'],
+                radius: ['55%', '70%'],
+                center: ['18%', '50%'],
                 hoverAnimation: false,
                 label: {
                     normal: {
@@ -106,8 +73,8 @@ export default class ThreeTypeEchart extends  React.Component{
                 data: dataFormat(data1[0])
             }, {
                 type: 'pie',
-                radius: [35, 50],
-                center: ['50%', '40%'],
+                radius: ['55%', '70%'],
+                center: ['50%', '50%'],
                 hoverAnimation: false,
                 label: {
                     normal: {
@@ -117,8 +84,8 @@ export default class ThreeTypeEchart extends  React.Component{
                 data: dataFormat(data1[1])
             }, {
                 type: 'pie',
-                radius: [35, 50],
-                center: ['82%', '40%'],
+                radius: ['55%', '70%'],
+                center: ['82%', '50%'],
                 hoverAnimation: false,
                 label: {
                     normal: {
@@ -127,30 +94,6 @@ export default class ThreeTypeEchart extends  React.Component{
                 },
                 data: dataFormat(data1[2])
             }],
-            graphic: {
-                elements: [{
-                    type: 'group',
-                    left: '10%',
-                    bottom: '13%',
-                    z: 100,
-                    children: childrenFun(data1[0].text)
-                },
-                    {
-                        type: 'group',
-                        left: '42%',
-                        bottom: '13%',
-                        z: 100,
-                        children: childrenFun(data1[1].text)
-                    },
-                    {
-                        type: 'group',
-                        left: '74%',
-                        bottom: '13%',
-                        z: 100,
-                        children: childrenFun(data1[2].text)
-                    }
-                ]
-            }
         };
         return option
     }

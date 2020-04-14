@@ -9,6 +9,8 @@ import ThreeTypeEchart1 from "./ThreeTypeEchart1";
 import LiquidFillEchart from "./LiquidFillEchart";
 import RootTypeEchart from "./RootTypeEchart";
 import ColTypeEchart from "./ColTypeEchart";
+import MBarTypeEchart from "./MBarTypeEchart";
+import M3BarTypeEchart from "./M3BarTypeEchart";
 import ColTypeEchart2 from "./ColTypeEchart2";
 /**
 const HOME_CONFIG = {
@@ -32,7 +34,7 @@ export default class Home extends React.Component{
                 <div >
                     <Row  >
                         <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            代办工作
+                            待  办  事  项
                         </Col>
                     </Row>
                     <Row>
@@ -45,7 +47,7 @@ export default class Home extends React.Component{
                     </Row>
                     <Row  >
                         <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            已就业情况分析
+                            已 就 业 情 况 分 析
                         </Col>
                     </Row>
                     <Row>
@@ -61,31 +63,17 @@ export default class Home extends React.Component{
                     </Row>
                     <Row  >
                         <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            待就业情况分析
+                            待  就 业 情 况 分 析
                         </Col>
                     </Row>
                     <Row type={"flex"} align={"middle"} justify={"space-around"}>
-                        <Col span={3}>
-                            <RootTypeEchart />
+                        <Col span={15}>
+                            <MBarTypeEchart />
                         </Col>
-                        <Col span={3}>
-                            <RootTypeEchart />
+                        <Col span={9}>
+                            <M3BarTypeEchart />
                         </Col>
-                        <Col span={3}>
-                            <RootTypeEchart />
-                        </Col>
-                        <Col span={3}>
-                            <RootTypeEchart />
-                        </Col>
-                        <Col span={3}>
-                            <RootTypeEchart />
-                        </Col>
-                        <Col span={3}>
-                        <RootTypeEchart />
-                    </Col>
-                        <Col span={3}>
-                            <RootTypeEchart />
-                        </Col>
+
                     </Row>
 
                 </div>

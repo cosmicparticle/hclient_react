@@ -13,7 +13,7 @@ export default class AnyEchart extends React.Component{
                 x: 'center',
                 textStyle: {
                     color:'#fff',
-                    fontSize: 25,
+                    fontSize: 22,
                 }
             },
             grid: {
@@ -80,7 +80,7 @@ export default class AnyEchart extends React.Component{
                 label: {
                     show: true,
                     position: 'top',
-                    distance: 15,
+                    distance: 5,
                     color: '#0000FF',
                     fontWeight: 'bolder',
                     fontSize: 20,
@@ -109,7 +109,7 @@ export default class AnyEchart extends React.Component{
                         opacity: 1
                     }
                 },
-                data: [123, 60, 25, 18, 12, 9,  1],
+                data: [50, 60, 25, 18, 12, 9,  1],
                 z: 10
             }]
         };

@@ -4,17 +4,30 @@ import ReactEcharts from 'echarts-for-react';
 
 export default class ThreeTypeEchart extends  React.Component{
     getOptions=()=>{
+
+       const textStyle= {
+            color: '#fff',
+                fontSize: 20
+        }
+
+        const countStyle= {
+            color: '#fff',
+            fontSize: 30
+        }
+
+        const countData=[20,50,3];
+
         const option = {
-            backgroundColor:'#ffffff',
+            backgroundColor:'#04184A',
             title:{
                 text: '就业颜色'
             },
             series: [
                 {
-                    name: '遥感解译信息',
+                    name: '黄码',
                     type: 'pie',
-                    radius: ['25%', '30%'],
-                    center: ['15%', '50%'],
+                    radius: ['40%', '60%'],
+                    center: ['20%', '50%'],
                     startAngle: 225,
                     color: [new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                         offset: 0,
@@ -39,11 +52,7 @@ export default class ThreeTypeEchart extends  React.Component{
                         label: {
                             normal: {
                                 formatter: '需跟进',
-                                textStyle: {
-                                    color: '#000',
-                                    fontSize: 16
-
-                                }
+                                textStyle: textStyle
                             }
                         }
                     }, {
@@ -51,12 +60,8 @@ export default class ThreeTypeEchart extends  React.Component{
                         name: '%',
                         label: {
                             normal: {
-                                formatter: '\n\n35',
-                                textStyle: {
-                                    color: '#007ac6',
-                                    fontSize: 30
-
-                                }
+                                formatter: '\n\n\n\n'+countData[0],
+                                textStyle:countStyle
                             }
                         }
                     },
@@ -67,7 +72,7 @@ export default class ThreeTypeEchart extends  React.Component{
                                 normal: {
                                     formatter: '',
                                     textStyle: {
-                                        color: '#000',
+                                        color: '#fff',
                                         fontSize: 16
 
                                     }
@@ -76,10 +81,10 @@ export default class ThreeTypeEchart extends  React.Component{
                         }]
                 },
                 {
-                    name: '局部监测信息',
+                    name: '绿码',
                     type: 'pie',
-                    radius: ['25%', '30%'],
-                    center: ['50%', '50%'],
+                    radius: ['40%', '60%'],
+                    center: ['53%', '50%'],
                     startAngle: 225,
                     color: [new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                         offset: 0,
@@ -103,12 +108,7 @@ export default class ThreeTypeEchart extends  React.Component{
                         name: '快了',
                         label: {
                             normal: {
-                              //  formatter: '局部监测信息',
-                                textStyle: {
-                                    color: '#000',
-                                    fontSize: 16
-
-                                }
+                                textStyle: textStyle
                             }
                         }
                     }, {
@@ -116,12 +116,8 @@ export default class ThreeTypeEchart extends  React.Component{
                         name: '%',
                         label: {
                             normal: {
-                                formatter: '\n\n3534',
-                                textStyle: {
-                                    color: '#007ac6',
-                                    fontSize: 30
-
-                                }
+                                formatter: '\n\n\n\n'+countData[1],
+                                textStyle: countStyle
                             }
                         }
                     },
@@ -131,19 +127,15 @@ export default class ThreeTypeEchart extends  React.Component{
                             label: {
                                 normal: {
                                     formatter: '',
-                                    textStyle: {
-                                        color: '#fff',
-                                        fontSize: 16
-
-                                    }
+                                    textStyle: textStyle
                                 }
                             }
                         }]
                 },
                 {
-                    name: '告警设备数量',
+                    name: '红码',
                     type: 'pie',
-                    radius: ['25%', '30%'],
+                    radius: ['40%', '60%'],
                     center: ['85%', '50%'],
                     startAngle: 225,
                     labelLine: {
@@ -169,15 +161,10 @@ export default class ThreeTypeEchart extends  React.Component{
                                 }]),
                             }
                         },
-                        name: '重点',
+                        name: '红码',
                         label: {
                             normal: {
-                              //  formatter: '告警设备数量',
-                                textStyle: {
-                                    color: '#000',
-                                    fontSize: 16
-
-                                }
+                                textStyle: textStyle
                             }
                         }
                     }, {
@@ -185,12 +172,8 @@ export default class ThreeTypeEchart extends  React.Component{
                         name: '%',
                         label: {
                             normal: {
-                                formatter: '\n\n3534',
-                                textStyle: {
-                                    color: '#f125ff',
-                                    fontSize: 30
-
-                                }
+                                formatter: '\n\n\n\n'+countData[2],
+                                textStyle: countStyle
                             }
                         }
                     },
@@ -200,11 +183,7 @@ export default class ThreeTypeEchart extends  React.Component{
                             label: {
                                 normal: {
                                     formatter: '',
-                                    textStyle: {
-                                        color: '#fff',
-                                        fontSize: 16
-
-                                    }
+                                    textStyle: textStyle
                                 }
                             }
                         }]

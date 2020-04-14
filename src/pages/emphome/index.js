@@ -1,10 +1,11 @@
 import React from 'react'
 import './index.css'
-import { Row, Col } from 'antd';
+import { Row, Col,Button } from 'antd';
 import AnyEchart from "./AnyEchart";
 import LineEchart from "./LineEchart";
 import AniEchart from "./AniEchart";
 import ThreeTypeEchart from "./ThreeTypeEchart";
+import ThreeTypeEchart1 from "./ThreeTypeEchart1";
 import LiquidFillEchart from "./LiquidFillEchart";
 import RootTypeEchart from "./RootTypeEchart";
 import ColTypeEchart from "./ColTypeEchart";
@@ -24,6 +25,7 @@ export default class Home extends React.Component{
                 color:'black',
                 fontSize:'30px',
                 paddingBottom:'20px',
+                paddingTop:'10px',
                 //border:'1px solid blue',
             };
             return (
@@ -35,7 +37,7 @@ export default class Home extends React.Component{
                     </Row>
                     <Row>
                         <Col span={12}>
-                            <ThreeTypeEchart />
+                            <ThreeTypeEchart1 />
                         </Col>
                         <Col span={12}>
                             <ThreeTypeEchart />

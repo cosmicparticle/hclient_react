@@ -20,7 +20,7 @@ export default class ActTree extends React.Component{
     }
     loadTree=(menuId,data)=>{
         Super.super({
-            url:`/api2/entity/curd/tree/${menuId}`, 
+            url:`api2/entity/curd/tree/${menuId}`,
             data,
         }).then((res)=>{
             const fieldIds=[]
@@ -58,7 +58,7 @@ export default class ActTree extends React.Component{
         const id=info.node?info.node.props.id:null
         const {treeData}=this.state
         Super.super({
-            url:`/api2/entity/curd/ask_for/${queryKey}`,
+            url:`api2/entity/curd/ask_for/${queryKey}`,
             data:{
                 pageNo
             }       

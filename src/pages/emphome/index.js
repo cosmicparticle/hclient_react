@@ -34,7 +34,7 @@ export default class Home extends React.Component{
                 <div >
                     <Row  >
                         <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            待  办  事  项
+                            * * * * ** *** 待  办  事  项 *** ** * * * *
                         </Col>
                     </Row>
                     <Row>
@@ -47,7 +47,21 @@ export default class Home extends React.Component{
                     </Row>
                     <Row  >
                         <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            已 就 业 情 况 分 析
+                           * * * * ** *** 待  就 业 情 况 分 析 *** ** * * * *
+                        </Col>
+                    </Row>
+                    <Row type={"flex"} align={"middle"} justify={"space-around"}>
+                        <Col span={15}>
+                            <MBarTypeEchart />
+                        </Col>
+                        <Col span={9}>
+                            <M3BarTypeEchart />
+                        </Col>
+
+                    </Row>
+                    <Row  >
+                        <Col className="gutter-row" style={titleStyle} align={"middle"}>
+                            * * * * ** *** 已 就 业 情 况 分 析 *** ** * * * *
                         </Col>
                     </Row>
                     <Row>
@@ -61,20 +75,8 @@ export default class Home extends React.Component{
                             <ColTypeEchart />
                         </Col>
                     </Row>
-                    <Row  >
-                        <Col className="gutter-row" style={titleStyle} align={"middle"}>
-                            待  就 业 情 况 分 析
-                        </Col>
-                    </Row>
-                    <Row type={"flex"} align={"middle"} justify={"space-around"}>
-                        <Col span={15}>
-                            <MBarTypeEchart />
-                        </Col>
-                        <Col span={9}>
-                            <M3BarTypeEchart />
-                        </Col>
 
-                    </Row>
+
 
                 </div>
         );

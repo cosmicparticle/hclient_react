@@ -18,8 +18,8 @@ export default class AnyEchart extends React.Component{
             },
             grid: {
                 left: '12%',
-                top: '5%',
-                bottom: '12%',
+                top: '10%',
+                bottom: '10%',
                 right: '8%'
             },
             xAxis: {

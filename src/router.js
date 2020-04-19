@@ -3,7 +3,7 @@ import { HashRouter, Route , Switch, Redirect} from 'react-router-dom'
 import App from './App'
 import Admin from './pages/admin'
 import Loginit from './pages/login'
-import Home from './pages/home'
+import Home from './pages/emphome'
 import ActTable from "./pages/actTable"
 import Detail from "./pages/detail"
 import Import from "./pages/importData/importData"

@@ -9,8 +9,10 @@ export default class EditTable extends React.Component{
         const unallowedCreate=columns.unallowedCreate
         const selectionTemplateId=columns.selectionTemplateId
         const dialogSelectType=columns.dialogSelectType
+
         const rabcUncreatable=columns.rabcUncreatable
         const rabcTemplateGroupId=columns.rabcTemplateGroupId
+        const rabcTreeTemplateId=columns.rabcTreeTemplateId
         const title=columns.title
         let rabcTemplatecreatable=false
         if(rabcTemplateGroupId && rabcUncreatable===null){
@@ -27,7 +29,7 @@ export default class EditTable extends React.Component{
                     type={type}
                     columns={columns.fields}
                     dataSource={data}
-                    haveTemplate={dialogSelectType && (selectionTemplateId || rabcTemplateGroupId)?true:false}
+                    haveTemplate={dialogSelectType && (selectionTemplateId || rabcTemplateGroupId || rabcTreeTemplateId)?true:false}
                     cardTitle={title}
                     handleAdd={()=>this.props.handleAdd(columns.fields,true)}
                     getTemplate={getTemplate}

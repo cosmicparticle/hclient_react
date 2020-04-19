@@ -183,7 +183,7 @@ export default class TemplateList extends React.Component{
         const id=info.node?info.node.props.id:null
         const {treeData}=this.state
         Super.super({
-            url:`/api2/entity/curd/ask_for/${queryKey}`,
+            url:`api2/entity/curd/ask_for/${queryKey}`,
             data:{
                 pageNo
             }       
@@ -265,6 +265,9 @@ export default class TemplateList extends React.Component{
     renderColumns=(columns)=>{
         let tmpIndex=0, opsIndex=0;
 
+        if(!columns){
+            return columns;
+        }
         columns.forEach((item)=>{
             if(item.viewOption==="refselect" || item.viewOption==="relselect" ){
                 item['render']= (text, record) => (record[item.id]?record[item.id].split('@R@')[1]:null)

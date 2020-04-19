@@ -742,7 +742,7 @@ export default class Detail extends React.Component{
         })
 
 
-        const url_1=rfieldId?`/api2/entity/curd/entityQuery/rfield/${menuId}/${rfieldId}`:`/api2/entity/curd/entityQuery/detailGroup/${menuId}/${templateGroupId}`
+        const url_1=rfieldId?`api2/entity/curd/entityQuery/rfield/${menuId}/${rfieldId}`:`api2/entity/curd/entityQuery/detailGroup/${menuId}/${templateGroupId}`
 
         Super.super({
             url:url_1,

@@ -54,7 +54,7 @@ export default class M3ColTypeEchart extends  React.Component{
                     console.log(p);
                     var _arr = p.seriesName.split('/'),
                         idx = p.seriesIndex;//1，2，3
-                    return '名称：' + p.seriesName + '<br>' + '完成：' + p.value + '<br>' + '占比：' + (p.value / _datamax[p.name] * 100).toFixed(0) + '%';
+                    return  p.seriesName + '<br>' + '人数：' + p.value + '<br>' + '占比：' + (p.value / _datamax[p.name] * 100).toFixed(0) + '%';
                 },
                 extraCssText: 'box-shadow: 0 0 5px rgba(0, 0, 0, 0.1)'
             },

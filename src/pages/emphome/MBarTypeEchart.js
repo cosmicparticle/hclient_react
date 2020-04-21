@@ -3,19 +3,48 @@ import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 
 export default class MColTypeEchart extends  React.Component{
-    getOptions=()=>{
+
+    getOptions=(data)=>{
         var spNum = 5,_max=100;
         var colorList = ['#73DDFF', '#73ACFF', '#9E87FF', '#FDD56A', '#FDB36A', '#FD866A', '#eb3600'];
         var legendData = ['企业', '考研', '考公', '事业', '创业', '出国','其他'];
         var y_data = ['经济161', '经济162', '会展161', '金融161', '金融162', '旅管161', '旅管182','其他',];
-        var _datamax = {'经济161':50,'经济162':55,'会展161':30,'金融161':29,'金融162':45,'旅管161':43,'旅管182':44,'其他':43,},
-            _data1 = [10,15,10,13,15,11,19,20],
-            _data2 = [19,5,10,3,15,21,10,13],
-            _data3 = [21,35,10,13,15,11,25,10],
-        _data4 = [21,5,8,13,15,11,13,15],
-        _data5 = [11,15,10,19,5,21,15,10],
-            _data6 = [11,15,13,13,15,11,13,15],
-            _data7 = [19,5,10,13,15,11,14,13];
+        // var _data1=data[0],_data2=data[1],_data3=data[2],_data4=data[3],_data5=data[4],_data6=data[5],_data7=data[6];
+        // var _datamax={};
+        // for (let i=0;i<data.length;i++){
+        //     let  value=0;
+        //     for(let j=0;i<8;j++){
+        //         value=value+data[j][i];
+        //     }
+        //     if(i===0){
+        //         _datamax.经济161=value;
+        //     }else if(i===1){
+        //         _datamax.经济162=value;
+        //     }else if(i===2){
+        //         _datamax.会展161=value;
+        //     }else if(i===3){
+        //         _datamax.金融161=value;
+        //     }else if(i===4){
+        //         _datamax.金融162=value;
+        //     }else if(i===5){
+        //         _datamax.旅管161=value;
+        //     }else if(i===6){
+        //         _datamax.旅管182=value;
+        //     }else if(i===7){
+        //         _datamax.其他=value;
+        //     }
+        // }
+       var _datamax = {'经济161':50,'经济162':55,'会展161':30,'金融161':29,'金融162':45,'旅管161':43,'旅管182':44,'其他':43,},
+        _data1 = [35,45,30,25,37,35,28,12],
+            _data2 = [10,11,3,4,8,2,9,0],
+            _data3 = [6,7,2,1,0,1,0,1],
+            _data4 = [0,1,0,0,2,0,0,1],
+            _data5 = [0,0,1,0,0,1,0,0],
+            _data6 = [0,3,1,4,0,0,0,0],
+            _data7 = [0,0,0,0,0,0,0,0];
+
+
+
         var fomatter_fn = function(v) {
             return (v.value / _max * 100).toFixed(0)
         }
@@ -229,6 +258,7 @@ export default class MColTypeEchart extends  React.Component{
         return {height:'50vh', width:'100%'};
     }
     render(){
+     //   const {data}=this.props.data;
         return (
             <ReactEcharts option={this.getOptions()}
                           style={this.getStyle()}

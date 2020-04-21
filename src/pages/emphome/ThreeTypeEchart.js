@@ -15,7 +15,7 @@ export default class ThreeTypeEchart extends  React.Component{
             fontSize: 28
         }
 
-        const countData=[20,50,3];
+        const countData=[0,1,1];
 
         const option = {
             backgroundColor:'#04184A',

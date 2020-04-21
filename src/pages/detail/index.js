@@ -295,7 +295,7 @@ export default class Detail extends React.Component{
                                 size="small"  
                                 onClick={()=>this.getForm(record)}
                                 ></Button>:""}
-                            {this.props.match && ( item.rabcUnupdatable===null || item.unallowedCreate===null || item.rabcTemplateGroupId ) && record.code.length>9?
+                            {this.props.match && ( item.unallowedDelete===null  ) && record.code.length>9?
                                 <Button type='danger'
                                 icon="delete" 
                                 title="删除当前行" 

@@ -147,7 +147,7 @@ export default class actTable extends React.Component{
 
             this.setState({
                 moduleTitle:res.menu.title,
-                columns:this.renderColumns(res.ltmpl.columns,res.tmplGroup.ractions),
+                columns:this.renderColumns(res.ltmpl.columns,res.tmplGroup?res.tmplGroup.ractions:null),
                 queryKey:res.queryKey,
                 formList:res.ltmpl.criterias,
                 tmplGroup:res.tmplGroup,

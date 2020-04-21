@@ -6,15 +6,15 @@ export default class ThreeTypeEchart extends  React.Component{
     getOptions=()=>{
              var data1 = [{
             text: '待完善',
-            value: '10',
+            value: '11',
             color: '#5dd054'
         }, {
             text: '待约谈',
-            value: '8',
+            value: '0',
             color: '#097ff9'
         }, {
             text: '待上报',
-            value: '200',
+            value: '11',
             color: '#ff6804'
         }];
 

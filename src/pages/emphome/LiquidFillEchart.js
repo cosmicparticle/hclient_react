@@ -9,7 +9,7 @@ export default class LiquidFillEchart extends React.Component{
             backgroundColor: "#38445E",
             series: [{
                 type: 'liquidFill',
-                data: [0.30, 0.30],
+                data: [0.10, 0.10, 0.10, 0.10],
                 radius: '90%',
                 outline: {
                     show: false
@@ -25,7 +25,7 @@ export default class LiquidFillEchart extends React.Component{
                     normal: {
                         position: ['40%', '50%'],
                         formatter: function () {
-                            return '就业率:30%\n\n已就业:25\n\n总人数:306';
+                            return '就业率:4%\n\n已就业:11\n\n总人数:306';
                         },
                         textStyle: {
                             fontSize: 22,

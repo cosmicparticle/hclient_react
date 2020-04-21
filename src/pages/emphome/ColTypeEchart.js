@@ -6,9 +6,9 @@ export default class ColTypeEchart extends  React.Component{
     getOptions=()=>{
 
 
-            var data = [70, 34, 60, 78, 69,20,1,89]
+            var data = [9, 0, 0,3,0,0,13,0]
         var titlename = ['经济161', '经济162', '会展161', '金融161', '金融162', '旅管161', '旅管182','其他',];
-        var valdata = [683, 234, 234, 523, 345,100,232,111]
+        var valdata = [55, 55, 31, 37, 37,37,40,12]
         var myColor = ['#1089E7', '#F57474', '#56D0E3', '#F8B448', '#8B78F6', '#F8B448', '#8B78F6','#F57474'];
         const option = {
             backgroundColor: '#38445E',

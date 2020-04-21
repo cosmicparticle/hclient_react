@@ -109,7 +109,7 @@ export default class AnyEchart extends React.Component{
                         opacity: 1
                     }
                 },
-                data: [50, 60, 25, 18, 12, 9,  1],
+                data: [6, 1, 1, 0, 0, 3,  0],
                 z: 10
             }]
         };

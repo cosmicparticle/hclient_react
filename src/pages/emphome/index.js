@@ -12,6 +12,7 @@ import ColTypeEchart from "./ColTypeEchart";
 import MBarTypeEchart from "./MBarTypeEchart";
 import M3BarTypeEchart from "./M3BarTypeEchart";
 import ColTypeEchart2 from "./ColTypeEchart2";
+import Super from "../../super";
 /**
 const HOME_CONFIG = {
     component       : HomePage,
@@ -21,8 +22,38 @@ const HOME_CONFIG = {
 **/
 export default class Home extends React.Component{
 
+    // state={
+    //     mbarData:{}
+    //
+    // }
+    //
+    // componentDidMount(){
+    //     Super.super({
+    //         url:"ks/c/waiting/classdistrib",
+    //     }).then((res)=>{
+    //         console.log(res)
+    //         let mbarDataKey = res.result.queryKey
+    //         Super.super({
+    //             url:"ks/query/"+mbarDataKey+"/1",
+    //         }).then((res)=>{
+    //             console.log(res)
+    //
+    //             this.setState({
+    //               //  mbarDataKey:res,
+    //             })
+    //         })
+    //         this.setState({
+    //             mbarDataKey:res,
+    //         })
+    //     })
+    //
+    // }
+
 
         render(){
+
+    //        const {mbarData}=this.state;
+
             const titleStyle={
                 color:'black',
                 fontSize:'30px',
@@ -39,7 +70,7 @@ export default class Home extends React.Component{
                     </Row>
                     <Row>
                         <Col span={12}>
-                            <ThreeTypeEchart1 />
+                            <ThreeTypeEchart1  />
                         </Col>
                         <Col span={12}>
                             <ThreeTypeEchart />
@@ -51,10 +82,11 @@ export default class Home extends React.Component{
                         </Col>
                     </Row>
                     <Row type={"flex"} align={"middle"} justify={"space-around"}>
-                        <Col span={15}>
+                        <Col span={24}>
                             <MBarTypeEchart />
                         </Col>
-                        <Col span={9}>
+
+                        <Col span={0}>
                             <M3BarTypeEchart />
                         </Col>
 

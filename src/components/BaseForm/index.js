@@ -46,65 +46,85 @@ class BaseForm extends React.Component{
                 const field=`criteria_${item.id}`;
                 const value=item.value
                 const dateFormat = 'YYYY-MM-DD';
-                if(item.inputType==="daterange"){
-                    const v1=value?value.split("~")[0]:null
-                    const v2=value?value.split("~")[1]:null
-                    const TIMEPICKER= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{initialValue:v1?[moment(v1,dateFormat),moment(v2,dateFormat)]:undefined})(
-                            <RangePicker locale={locale} style={{width:225}}/>
-                        )}
-                    </FormItem>   
-                    formItemList.push(TIMEPICKER)                
-                }else if(item.inputType==="date"){
-                    const TIMEPICKER= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{initialValue:value?moment(value,dateFormat):undefined})(
-                            <DatePicker 
-                                locale={locale} 
-                                placeholder={`请输入${label}`}
-                                style={{width:225}} 
-                                getCalendarContainer={trigger => trigger.parentNode}
+                const queryShow=item.queryShow;
+                if(queryShow){
+                    if(item.inputType==="daterange"){
+                        const v1=value?value.split("~")[0]:null
+                        const v2=value?value.split("~")[1]:null
+                        const TIMEPICKER= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:v1?[moment(v1,dateFormat),moment(v2,dateFormat)]:undefined})(
+                                <RangePicker locale={locale} style={{width:225}}/>
+                            )}
+                        </FormItem>
+                        formItemList.push(TIMEPICKER)
+                    }else if(item.inputType==="date"){
+                        const TIMEPICKER= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?moment(value,dateFormat):undefined})(
+                                <DatePicker
+                                    locale={locale}
+                                    placeholder={`请输入${label}`}
+                                    style={{width:225}}
+                                    getCalendarContainer={trigger => trigger.parentNode}
                                 />
-                        )}
-                    </FormItem>   
-                    formItemList.push(TIMEPICKER)                
-                }else if(item.inputType==="decimal" ){
-                    const decimal= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{initialValue:value?value:""})(
-                            <InputNumber placeholder={`请输入${label}`} style={{width:160}} min={0} step={0.1}/>
-                        )}
-                    </FormItem>   
-                    formItemList.push(decimal)                
-                }else if(item.inputType==="int"){
-                    const int= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{
-                            initialValue:value?value:""})(
-                            <InputNumber placeholder={`请输入${label}`} style={{width:160}} min={0} onKeyUp={this.changeInt}/>
-                        )}
-                    </FormItem>   
-                    formItemList.push(int)                
-                }else if(item.inputType==="text"){
-                    const INPUT= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{initialValue:value?value:""})(
-                            <Input type="text" placeholder={`请输入${label}`} style={{width:160}} onPressEnter={this.handleFilterSubmit}/>
-                        )}
-                    </FormItem>   
-                    formItemList.push(INPUT)                
-                }else if(item.inputType==="select"){
-                    const SELECT= <FormItem label={label} key={field}>
-                        {getFieldDecorator(field,{initialValue:value?value:undefined})(
-                            <Select style={{width:120}} 
-                                    onFocus={()=>this.selectOptions(item.fieldId)}
-                                    placeholder={`请输入${label}`} 
-                                    notFoundContent="暂无选项"
-                                    allowClear={true}
-                                    showSearch
-                                    getPopupContainer={trigger => trigger.parentNode}>
-                                {Units.getSelectList(this.state.list)}
-                            </Select>
-                        )}
-                    </FormItem>
-                    formItemList.push(SELECT)    
+                            )}
+                        </FormItem>
+                        formItemList.push(TIMEPICKER)
+                    }else if(item.inputType==="decimal" ){
+                        const decimal= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?value:""})(
+                                <InputNumber placeholder={`请输入${label}`} style={{width:160}} min={0} step={0.1}/>
+                            )}
+                        </FormItem>
+                        formItemList.push(decimal)
+                    }else if(item.inputType==="int"){
+                        const int= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{
+                                initialValue:value?value:""})(
+                                <InputNumber placeholder={`请输入${label}`} style={{width:160}} min={0} onKeyUp={this.changeInt}/>
+                            )}
+                        </FormItem>
+                        formItemList.push(int)
+                    }else if(item.inputType==="text"){
+                        const INPUT= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?value:""})(
+                                <Input type="text" placeholder={`请输入${label}`} style={{width:160}} onPressEnter={this.handleFilterSubmit}/>
+                            )}
+                        </FormItem>
+                        formItemList.push(INPUT)
+                    }else if(item.inputType==="select"){
+                        const SELECT= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?value:undefined})(
+                                <Select style={{width:160}}
+                                        onFocus={()=>this.selectOptions(item.fieldId)}
+                                        placeholder={`请输入${label}`}
+                                        notFoundContent="暂无选项"
+                                        allowClear={true}
+                                        showSearch
+                                        getPopupContainer={trigger => trigger.parentNode}>
+                                    {Units.getSelectList(this.state.list)}
+                                </Select>
+                            )}
+                        </FormItem>
+                        formItemList.push(SELECT)
+                    }else if(item.inputType==="multiselect"){
+                        const MULTISELECT= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?value:undefined})(
+                                <Select style={{width:160}}
+                                        mode="multiple"
+                                        onFocus={()=>this.selectOptions(item.fieldId)}
+                                        placeholder={`请输入${label}`}
+                                        notFoundContent="暂无选项"
+                                        allowClear={true}
+                                        showSearch
+                                        getPopupContainer={trigger => trigger.parentNode}>
+                                    {Units.getSelectList(this.state.list)}
+                                </Select>
+                            )}
+                        </FormItem>
+                        formItemList.push(MULTISELECT)
+                    }
                 }
+
             })
         }
         return formItemList;

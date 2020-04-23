@@ -26,7 +26,8 @@ export default class actTable extends React.Component{
         ratmplId:"无效的",
         rootCode:null,
         parentUrl:null,
-        parentDate:null
+        parentDate:null,
+        runsearch:true
     }
     componentDidMount(){
         const {menuId,ratmplId,rootCode}=this.props.match.params;
@@ -38,7 +39,6 @@ export default class actTable extends React.Component{
             }else{
                 this.requestRootLtmpl(menuId)
             }
-
         }else{
             this.searchList(Units.urlToObj(url),menuId)//更新筛选列表
         }
@@ -108,7 +108,7 @@ export default class actTable extends React.Component{
 
             const fieldIds=[]
             res.ltmpl.criterias.forEach((item)=>{
-                if(item.inputType==="select"){
+                if(item.inputType==="select" || item.inputType==="multiselect"){
                     fieldIds.push(item.fieldId)
                 }
                 const criteriaValueMap=res.criteriaValueMap
@@ -295,9 +295,13 @@ export default class actTable extends React.Component{
 		}
     } 
     searchList=(params,menuId)=>{
+
         for(let k in params){
-            if(typeof params[k] ==="object"){ //日期格式转换
+            if(typeof params[k] ==="object"){
+                const old=params[k];
+                //日期格式转换
                 if(params[k] instanceof Array){
+
                     const arr=[]
                     params[k].forEach(item=>{
                         arr.push(moment(item).format("YYYY-MM-DD"))
@@ -306,6 +310,11 @@ export default class actTable extends React.Component{
                 }else{
                     params[k]=moment(params[k]).format("YYYY-MM-DD")
                 }
+
+                if(params[k]&& params[k].indexOf("Invalid date") != -1 ){
+                    params[k]=old.join(",")
+                }
+
             }else if(params[k] ==="Invalid date"){
                 params[k]=""
             }
@@ -580,7 +589,7 @@ export default class actTable extends React.Component{
                         hideQuery={hideQuery}
                         onRef={this.onRef}
                         optionsMap={optionsMap}
-                        />          
+                        />
                 </Card>
                 <Table
                     rowSelection={hideDelete && (!tmplGroup || tmplGroup.actions.length===0) && (!tmplGroup || tmplGroup.jumps.length===0)?null:rowSelection}

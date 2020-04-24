@@ -47,8 +47,9 @@ export default class ExportFrame extends React.Component{
             });
         }
         Super.super({
-            url:`api2/entity/export/start/${menuId}/${queryKey}`,    
-            data:{
+            url:`api2/entity/list/exporter/uuid/${menuId}/${queryKey}`,
+            method:'GET',
+            query:{
                 scope,
                 withDetail:withDetail,
                 parameters:{
@@ -58,7 +59,8 @@ export default class ExportFrame extends React.Component{
                 },               
                 rangeStart:v1,
                 rangeEnd:v2,
-            }            
+            } ,
+
 		}).then((res)=>{
             console.log(moduleTitle)
             this.props.setDownloadTitle(moduleTitle)
@@ -76,11 +78,11 @@ export default class ExportFrame extends React.Component{
     }
     statusOut=(uuid,interrupted)=>{
         Super.super({
-            url:`api2/entity/export/status`,   
+            url:`api2/entity/list/exporter/status/${uuid}`,
             data:{
-                uuid,
                 interrupted,
-            }         
+            }  ,
+            method:'GET',
 		},"","none").then((res)=>{
             this.setState({
                 statusMsg:res.statusMsg,
@@ -101,7 +103,7 @@ export default class ExportFrame extends React.Component{
     download=()=>{
         let {uuid}=this.state;
         const tokenName=Units.getLocalStorge("tokenName")
-        Units.downloadFile(`api2/entity/export/download/${uuid}?@token=${tokenName}`) 
+        Units.downloadFile(`api2/entity/list/exporter/result/${uuid}?@token=${tokenName}`)
     }
     handleCancel=()=>{
         const {uuid}=this.state

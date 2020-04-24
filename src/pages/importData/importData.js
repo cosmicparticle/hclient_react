@@ -33,7 +33,8 @@ export default class Import extends React.Component{
             uploading: true,
         });
         Super.super({
-            url:`api2/entity/import/start/${menuId}`,
+            url:`api2/entity/list/importer/${menuId}`,
+            method:'POST',
             query:{
                 exportFaildFile: 1
             },
@@ -53,9 +54,9 @@ export default class Import extends React.Component{
     handleStatus=(uuid)=>{
         const {maxMsgCount}=this.state
         Super.super({
-            url:`api2/entity/import/status`,  
-            data:{
-                uuid,
+            url:`api2/entity/list/importer/status/${uuid}`,
+            method:'GET',
+            query:{
                 msgIndex:0,
                 maxMsgCount,
                 interrupted: false,
@@ -134,7 +135,7 @@ export default class Import extends React.Component{
     }
     downloadFile=(failedRowsFileUUID)=>{
         const tokenName=Units.getLocalStorge("tokenName")
-        Units.downloadFile(`api2/entity/export/download/${failedRowsFileUUID}?@token=${tokenName}`)      
+        Units.downloadFile(`api2/entity/list/exporter/result/${failedRowsFileUUID}?@token=${tokenName}`)
     }
     onChangeNews=()=>{
         const {inputValue}=this.state

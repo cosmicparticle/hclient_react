@@ -78,21 +78,23 @@ export default class actTable extends React.Component{
     }
 
     requestLtmpl=(menuId,data,ratmplId,rootCode)=>{
-        let ratmplId_=rootCode?ratmplId?ratmplId:this.state.ratmplId:null;
         let recordCode_=rootCode?rootCode:this.state.rootCode;
+        let ratmplId_=recordCode_?ratmplId?ratmplId:this.state.ratmplId:null;
+
         this.requestLtmplRunner(menuId,data,ratmplId_,recordCode_);
     }
 
     requestLtmplRunner=(menuId,data,ratmplId,rootCode)=>{
 
-        let url_=`api2/entity/curd/start_query/${menuId}`
+        let url_=`api2/entity/list/tmpl/${menuId}`
         if(ratmplId){
-            url_=`api2/entity/curd/start_query/${menuId}/${ratmplId}/${rootCode}`
+            url_=`api2/entity/list/tmpl/${menuId}/${ratmplId}/${rootCode}`
         }
 
         Super.super({
             url:url_,
-            data           
+            method:'GET',
+           query: data
         }).then((res)=>{
             if(ratmplId){
                 this.queryList(res.queryKey,data)
@@ -163,8 +165,9 @@ export default class actTable extends React.Component{
     queryList=(queryKey,data)=>{
         const {menuId,currentPage}=this.state
         Super.super({
-            url:`api2/entity/curd/ask_for/${queryKey}`,     
-            data:data?data:{
+            url:`api2/entity/list/data/${queryKey}`,
+            method:'GET',
+            query:data?data:{
                 pageNo:currentPage
             }         
         }).then((res)=>{
@@ -255,7 +258,7 @@ export default class actTable extends React.Component{
         const { menuId,selectCodes,ratmplId,rootCode }=this.state
         const code=record.code
         this.setState({Loading:true})
-        let url_=rootCode?`api2/entity/curd/remove/${menuId}/${ratmplId}`:`api2/entity/curd/remove/${menuId}`
+        let url_=rootCode?`api2/entity/detail/${menuId}/${ratmplId}`:`api2/entity/detail/${menuId}`
         if(type==="delete"){
             Modal.confirm({
 				title:"删除提示",
@@ -267,7 +270,8 @@ export default class actTable extends React.Component{
                         url:url_,
                         data:{
                             codes:selectCodes
-                        }            
+                        },
+                        method:'DELETE',
 					}).then((res)=>{
                         this.setState({
                             Loading:false,
@@ -362,10 +366,11 @@ export default class actTable extends React.Component{
         const {menuId,selectCodes}=this.state;    
         this.setState({Loading:true})
         Super.super({
-            url:`api2/entity/curd/do_action/${menuId}/${actionId}`, 
+            url:`api2/entity/action/${menuId}/${actionId}`,
             data:{
                 codes:selectCodes
-            }                 
+            },
+            method:"POST",
         }).then((res)=>{
             this.setState({
                 Loading:false,
@@ -382,10 +387,11 @@ export default class actTable extends React.Component{
         const {menuId,selectCodes}=this.state;
         this.setState({Loading:true})
         Super.super({
-            url:`api2/entity/curd/do_jump/${menuId}/${jumpId}`,
-            data:{
+            url:`api2/entity/jump/${menuId}/${jumpId}`,
+            query:{
                 codes:selectCodes
-            }
+            },
+            method:'GET'
         }).then((res)=>{
             this.setState({
                 Loading:false,
@@ -408,7 +414,8 @@ export default class actTable extends React.Component{
         const {queryKey,isSeeTotal}=this.state
         if(!isSeeTotal){
             Super.super({
-                url:`api2/entity/curd/get_entities_count/${queryKey}`,                
+                url:`api2/entity/list/count/${queryKey}`,
+                method:"GET"
             }).then((res)=>{
                 this.setState({
                     isSeeTotal:res.count
@@ -442,7 +449,8 @@ export default class actTable extends React.Component{
             cancelText: "取消",
             onOk() {
                 Super.super({
-                    url:`api2/entity/curd/recalc/${menuId}`,                 
+                    url:`api2/entity/statistician/recalc/${menuId}`,
+                    method:'POST'
                 }).then((res)=>{
                    if(res.status==="suc"){
                         _this.reset()

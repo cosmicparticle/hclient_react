@@ -29,7 +29,8 @@ class Loginit extends React.Component{
                     query:{
                         username:values.username,
                         password:values.password
-                    }                  
+                    } ,
+                    method:"GET"
                 }).then((res)=>{
                     if(res.status === 'suc'){
                         window.location.hash="#/home";

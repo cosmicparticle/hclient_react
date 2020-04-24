@@ -63,7 +63,13 @@ class Header extends React.Component{
 		})		
 	}
 	loginout=()=>{
-		window.location.hash = "#/login";
+		Super.super({
+			url:'api2/auth/token',
+			method:'DELETE'
+		}).then((res)=>{
+			window.location.hash = "#/login";
+		})
+
 	}
 	getUser=()=>{
 		Super.super({

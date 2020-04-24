@@ -22,10 +22,10 @@ export default class RightBar extends React.Component{
         const {list}=this.props
         return (
             <div className="rightBar" onScroll={this.scroll}>
-                <ul>              
+                <ul >
                     {
-                        list?list.map(item=>
-                            <li onClick={()=>this.scrollToAnchor(item)} key={item}>{item}</li>
+                        list?list.map((item,index)=>
+                            <li  onClick={()=>this.scrollToAnchor(item)} key={index}>{item}</li>
                         ):""
                     }
                 </ul>

@@ -23,7 +23,8 @@ export default class ModelImport extends React.Component{
     }
     loadWords=(menuId)=>{
         Super.super({
-            url:`api2/entity/import/dict/${menuId}`,        
+            url:`api2/entity/list/importer/dict/${menuId}`,
+            method:'GET',
         }).then((res)=>{
             let selectWords=res.fieldDictionary.composites
             //console.log(selectWords)
@@ -54,7 +55,8 @@ export default class ModelImport extends React.Component{
         const {menuId}=this.props
         this.handleVisibleChange(true)
         Super.super({
-            url:`api2/entity/import/tmpls/${menuId}`,        
+            url:`api2/entity/list/importer/tmpls/${menuId}`,
+            method:'GET',
         }).then((res)=>{
             if(res){
                 this.setState({
@@ -67,7 +69,8 @@ export default class ModelImport extends React.Component{
         const {menuId}=this.props
         const {forType,selectWords}=this.state
         Super.super({
-            url:`api2/entity/import/tmpl/${menuId}/${tmplId}`,        
+            url:`api2/entity/list/importer/tmpl/${menuId}/${tmplId}`,
+            method:'GET',
         }).then((res)=>{
             //console.log(res.tmpl.fields)
             if(res){
@@ -126,7 +129,8 @@ export default class ModelImport extends React.Component{
         let {tmplId,title,dataSource}=this.state
         const fields=this.getFields(dataSource)       
         Super.super({
-            url:`api2/entity/import/save_tmpl/${menuId}`, 
+            url:`api2/entity/list/importer/tmpl/${menuId}`,
+            method:'POST',
             data:JSON.stringify({
                     tmplId,
                     title,
@@ -177,7 +181,8 @@ export default class ModelImport extends React.Component{
                 okText: '是的',
                 cancelText: '取消',
                 onOk() {
-                    return Units.downloadFile(`api2/entity/import/download_tmpl/${tmplId}?@token=${tokenName}`)               
+                    const tokenName=Units.getLocalStorge("tokenName")
+                    Units.downloadFile(`api2/entity/list/importer/excel/${tmplId}?@token=${tokenName}`)
                 },
             }) 
         }else{

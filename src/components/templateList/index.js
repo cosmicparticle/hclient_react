@@ -55,7 +55,8 @@ export default class TemplateList extends React.Component{
         const {queryKey}=this.props.templateData
         if(!isSeeTotal){
             Super.super({
-                url:`api2/entity/curd/get_entities_count/${queryKey}`,                
+                url:`api2/entity/list/count/${queryKey}`,
+                method:'GET',
             }).then((res)=>{
                 this.setState({
                     isSeeTotal:res.count,
@@ -69,7 +70,7 @@ export default class TemplateList extends React.Component{
         this.setState({
             currentPage:pageNo
         })
-        this.props.templatePageTo(queryKey,{pageNo,pageSize})			
+        this.props.templatePageTo(queryKey,{pageNo,pageSize})
     }
     onRef=(ref)=>{
 		this.child=ref
@@ -88,7 +89,7 @@ export default class TemplateList extends React.Component{
             formData.append(k, result[k])
         }
         Super.super({
-            url:`api2/entity/curd/save/rabc/${menuId}/${formTmplGroupId}`,    
+            url:`api2/entity/rabc/${menuId}/${formTmplGroupId}`,
             data:formData       
         },'formdata').then((res)=>{
             if(res.status==="suc"){
@@ -131,12 +132,13 @@ export default class TemplateList extends React.Component{
             }
             const nodeId=treeNode.props.dataRef.nodeId
             Super.super({
-                url:`api2/entity/curd/start_query_rel/${this.state.menuId}/${treeNode.props.code}/${treeNode.props.id}`,        
+                url:`api2/entity/tree/ntmpl/${this.state.menuId}/${treeNode.props.code}/${treeNode.props.id}`,
             }).then((res)=>{
                 if(res){
                     Super.super({
-                        url:`api2/entity/curd/ask_for/${res.queryKey}`, 
-                        data:{
+                        url:`api2/entity/list/data/${res.queryKey}`,
+                        method:'GET',
+                        query:{
                             pageNo:1
                         }       
                     }).then((resq)=>{
@@ -183,8 +185,9 @@ export default class TemplateList extends React.Component{
         const id=info.node?info.node.props.id:null
         const {treeData}=this.state
         Super.super({
-            url:`api2/entity/curd/ask_for/${queryKey}`,
-            data:{
+            url:`api2/entity/list/data/${queryKey}`,
+            method:'GET',
+            query:{
                 pageNo
             }       
 		}).then((res)=>{

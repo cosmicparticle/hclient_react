@@ -16,9 +16,9 @@ export default class Superagent{
         }else if(type==="json"){
             ty="application/json"
         }
+        let method=options.method?options.method:"POST";
         return new Promise((resolve,reject)=>{
-            superagent
-                .post(Units.api()+options.url)
+            superagent(method,Units.api()+options.url)
                 .type(ty)
                 .set("hydrocarbon-token",tokenName)
                 .query(options.query||'')

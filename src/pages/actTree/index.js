@@ -20,7 +20,7 @@ export default class ActTree extends React.Component{
     }
     loadTree=(menuId,data)=>{
         Super.super({
-            url:`api2/entity/curd/tree/${menuId}`,
+            url:`api2/entity/tree/tmpl/${menuId}`,
             data,
         }).then((res)=>{
             const fieldIds=[]
@@ -58,7 +58,8 @@ export default class ActTree extends React.Component{
         const id=info.node?info.node.props.id:null
         const {treeData}=this.state
         Super.super({
-            url:`api2/entity/curd/ask_for/${queryKey}`,
+            url:`api2/entity/list/data/${queryKey}`,
+            method:"GET",
             data:{
                 pageNo
             }       
@@ -146,12 +147,13 @@ export default class ActTree extends React.Component{
             }
             console.log(treeNode)
             Super.super({
-                url:`api2/entity/curd/start_query_rel/${this.state.menuId}/${treeNode.props.code}/${treeNode.props.id}`,        
+                url:`api2/entity/tree/ntmpl/${this.state.menuId}/${treeNode.props.code}/${treeNode.props.id}`,
             }).then((res)=>{
                 if(res){
                     Super.super({
-                        url:`api2/entity/curd/ask_for/${res.queryKey}`, 
-                        data:{
+                        url:`api2/entity/list/data/${res.queryKey}`,
+                        method:'GET',
+                        query:{
                             pageNo:1
                         }       
                     }).then((resq)=>{

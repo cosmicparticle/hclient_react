@@ -28,7 +28,11 @@ export default class BaseInfoForm extends React.Component{
 
      fileNormalize = (value, prevValue) => {
         if(!value){
-            return undefined;
+            if(prevValue===" "){
+                return  prevValue;
+            }else{
+                return undefined;
+            }
         }
         const {removed}=value;
         if(removed===true){

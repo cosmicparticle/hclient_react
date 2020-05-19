@@ -114,7 +114,7 @@ export default class BaseInfoForm extends React.Component{
                             )}
                     </FormItem>
                     formItemList.push(DATETIME)
-                }else if(item.type==="text"){
+                }else if(item.type==="text" || item.type===null){
                     const TEXT= <FormItem label={title} key={field} className='labelcss'>
                                     {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                         getFieldDecorator(fieldName,{
@@ -293,7 +293,7 @@ export default class BaseInfoForm extends React.Component{
                         formItemList.push(FILE)
                     }
 
-                    }else if(item.type==="decimal"){
+                    }else if(item.type==="decimal" || item.type==="float" || item.type==="double"){
                         const decimal= <FormItem label={title} key={field} className='labelcss'>
                             {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                 getFieldDecorator(fieldName,{

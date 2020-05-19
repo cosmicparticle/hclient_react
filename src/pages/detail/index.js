@@ -61,16 +61,18 @@ export default class Detail extends React.Component{
     loadltmpl=(menuId,params)=>{
        let {code,type,versionCode,nodeId,fieldGroupId,ratmplId,rootCode,rfieldId}=params
         let url
-        if(ratmplId){
-            url=`api2/meta/tmpl/dtmpl/relation/${menuId}/${ratmplId}`
+        if( menuId==='user'){
+            url=`api2/meta/tmpl/user/dtmpl/normal/`
+        }if(ratmplId){
+            url=`api2/meta/tmpl/${menuId}/dtmpl/relation/${ratmplId}`
         }else if(nodeId){
-            url=`api2/meta/tmpl/dtmpl/node/${menuId}/${nodeId}`
+            url=`api2/meta/tmpl/${menuId}/dtmpl/node/${nodeId}`
         }else if(fieldGroupId){
-            url=`api2/meta/tmpl/dtmpl/rabc/${menuId}/${fieldGroupId}`
+            url=`api2/meta/tmpl/${menuId}/dtmpl/rabc/${fieldGroupId}`
         }else if(rfieldId){
-            url=`api2/meta/tmpl/dtmpl/rfield/${menuId}/${rfieldId}`
+            url=`api2/meta/tmpl/${menuId}/dtmpl/rfield/${rfieldId}`
         }else{
-            url=`api2/meta/tmpl/dtmpl/normal/${menuId}/`
+            url=`api2/meta/tmpl/${menuId}/dtmpl/normal/`
         }
         Super.super({
             url,
@@ -133,8 +135,8 @@ export default class Detail extends React.Component{
     loadRequest=(dtmplGroup,versionCode)=>{
         const {menuId,type,code,nodeId,fieldGroupId,ratmplId,rfieldId}=this.props.match?this.props.match.params:this.props
 
-        let url_=ratmplId?`api2/entity/detail/${menuId}/${ratmplId}/${code}`:
-            `api2/entity/detail/${menuId}/${code}`;
+        let url_=ratmplId?`api2${menuId}/detail/${ratmplId}/${code}`:
+            `api2/entity/${menuId}/detail/${code}`;
             Super.super({
           url:url_,
                 query:{
@@ -191,7 +193,7 @@ export default class Detail extends React.Component{
     renderHistoryList=(versionCode)=>{
         const {menuId,code,nodeId}=this.state
         Super.super({
-            url:`api2/entity/history/${menuId}/${code}/1`,
+            url:`api2/entity/${menuId}/history/${code}/1`,
             query:{
                 versionCode,
                 nodeId
@@ -459,16 +461,16 @@ export default class Detail extends React.Component{
         }
         let url
         if(ratmplId){
-            url=`api2/entity/detail/relation/${menuId}/${ratmplId}/${rootCode}`
+            url=`api2/entity/${menuId}/detail/relation/${ratmplId}/${rootCode}`
         }else if(nodeId){
-            url=`api2/entity/detail/node/${menuId}/${nodeId}`
+            url=`api2/entity/${menuId}/detail/node/${nodeId}`
         }else if(fieldGroupId){
-            url=`api2/entity/detail/rabc/${menuId}/${fieldGroupId}`
+            url=`api2/entity/${menuId}/detail/rabc/${fieldGroupId}`
         }else if(rfieldId){
-            url=`api2/entity/detail/rfield/${menuId}/${rfieldId}`
+            url=`api2/entity/${menuId}/detail/rfield/${rfieldId}`
         }
         else{
-            url=`api2/entity/detail/normal/${menuId}`
+            url=`api2/entity/${menuId}/detail/normal`
         }
         Super.super({
             url:url, 
@@ -504,7 +506,7 @@ export default class Detail extends React.Component{
             cancelText: "取消",
             onOk() {
                 Super.super({
-                    url:`api2/entity/detail/exporter/result/${menuId}/${code}`,
+                    url:`api2/entity/${menuId}/detail/exporter/result/${code}`,
                     method:'GET',
                 }).then((res)=>{
                     if(res.status==="suc"){
@@ -731,7 +733,7 @@ export default class Detail extends React.Component{
     getTemplate=(params)=>{
         let {menuId}=this.state;
         let {templateGroupId,rfieldId,dfieldIds,excepts}=params
-        const url_0=rfieldId?`api2/meta/tmpl/stmpl/rfield/${menuId}/${rfieldId}`:`api2/meta/tmpl/stmpl/detailGroup/${menuId}/${templateGroupId}`
+        const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/stmpl/detailGroup/${menuId}/${templateGroupId}`
         Super.super({
             url:url_0,
             method:'GET',
@@ -748,7 +750,7 @@ export default class Detail extends React.Component{
         })
 
 
-        const url_1=rfieldId?`api2/entity/selector/key/rfield/${menuId}/${rfieldId}`:`api2/entity/selector/key/detailGroup/${menuId}/${templateGroupId}`
+        const url_1=rfieldId?`api2/entity/${menuId}/selector/key/rfield/${rfieldId}`:`api2/entity/${menuId}/selector/key/detailGroup/${templateGroupId}`
 
         Super.super({
             url:url_1,
@@ -765,7 +767,7 @@ export default class Detail extends React.Component{
     }
     templatePageTo=(queryKey,data)=>{
         Super.super({
-            url:`api2/entity/list/data/${queryKey}`,
+            url:`api2/entity/list/${queryKey}/data`,
             method:'GET',
             query:data,
         }).then((res)=>{
@@ -794,7 +796,7 @@ export default class Detail extends React.Component{
         }
 
         rfieldId? Super.super({
-            url:`api2/entity/selecteor/selected/data/rfield/${menuId}/${rfieldId}`,
+            url:`api2/entity/${menuId}/selecteor/selected/data/rfield/${rfieldId}`,
         data:{
             codes,
         }
@@ -830,7 +832,7 @@ export default class Detail extends React.Component{
             })
            :
         Super.super({
-            url:`api2/entity/selecteor/selected/data/detailGroup/${menuId}/${templateGroupId}`,
+            url:`api2/entity/${menuId}/selecteor/selected/data/detailGroup/${templateGroupId}`,
             method:'GET',
             query:{
                 codes,

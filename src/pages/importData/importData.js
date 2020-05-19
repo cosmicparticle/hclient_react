@@ -33,7 +33,7 @@ export default class Import extends React.Component{
             uploading: true,
         });
         Super.super({
-            url:`api2/entity/list/importer/${menuId}`,
+            url:`api2/entity/${menuId}/list/importer`,
             method:'POST',
             query:{
                 exportFaildFile: 1

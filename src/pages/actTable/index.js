@@ -86,9 +86,9 @@ export default class actTable extends React.Component{
 
     requestLtmplRunner=(menuId,data,ratmplId,rootCode)=>{
 
-        let url_=`api2/entity/list/tmpl/${menuId}`
+        let url_=`api2/entity/${menuId}/list/tmpl`
         if(ratmplId){
-            url_=`api2/entity/list/tmpl/${menuId}/${ratmplId}/${rootCode}`
+            url_=`api2/entity/${menuId}/list/tmpl/${ratmplId}/${rootCode}`
         }
 
         Super.super({
@@ -165,7 +165,7 @@ export default class actTable extends React.Component{
     queryList=(queryKey,data)=>{
         const {menuId,currentPage}=this.state
         Super.super({
-            url:`api2/entity/list/data/${queryKey}`,
+            url:`api2/entity/list/${queryKey}/data`,
             method:'GET',
             query:data?data:{
                 pageNo:currentPage
@@ -258,7 +258,7 @@ export default class actTable extends React.Component{
         const { menuId,selectCodes,ratmplId,rootCode }=this.state
         const code=record.code
         this.setState({Loading:true})
-        let url_=rootCode?`api2/entity/detail/${menuId}/${ratmplId}`:`api2/entity/detail/${menuId}`
+        let url_=rootCode?`api2/entity/${menuId}/detail/${ratmplId}`:`api2/entity/${menuId}/detail`
         if(type==="delete"){
             Modal.confirm({
 				title:"删除提示",
@@ -366,7 +366,7 @@ export default class actTable extends React.Component{
         const {menuId,selectCodes}=this.state;    
         this.setState({Loading:true})
         Super.super({
-            url:`api2/entity/action/${menuId}/${actionId}`,
+            url:`api2/entity/${menuId}/action/${actionId}`,
             data:{
                 codes:selectCodes
             },
@@ -387,7 +387,7 @@ export default class actTable extends React.Component{
         const {menuId,selectCodes}=this.state;
         this.setState({Loading:true})
         Super.super({
-            url:`api2/entity/jump/${menuId}/${jumpId}`,
+            url:`api2/entity/${menuId}/jump/${jumpId}`,
             query:{
                 codes:selectCodes
             },
@@ -414,7 +414,7 @@ export default class actTable extends React.Component{
         const {queryKey,isSeeTotal}=this.state
         if(!isSeeTotal){
             Super.super({
-                url:`api2/entity/list/count/${queryKey}`,
+                url:`api2/entity/${queryKey}/list/count`,
                 method:"GET"
             }).then((res)=>{
                 this.setState({
@@ -449,7 +449,7 @@ export default class actTable extends React.Component{
             cancelText: "取消",
             onOk() {
                 Super.super({
-                    url:`api2/entity/statistician/recalc/${menuId}`,
+                    url:`api2/entity/${menuId}/statistician/recalc`,
                     method:'POST'
                 }).then((res)=>{
                    if(res.status==="suc"){

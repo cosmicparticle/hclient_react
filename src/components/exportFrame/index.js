@@ -47,7 +47,7 @@ export default class ExportFrame extends React.Component{
             });
         }
         Super.super({
-            url:`api2/entity/list/exporter/uuid/${menuId}/${queryKey}`,
+            url:`api2/entity/${menuId}/list/exporter/uuid/${queryKey}`,
             method:'GET',
             query:{
                 scope,

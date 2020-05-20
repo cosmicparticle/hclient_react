@@ -414,7 +414,7 @@ export default class actTable extends React.Component{
         const {queryKey,isSeeTotal}=this.state
         if(!isSeeTotal){
             Super.super({
-                url:`api2/entity/${queryKey}/list/count`,
+                url:`api2/entity/list/${queryKey}/count`,
                 method:"GET"
             }).then((res)=>{
                 this.setState({

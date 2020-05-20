@@ -23,7 +23,7 @@ export default class ModelImport extends React.Component{
     }
     loadWords=(menuId)=>{
         Super.super({
-            url:`api2/entity/list/importer/dict/${menuId}`,
+            url:`api2/entity/${menuId}/list/importer/dict`,
             method:'GET',
         }).then((res)=>{
             let selectWords=res.fieldDictionary.composites

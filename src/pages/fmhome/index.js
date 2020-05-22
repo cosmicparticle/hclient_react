@@ -14,9 +14,18 @@ export default class Home extends React.Component{
     }
 
     state={
-        fmapID:'10347',
+        // fmapID:'10347',
+        fmapID : '90884',// 工厂地图
         storeImageDatas:[],
         array:[],
+        //控制是否可添加图片标注
+         addMarker : true,
+    //控制是否可改变图片标注
+     changeMarker : false,
+    //imagemarker对象
+     im : null,
+    //marker图层
+     layer : null,
     }
 
     componentDidMount() {
@@ -29,11 +38,16 @@ export default class Home extends React.Component{
             //必要，地图容器
             container: document.getElementById('fengMap'),
             //地图数据位置
-            mapServerURL: './data/' + fmapID,
+            // mapServerURL: './data/' + fmapID,
             //主题数据位置
-            mapThemeURL: './data/theme',
+            // mapThemeURL: './data/theme',
             //设置主题
             defaultThemeName: '2001',
+          mapScaleLevelRange: [16, 23],       // 比例尺级别范围， 16级到23级
+          defaultMapScaleLevel: 18,          // 默认比例尺级别设置为19级
+
+          //方向枚举型。可设置正南、正北、正东、正西、东南、西南等方向值。具体可参考fengmap.FMDirection类。
+          defaultControlsPose: 200,
             //是否支持单击模型高亮
             modelSelectedEffect: false,
             //必要，地图应用名称，通过蜂鸟云后台创建
@@ -158,12 +172,22 @@ removeStoreImage=(model)=>{
     }
 }
 
+
+
     render(){
 
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span>
+
+                <div id="btnsGroup" className="btnsGroup">
+                    <button onClick="addMarkerFunc(this)">添加图片标注</button>
+                    <button onClick="changeMarkerFunc(this)">更换所用图片</button>
+                    <button onClick="moveMarkerFunc(this)">更新图片位置（动画）</button>
+                    <button onClick="changePosFunc(this)">更新图片位置</button>
+                    <button onClick="deleteMarkerFunc(this)">删除图片标注</button>
+                </div>
             </div>
         );
     }

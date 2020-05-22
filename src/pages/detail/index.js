@@ -292,7 +292,7 @@ export default class Detail extends React.Component{
                         key: 'action',
                         render: (record) => (
                         <div className="editbtn">
-                            {this.props.match && item.unallowedCreate===null && record.code.length>9?  // 临时将新增和修改同步处理，后面再优化
+                            {this.props.match && item.unallowedCreate===null && record.code.length>5?  // 临时将新增和修改同步处理，后面再优化
                                 <Button
                                 type='primary' 
                                 title="编辑当前行" 
@@ -300,14 +300,14 @@ export default class Detail extends React.Component{
                                 size="small"  
                                 onClick={()=>this.getForm(record)}
                                 ></Button>:""}
-                            {this.props.match && ( item.unallowedDelete===null  ) && record.code.length>9?
+                            {this.props.match && ( item.unallowedDelete===null  ) && record.code.length>5?
                                 <Button type='danger'
                                 icon="delete" 
                                 title="删除当前行" 
                                 size="small" 
                                 onClick={()=>this.visibleModal(record,'removeList','确定要删除这条记录吗')}
                                 ></Button>:""}
-                            {this.props.match && item.rabcTemplateGroupId && item.rabcUnupdatable===null && record.code.length>9?
+                            {this.props.match && item.rabcTemplateGroupId && item.rabcUnupdatable===null && record.code.length>5?
                                 <Button 
                                     title="编辑当前实体" 
                                     type='primary' 
@@ -315,7 +315,7 @@ export default class Detail extends React.Component{
                                     size="small"  
                                     onClick={()=>this.getDetailFormTmpl({modalType:"edit"},record)}
                                     ></Button>:""}
-                            {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>9?
+                            {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>5?
                                 <Button
                                     title="查看当前实体"
                                     type='primary'
@@ -331,7 +331,7 @@ export default class Detail extends React.Component{
                             key: 'action',
                             render: (record) => (
                                 <div className="editbtn">
-                                    {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>9?
+                                    {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>5?
                                         <Button
                                             title="查看当前实体"
                                             type='primary'
@@ -432,7 +432,7 @@ export default class Detail extends React.Component{
                     const totalName=fieldMap.totalName
                     const order=fieldMap.order
                     const key=fieldMap.key
-                    if(key && key.length>9){ //有key证明数据本来就有,没有修改
+                    if(key && key.length>5){ //有key证明数据本来就有,没有修改
                         formData.append(`${totalName}[${order}].唯一编码`,fieldMap.code);
                     }
                     for(let i in fieldMap){
@@ -454,8 +454,11 @@ export default class Detail extends React.Component{
             }
         }
         let  isNew=true
+        console.log(formData.keys());
         if(type!=="new"){
-            formData.append('唯一编码', type==="new"?"":code);
+            if(!formData.has('唯一编码')){
+                formData.append('唯一编码',code);
+            }
             formData.append('%fuseMode%',fuseMode);
             isNew=false
         }
@@ -733,7 +736,7 @@ export default class Detail extends React.Component{
     getTemplate=(params)=>{
         let {menuId}=this.state;
         let {templateGroupId,rfieldId,dfieldIds,excepts}=params
-        const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/stmpl/detailGroup/${menuId}/${templateGroupId}`
+        const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/${menuId}/stmpl/detailGroup/${templateGroupId}`
         Super.super({
             url:url_0,
             method:'GET',

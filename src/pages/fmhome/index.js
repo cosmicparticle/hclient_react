@@ -2,6 +2,7 @@ import React from 'react'
 import {Col, Row} from 'antd';
 //import fengmap from "../../fengmap/fengmap.core.min"; //核心包
 import fengmap from 'fengmap';
+import './style.css';
 /**
 **/
 export default class Home extends React.Component{
@@ -10,6 +11,7 @@ export default class Home extends React.Component{
             position: 'absolute',
             width: '100%',
             height: '100%',
+            top: '100px'
         }
     }
 
@@ -18,14 +20,29 @@ export default class Home extends React.Component{
         fmapID : '90884',// 工厂地图
         storeImageDatas:[],
         array:[],
-        //控制是否可添加图片标注
+        map : null,
+            //控制是否可添加图片标注
          addMarker : true,
-    //控制是否可改变图片标注
-     changeMarker : false,
-    //imagemarker对象
-     im : null,
-    //marker图层
-     layer : null,
+        //控制是否可改变图片标注
+         changeMarker : false,
+        //imagemarker对象
+         im : null,
+        //marker图层
+         layer : null,
+        //矩形标注
+         rectangleMarker : null,
+        //圆形标注
+         circleMaker : null,
+        //自定义形状标注
+         polygonMarker : null,
+        addBtn : false,
+        removeBtn: false,
+        //判断当前是否点击的是poi,控制点击公共设施的时候只弹出公共设施的信息框
+         clickedPOI : false,
+        // 点击事件ID
+         eventID : null,
+        //定义选中模型
+         selectedModel : null
     }
 
     componentDidMount() {
@@ -57,28 +74,29 @@ export default class Home extends React.Component{
         };
 //        var fmapID = '10347'; //mapId
         //初始化地图对象
-       let map = new fengmap.FMMap(mapOptions);
+        this.state.map = new fengmap.FMMap(mapOptions);
         //打开Fengmap服务器的地图数据和主题
 //        map.openMapById(fmapID);
 
         //打开Fengmap服务器的地图数据和主题
-        map.openMapById(fmapID, function (error) {
+        this.state.map.openMapById(fmapID, function (error) {
             //打印错误信息
             console.log(error);
         });
 
         //地图加载完成事件
-        map.on('loadComplete', function () {
+        this.state.map.on('loadComplete', function () {
             console.log('地图加载完成！');
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
         });
 
         //地图点击事件
-        map.on('mapClickNode', this.mapEevent);
+        this.state.map.on('mapClickNode', this.mapEevent);
     }
 
     mapEevent=(event)=>{
+
         let array=this.state.array;
         //如果选中模型，修改模型的颜色、透明图、边线颜色
         if (event.nodeType === fengmap.FMNodeType.MODEL) {
@@ -100,6 +118,205 @@ export default class Home extends React.Component{
                 //addStoreImage(model);
             }
         }
+///
+
+        //鼠标左右键点击事件
+        let buttonType = event.domEvent.button;
+        let buttonTypeText = '';
+        if (buttonType === 0) {
+            buttonTypeText = '我是鼠标左键点击';
+            console.log('我是鼠标左键点击');
+        } else if (buttonType === 2) {
+            buttonTypeText = '我是鼠标右键点击';
+            console.log('我是鼠标右键点击');
+        }
+
+        //地图模型
+        let target = event.target;
+        if (!target) {
+            return;
+        }
+        //筛选点击类型,打印拾取信息
+        switch (target.nodeType) {
+            //地面模型
+            case fengmap.FMNodeType.FLOOR:
+                if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) return;
+                var info = '拾取对象类型： 地图 \n' +
+                    '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
+                if (this.state.selectedModel) {
+                    this.state.selectedModel.selected = false;
+                }
+                //弹出信息框
+                alert(info);
+                break;
+
+            //model模型
+            case fengmap.FMNodeType.MODEL:
+                if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) {
+                    this.setState({
+                        clickedPOI : false
+                    })
+
+                    return;
+                }
+                //过滤类型为墙的model
+                if (target.typeID === 300000) {
+                    //其他操作
+                    return;
+                }
+                let info = '拾取对象类型： 模型 \n' +
+                    'FID：' + target.FID + '\n' +
+                    'model中心点坐标：x: ' + target.mapCoord.x + '，y:' + target.mapCoord.y + '\n' +
+                    '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
+
+                //模型高亮
+                if (this.state.selectedModel && this.state.selectedModel.FID != target.FID) {
+                    this.state.selectedModel.selected = false;
+                }
+                target.selected = true;
+                this.setState({
+                    selectedModel : target,
+                })
+
+
+                setTimeout(function () {
+                    //弹出信息框
+                    alert(info);
+                }, 300);
+                break;
+
+            //公共设施、图片标注模型
+            case fengmap.FMNodeType.FACILITY:
+            case fengmap.FMNodeType.IMAGE_MARKER:
+
+                this.setState({
+                    clickedPOI :true,
+                    eventID : event.eventInfo.eventID,
+                })
+
+                 info = '拾取对象类型： 公共设施 \n' +
+                    '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
+                if (this.state.selectedModel) {
+                    this.state.selectedModel.selected = false;
+                }
+                //弹出信息框
+                alert(info);
+                break;
+        }
+
+        ////
+
+    }
+
+    /**
+     * 添加多边形标注按钮事件
+     * */
+    addMarkerFunc=()=> {
+        debugger
+        console.log("3333333333");
+        if (this.state.addMarker == true) {
+            //添加多边形标注
+            this.addPolygonMarker();
+
+            //修改可添加状态
+            this.setState({
+                addMarker:false,
+                addBtn : true,
+                removeBtn : false
+            })
+        }
+    }
+
+    /**
+     * 为第一层的模型添加多边形标注图层
+     * */
+    addPolygonMarker=()=> {
+        debugger
+        console.log("addPolygonMarker");
+        //获取当前聚焦楼层
+        // let group = this.map.getFMGroup(this.map.focusGroupID);
+        let group = this.state.map.getFMGroup(1);
+        //返回当前层中第一个polygonMarker,如果没有，则自动创建
+       let  pm = group.getOrCreateLayer('polygonMarker');
+        this.setState({
+            layer : pm
+        })
+        debugger
+        //创建矩形标注
+        let rma = this.createRectangleMaker();
+        debugger
+        // this.state.layer.addMarker(rma);
+        pm.addMarker(rma);
+
+        //创建圆形标注
+        // createCircleMaker();
+        // this.state.layer.addMarker(circleMaker);
+
+        //创建自定义形状标注
+        // createPolygonMaker(coords);
+        // this.state.layer.addMarker(polygonMarker);
+    }
+
+
+    /**
+     * 创建矩形标注
+     * fengmap.FMPolygonMarker 自定义图片标注对象
+     * https://www.fengmap.com/docs/js/v2.5.0/fengmap.FMPolygonMarker.html
+     */
+    createRectangleMaker=()=> {
+
+        return   new fengmap.FMPolygonMarker({
+            //设置颜色
+            color: '#9F35FF',
+            //设置透明度
+            alpha: 0.3,
+            //设置边框线的宽度
+            lineWidth: 3,
+            //设置高度
+            height: 25,
+            //多边形的坐标点集数组
+            points: {
+                //设置为矩形
+                type: 'rectangle',
+                //设置此形状的中心坐标
+                center: {
+                    x: 13297201.0,
+                    y: 4113843.0
+                },
+                //矩形的起始点设置，代表矩形的左上角。优先级大于center。
+                /*startPoint: {
+                 x: 1.2961583E7,
+                 y: 4861865.0
+                 },*/
+                //设置矩形的宽度
+                width: 70,
+                //设置矩形的高度
+                height: 70
+            }
+        });
+
+    }
+
+    /**
+     * 删除多边形标注按钮事件
+     * */
+     deleteMarkerFunc=()=> {
+            debugger
+         this.setState({
+             addBtn : false,
+             removeBtn : true
+         })
+        if (this.state.layer) {
+            //移除该层的所有标注
+            this.state.layer.removeAll();
+            //修改可添加状态
+            this.setState({
+                addMarker:true
+            })
+        }
+
+
+
     }
 
 /**
@@ -181,12 +398,17 @@ removeStoreImage=(model)=>{
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span>
 
-                <div id="btnsGroup" className="btnsGroup">
+               {/* <div id="btnsGroup" className="btnsGroup">
                     <button onClick="addMarkerFunc(this)">添加图片标注</button>
                     <button onClick="changeMarkerFunc(this)">更换所用图片</button>
                     <button onClick="moveMarkerFunc(this)">更新图片位置（动画）</button>
                     <button onClick="changePosFunc(this)">更新图片位置</button>
                     <button onClick="deleteMarkerFunc(this)">删除图片标注</button>
+                </div>*/}
+
+                <div  id="btnsGroup" className="btnsGroup">
+                    <button  className={this.state.addBtn===true?'addBtn active':'addBtn'} onClick={this.addMarkerFunc.bind(this)}>添加多边形标注</button>
+                    <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除多边形标注</button>
                 </div>
             </div>
         );

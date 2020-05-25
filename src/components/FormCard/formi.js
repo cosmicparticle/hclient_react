@@ -18,7 +18,7 @@ class Formi extends React.Component{
                     //     continue;
                     // }
                     if(values[k] && moment(values[k],moment.ISO_8601).isValid()){ //日期格式转换
-                        result[k]=moment(values[k]).format("YYYY-MM-DD")
+                        result[k]=moment(values[k]).format("YYYY-MM-DD hh:mm:ss")
                     }else if(values[k] && values[k].originFileObj){
                         result[k]=values[k].originFileObj
                     }else if(!values[k] || values[k].length===0){

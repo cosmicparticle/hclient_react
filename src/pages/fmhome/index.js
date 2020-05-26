@@ -3,6 +3,7 @@ import {Col, Row} from 'antd';
 //import fengmap from "../../fengmap/fengmap.core.min"; //核心包
 import fengmap from 'fengmap';
 import './style.css';
+
 /**
 **/
 export default class Home extends React.Component{
@@ -42,7 +43,30 @@ export default class Home extends React.Component{
         // 点击事件ID
          eventID : null,
         //定义选中模型
-         selectedModel : null
+         selectedModel : null,
+        coords : [
+            {
+                x: 13297541 ,
+                y: 4113733,
+                z: 1
+            },
+            {
+                x: 13297421.0,
+                y: 4113834.0,
+                z: 1
+            },
+            {
+                x: 13297340,
+                y: 4113577,
+                z: 1
+            },
+            {
+                x: 13297252,
+                y: 4113683,
+                z: 1
+            }
+        ],
+
     }
 
     componentDidMount() {
@@ -249,12 +273,12 @@ export default class Home extends React.Component{
         pm.addMarker(rma);
 
         //创建圆形标注
-        // createCircleMaker();
-        // this.state.layer.addMarker(circleMaker);
+       let cm =  this.createCircleMaker();
+        pm.addMarker(cm);
 
         //创建自定义形状标注
-        // createPolygonMaker(coords);
-        // this.state.layer.addMarker(polygonMarker);
+        let cpm = this.createPolygonMaker(this.state.coords);
+        pm.addMarker(cpm);
     }
 
 
@@ -295,6 +319,56 @@ export default class Home extends React.Component{
             }
         });
 
+    }
+
+
+    /**
+     * 创建圆形标注
+     * */
+    createCircleMaker=()=> {
+        return new fengmap.FMPolygonMarker({
+            //设置颜色
+            color: '#3CF9DF',
+            //设置透明度
+            alpha: .3,
+            //设置边框线的宽度
+            lineWidth: 3,
+            //设置高度
+            height: 15,
+            //多边形的坐标点集数组
+            points: {
+                //设置为圆形
+                type: 'circle',
+                //设置此形状的中心坐标
+                center: {
+                    x: 13297123.0,
+                    y: 4113906.0
+                },
+                //设置半径
+                radius: 50,
+                //设置段数，默认为40段
+                segments: 40
+            }
+        });
+    }
+
+
+    /**
+     * 创建自定义形状标注
+     * coords 多边形的坐标点集数组
+     * */
+    createPolygonMaker=(coords)=> {
+        //实例化polygonMarker
+        return new fengmap.FMPolygonMarker({
+            //设置透明度
+            alpha: 0.5,
+            //设置边框线的宽度
+            lineWidth: 3,
+            //设置高度
+            height: 7,
+            //多边形的坐标点集数组
+            points: coords
+        });
     }
 
     /**

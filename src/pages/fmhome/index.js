@@ -165,7 +165,7 @@ export default class Home extends React.Component{
             //地面模型
             case fengmap.FMNodeType.FLOOR:
                 if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) return;
-                var info = '拾取对象类型： 地图 \n' +
+                let info = '拾取对象类型： 地图 \n' +
                     '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
                 if (this.state.selectedModel) {
                     this.state.selectedModel.selected = false;
@@ -188,7 +188,7 @@ export default class Home extends React.Component{
                     //其他操作
                     return;
                 }
-                let info = '拾取对象类型： 模型 \n' +
+                 info = '拾取对象类型： 模型 \n' +
                     'FID：' + target.FID + '\n' +
                     'model中心点坐标：x: ' + target.mapCoord.x + '，y:' + target.mapCoord.y + '\n' +
                     '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;

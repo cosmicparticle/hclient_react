@@ -3,123 +3,75 @@ import {Col, Row} from 'antd';
 //import fengmap from "../../fengmap/fengmap.core.min"; //核心包
 import fengmap from 'fengmap';
 import './style.css';
-import Super from "./../../super"
-import Units from './../../units'
-import { message } from 'antd';
-//数字计算
-// import np from "number-precision" 
 
 /**
 **/
 export default class Home extends React.Component{
-
-    constructor(props) {
-        super(props);
-        this.state={
-            // fmapID:'10347',
-            fmapID : '90884',// 工厂地图
-            storeImageDatas:[],
-            array:[],
-            map : null,
-            imgLayer : null,
-            //控制是否可添加电子围栏
-            addFenceMarker : true,
-            // 添加电子围栏的按钮是否点击了
-            addFenceBtn : false,
-    
-            // 控制是否添加任务头像
-            addPeoPleImgMarker : true,
-            // 添加人物头像的按钮是否点击了
-            addPeoPleImgBtn : false, 
-            //控制是否可改变图片标注
-             changeMarker : false,
-            //imagemarker对象, 设备图片对象
-             imList : [],
-            //多边形图层
-            polygonLayer : null,
-            //矩形标注
-             rectangleMarker : null,
-            //圆形标注
-             circleMaker : null,
-            //自定义形状标注
-             polygonMarker : null,
-    
-            
-            removeBtn: false,
-            // 人移动按钮
-            moveImaBtn : false,
-    
-            //判断当前是否点击的是poi,控制点击公共设施的时候只弹出公共设施的信息框
-             clickedPOI : false,
-            // 点击事件ID
-             eventID : null,
-            //定义选中模型
-             selectedModel : null,
-            // 多边形定义的点
-            coords : [
-                {
-                    x: 13297422 ,
-                    y: 4113833,
-                    z: 1
-                },
-                {
-                    x: 13297516.0,
-                    y: 4113735.0,
-                    z: 1
-                },
-                {
-                    x: 13297341,
-                    y: 4113577,
-                    z: 1
-                },
-                {
-                    x: 13297248,
-                    y: 4113677,
-                    z: 1
-                }
-            ],
-    
-            // 设备定位标签数据
-            coordsTagArr : [],
-    
-            // 是否执行定时任务
-            isTimer : false,
-    
-    
-        }
-    }
-
     getStyle(){
         return {
             position: 'absolute',
             width: '100%',
             height: '100%',
+            top: '100px'
         }
     }
 
-    
+    state={
+        // fmapID:'10347',
+        fmapID : '90884',// 工厂地图
+        storeImageDatas:[],
+        array:[],
+        map : null,
+        imgLayer : null,
+            //控制是否可添加图片标注
+         addMarker : true,
+        //控制是否可改变图片标注
+         changeMarker : false,
+        //imagemarker对象
+         im : null,
+        //多边形图层
+        polygonLayer : null,
+        //矩形标注
+         rectangleMarker : null,
+        //圆形标注
+         circleMaker : null,
+        //自定义形状标注
+         polygonMarker : null,
+        addBtn : false,
+        removeBtn: false,
+        //判断当前是否点击的是poi,控制点击公共设施的时候只弹出公共设施的信息框
+         clickedPOI : false,
+        // 点击事件ID
+         eventID : null,
+        //定义选中模型
+         selectedModel : null,
+        coords : [
+            {
+                x: 13297422 ,
+                y: 4113833,
+                z: 1
+            },
+            {
+                x: 13297516.0,
+                y: 4113735.0,
+                z: 1
+            },
+            {
+                x: 13297341,
+                y: 4113577,
+                z: 1
+            },
+            {
+                x: 13297248,
+                y: 4113677,
+                z: 1
+            }
+        ],
+
+    }
 
     componentDidMount() {
         this.openMap();
-
-        this.state.map.on('loadComplete', ()=> {
-            console.log('地图加载完成！');
-            //显示按钮
-           // document.getElementById('tip').style.display = 'block';
-           this.timer = setInterval(function () {
-               debugger
-            console.log( "啥意思啊");
-               if (this.state != undefined  && this.state.isTimer == true) {
-                   console.log("触发了吗！！"); 
-                this.moveMarkerFunc();
-               }
-            
-            }.bind(this), 3000);
-            
-            });
-
-       
-        
     }
     openMap=()=>{
         let fmapID= this.state.fmapID;
@@ -162,10 +114,8 @@ export default class Home extends React.Component{
             console.log('地图加载完成！');
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
-
-           
         });
-        
+
         //地图点击事件
         this.state.map.on('mapClickNode', this.mapEevent);
     }
@@ -284,210 +234,55 @@ export default class Home extends React.Component{
     }
 
     /**
-     * 添加电子围栏
+     * 添加多边形标注按钮事件
      * */
-    addElectronicFence=()=> {
-        
-        if (this.state.addFenceMarker == true) {
+    addMarkerFunc=()=> {
+        debugger
+        console.log("3333333333");
+        if (this.state.addMarker == true) {
             //添加多边形标注
             this.addPolygonMarker();
 
+            //添加(人的头像)图片标注
+            this.addImageMarker();
+
             //修改可添加状态
             this.setState({
-                addFenceMarker:false,
-                // addPeoPleImgMarker : false,
-                addFenceBtn : true,
+                addMarker:false,
+                addBtn : true,
                 removeBtn : false
             })
         }
     }
 
-
-     /**
-     * 添加人物头像
-     * */
-    addPeoplePhoto=()=> {
-        // 请求后台， 获取定位人员数据
-        debugger
-        Super.super({
-            url:'api2/ks/clist/tag/list/data',  
-            query:{
-                pageSize:100
-            } ,
-            method:"GET"
-        }).then((res)=>{
-            debugger
-           let arr =  res.result.entities;
-           
-
-            arr.forEach(element => {
-
-                let coord = element.基本属性组.当前坐标点;
-               let onlyCode = element.默认字段组.唯一编码;
-                if (coord != undefined) {
-                    let conut = coord.indexOf(',');
-                    let conutEnd = coord.indexOf(')');
-
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                    
-                      let  coordsTag = {
-                            x : x,
-                            y : y,
-                            id : onlyCode,
-                        }
-
-                    this.state.coordsTagArr.push(coordsTag);
-
-                    if (this.state.addPeoPleImgMarker == true) {                    
-                            debugger
-                               //添加(人的头像)图片标注
-                        this.addImageMarker(coordsTag);
-                    }
-
-                }                 
-             
-            });
-
-             //修改可添加状态
-             this.setState({
-                addPeoPleImgMarker : false,
-                addPeoPleImgBtn : true,
-                // moveImaBtn : true,
-                removeBtn : false
-            })
-
-            // 开启定时任务
-            this.setState({
-                isTimer : true,
-             })
-
-            // 打印所有数据
-           console.log(arr);
-        })
-
-
-        // if (this.state.addPeoPleImgMarker == true) {
-        //     debugger
-        //     this.state.coordsTagArr.forEach(coordsTag => {
-        //         debugger
-        //            //添加(人的头像)图片标注
-        //          this.addImageMarker(coordsTag);
-        //     });         
-
-        //     //修改可添加状态
-        //     this.setState({
-        //         addPeoPleImgMarker : false,
-        //         addPeoPleImgBtn : true,
-        //         // moveImaBtn : true,
-        //         removeBtn : false
-        //     })
-        // }
-    }
-    
-
     /**
      * fengmap.FMImageMarker 自定义图片标注对象，为自定义图层。
      * https://www.fengmap.com/docs/js/v2.5.0/fengmap.FMImageMarker.html
      **/
-    addImageMarker=(coordsTag)=> {
+    addImageMarker=()=> {
         let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
-
-        // let imLayer = new fengmap.FMImageMarkerLayer();   //实例化ImageMarkerLayer
-        // group.addLayer(imLayer);
         let imLayer = group.getOrCreateLayer('imageMarker');
 
         this.setState({
             imgLayer : imLayer
         })
 
-        // let gpos = group.mapCoord;
+        let gpos = group.mapCoord;
+        debugger
        let fmIm = new fengmap.FMImageMarker({
             //标注x坐标点
-            x: coordsTag.x,
+            x: gpos.x,
             //标注y坐标点
-            y: coordsTag.y,
+            y: gpos.y,
             //设置图片路径
-            url: require('./images/blueImageMarker.png'),
+            url: './images/blueImageMarker.png',
             //设置图片显示尺寸
-            size: 32,
+            size: 68,
             //标注高度，大于model的高度
-            height: 2
+            height: 12
         });
-        // 设置图片标注的唯一id
-        fmIm.id = coordsTag.id;
-
-        this.state.imList.push(fmIm);
-        this.state.imgLayer.addMarker(fmIm);
-        fmIm.alwaysShow();
-
-        // 为图片标注添加信息窗
-        // this.addPopInfoWindow(fmIm);
+        imLayer.addMarker(fmIm);
     }
-
-    /**
-     * 
-     * @param {信息框控件配置} marker 
-     */
-     addPopInfoWindow=(marker)=> {   
-        if (marker) {
-            //添加绑定marker信息窗
-            var ctlOpt = {
-                //设置弹框的宽度
-                width: 200,
-                //设置弹框的高度px
-                height: 100,
-                //设置弹框的内容，文本或html页面元素
-                content: '<a target="_bank" href="https://www.fengmap.com">这是一个绑定marker信息框</a>',
-                //关闭回调函数
-                closeCallBack: function () {
-                    //信息窗点击关闭操作
-                    console.log('信息窗关闭了！');
-                }
-            };
-            //添加弹框到地图上，绑定marker
-            var popMarker = new fengmap.FMPopInfoWindow(this.state.map, ctlOpt, marker);
-            //popMarker.close(); 关闭信息窗
-        } else {
-            //独立信息窗坐标点
-            var target = {
-                //地图坐标
-                coord: {
-                    x: 12961581.8454802,
-                    y: 4861817.63647148,
-                    z: 0
-                },
-                groupID: 1 //楼层id
-            };
-            //添加独立信息窗
-            var ctlOpt = {
-                //添加信息框的地图位置坐标
-                mapCoord: {
-                    //设置弹框的x轴
-                    x: target.coord.x,
-                    //设置弹框的y轴
-                    y: target.coord.y,
-                    //控制信息框距离地图的高度
-                    height: 2,
-                    //设置弹框位于的楼层,当前聚焦楼层
-                    groupID: target.groupID
-                },
-                //设置弹框的宽度
-                width: 200,
-                //设置弹框的高度px
-                height: 100,
-                //设置弹框的内容
-                content: '<a target="_bank" href="https://www.fengmap.com">这是一个独立信息框</a>',
-                closeCallBack: function () {
-                    //信息窗点击关闭操作
-                    console.log('信息窗关闭了！');
-                }
-            };
-            //添加弹框到地图上，独立信息窗
-            var popMarker = new fengmap.FMPopInfoWindow(this.state.map, ctlOpt);
-        }
-    }
-
 
     /**
      * 为第一层的模型添加多边形标注图层
@@ -610,109 +405,36 @@ export default class Home extends React.Component{
     }
 
     /**
-     * 删除所有标注
+     * 删除多边形标注按钮事件
      * */
      deleteMarkerFunc=()=> {
             debugger
-         this.setState({            
-            removeBtn : true
+         this.setState({
+             addBtn : false,
+             removeBtn : true
          })
-         // 删除电子围栏
         if (this.state.polygonLayer) {
             //移除该层的所有标注
             this.state.polygonLayer.removeAll();
             //修改可添加状态
             this.setState({
-                addFenceMarker:true,
-                addFenceBtn : false,
+                addMarker:true
             })
         }
 
-        // 删除任务头像
          if (this.state.imgLayer) {
              //移除该层的所有标注
              this.state.imgLayer.removeAll();
              //修改可添加状态
              this.setState({
-                addPeoPleImgMarker:true,
-                addPeoPleImgBtn : false,
+                 addMarker:true
              })
          }
 
+
+
     }
 
-
-     /**
-         * 更新图片位置按钮事件
-         * 从后台加载新的坐标点
-         * */
-        moveMarkerFunc=()=> {
-            this.setState({
-                moveImaBtn : true,
-
-            })
-
-            Super.super({
-                url:'api2/ks/clist/tag/list/data',  
-                query:{
-                    pageSize:100
-                } ,
-                method:"GET"
-            }).then((res)=>{
-                debugger
-               let arr =  res.result.entities;
-
-                arr.forEach(element => {
-    
-                    let coord = element.基本属性组.当前坐标点;
-                   let onlyCode = element.默认字段组.唯一编码;
-                    if (coord != undefined) {
-                        let conut = coord.indexOf(',');
-                        let conutEnd = coord.indexOf(')');
-    
-                        var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                        var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                        
-                          let  coordsTag = {
-                                x : x,
-                                y : y,
-                                id : onlyCode,
-                            }
-    
-                        // this.state.coordsTagArr.push(coordsTag);
-                        
-                        //marker已存在，设置marker的位置，setPosition ( x, y, gid, height )
-                    if (this.state.imList) {
-                        // this.state.im.setPosition(this.state.im.x + 10, this.state.im.y + 10, 1, 2);
-                        let im =  this.state.imList.find(imv=>imv.id == onlyCode);
-                            if (im) {
-                                im.moveTo({
-                                    x: coordsTag.x,
-                                    y: coordsTag.y,
-                                    time: 1,
-                                    callback: function () {
-                                        console.log("位置更新完毕");
-                                    
-                                    },
-                                    //更新时的回调函数
-                                    update: function (currentXY) {
-                                        console.log("实时坐标：" + currentXY.x + "," + currentXY.y);
-                                    }
-                                });
-                            } else {
-                                //            //添加(人的头像)图片标注
-                                    this.addImageMarker(coordsTag);
-                            }
-            
-                        }                 
-                    }
-                });
-            });
-            this.setState({
-                moveImaBtn : false,
-
-            })
-        }
 /**
  * 设置model颜色、透明度、边线颜色
  * */
@@ -792,14 +514,17 @@ removeStoreImage=(model)=>{
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span>
 
-                <div  id="btnsGroup" className="btnsGroup">
-                    <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
+               {/* <div id="btnsGroup" className="btnsGroup">
+                    <button onClick="addMarkerFunc(this)">添加图片标注</button>
+                    <button onClick="changeMarkerFunc(this)">更换所用图片</button>
+                    <button onClick="moveMarkerFunc(this)">更新图片位置（动画）</button>
+                    <button onClick="changePosFunc(this)">更新图片位置</button>
+                    <button onClick="deleteMarkerFunc(this)">删除图片标注</button>
+                </div>*/}
 
-                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示人员</button>
-                   
-                    <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button>
-                   
-                    <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除所有标注</button>
+                <div  id="btnsGroup" className="btnsGroup">
+                    <button  className={this.state.addBtn===true?'addBtn active':'addBtn'} onClick={this.addMarkerFunc.bind(this)}>添加多边形标注</button>
+                    <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除多边形标注</button>
                 </div>
             </div>
         );

@@ -22,14 +22,14 @@ body {
 }
 
 /* 按钮组 */
-.btnsGroup {
+.fmbtnsGroup {
     position: absolute;
     right: 20px;
     top: 20px;
     /*display: none;*/
 }
 
-.btnsGroup button {
+.fmbtnsGroup button {
     padding: 8px;
     cursor: pointer;
     display: block;
@@ -39,35 +39,35 @@ body {
     background-color: #fff;
 }
 
-.btnsGroup button.active {
+.fmbtnsGroup button.active {
     background-color: #3385ff;
     border: 1px solid #3385ff;
     color: #fff;
 }
 
-.btnsGroup button.disabled {
+.fmbtnsGroup button.disabled {
     background-color: #ccc;
     border: none;
 }
 
 /*覆盖物管理*/
-.btns {
+.fmbtns {
     position: absolute;
     right: 20px;
     top: 20px;
     display: none;
 }
 
-.btns button {
+.fmbtns button {
     padding: 8px;
     cursor: pointer;
     margin-bottom: 5px;
     border: 1px solid #ccc;
     outline: none;
-    background-color: #fff;
+    background-color: #1890ff;
 }
 
-.btns button.active {
+.fmbtns button.active {
     background-color: #3385ff;
     border: 1px solid #3385ff;
     color: #fff;

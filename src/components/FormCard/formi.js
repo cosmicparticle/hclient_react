@@ -21,8 +21,6 @@ class Formi extends React.Component{
                         result[k]=moment(values[k]).format("YYYY-MM-DD hh:mm:ss")
                     }else if(values[k] && values[k].originFileObj){
                         result[k]=values[k].originFileObj
-                    }else if(!values[k] || values[k].length===0){
-                        delete values[k]
                     }else{
                         result[k]=values[k]
                     }

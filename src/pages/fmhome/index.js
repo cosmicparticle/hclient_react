@@ -107,7 +107,7 @@ export default class Home extends React.Component{
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
            this.timer = setInterval(function () {
-               debugger
+ //              debugger
             console.log( "啥意思啊");
                if (this.state != undefined  && this.state.isTimer == true) {
                    console.log("触发了吗！！"); 
@@ -308,7 +308,7 @@ export default class Home extends React.Component{
      * */
     addPeoplePhoto=()=> {
         // 请求后台， 获取定位人员数据
-        debugger
+//        debugger
         Super.super({
             url:'api2/ks/clist/tag/list/data',  
             query:{
@@ -316,7 +316,7 @@ export default class Home extends React.Component{
             } ,
             method:"GET"
         }).then((res)=>{
-            debugger
+ //           debugger
            let arr =  res.result.entities;
            
 
@@ -340,7 +340,7 @@ export default class Home extends React.Component{
                     this.state.coordsTagArr.push(coordsTag);
 
                     if (this.state.addPeoPleImgMarker == true) {                    
-                            debugger
+ //                           debugger
                                //添加(人的头像)图片标注
                         this.addImageMarker(coordsTag);
                     }
@@ -493,7 +493,7 @@ export default class Home extends React.Component{
      * 为第一层的模型添加多边形标注图层
      * */
     addPolygonMarker=()=> {
-        debugger
+ //       debugger
         console.log("addPolygonMarker");
         //获取当前聚焦楼层
         let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
@@ -503,10 +503,10 @@ export default class Home extends React.Component{
         this.setState({
             polygonLayer : pm
         })
-        debugger
+//        debugger
         //创建矩形标注
         let rma = this.createRectangleMaker();
-        debugger
+ //       debugger
         // this.state.layer.addMarker(rma);
         pm.addMarker(rma);
 
@@ -613,7 +613,7 @@ export default class Home extends React.Component{
      * 删除所有标注
      * */
      deleteMarkerFunc=()=> {
-            debugger
+ //           debugger
          this.setState({            
             removeBtn : true
          })
@@ -659,7 +659,7 @@ export default class Home extends React.Component{
                 } ,
                 method:"GET"
             }).then((res)=>{
-                debugger
+//                debugger
                let arr =  res.result.entities;
 
                 arr.forEach(element => {
@@ -792,7 +792,7 @@ removeStoreImage=(model)=>{
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span>
 
-                <div  id="btnsGroup" className="btnsGroup">
+                <div  id="btnsGroup" className="fmbtnsGroup">
                     <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
 
                     <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示人员</button>

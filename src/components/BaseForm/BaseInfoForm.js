@@ -97,14 +97,14 @@ export default class BaseInfoForm extends React.Component{
                     const DATETIME= <FormItem label={title} key={field} className='labelcss'>
                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                             getFieldDecorator(fieldName,{
-                                initialValue:fieldValue?moment(fieldValue,'YYYY-MM-DD hh:mm:ss'):null,
+                                initialValue:fieldValue?moment(fieldValue,'YYYY-MM-DD HH:mm:ss'):null,
                                 rules:item.validators?[{
                                     required: true, message: `请选择${title}`,
                                 }]:"",
                             })(
                                 <DatePicker
                                     showTime={true}
-                                    format='YYYY-MM-DD hh:mm:ss'
+                                    format='YYYY-MM-DD HH:mm:ss'
                                     style={{width:width}}
                                     locale={locale}
                                     placeholder={this.getplaceholder(available,title)}

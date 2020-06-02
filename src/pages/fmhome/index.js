@@ -408,18 +408,22 @@ export default class Home extends React.Component{
             //标注y坐标点
             y: coordsTag.y,
             //设置图片路径
-            url: require('./images/blueImageMarker.png'),
+            url: require('./images/people3.png'),
             //设置图片显示尺寸
-            size: 32,
+            size: 20,   
             //标注高度，大于model的高度
-            height: 2
+            height: 1,
+            // alwaysShow: true,
+            // avoid: false,
         });
         // 设置图片标注的唯一id
         fmIm.id = coordsTag.id;
+        // 设置不自动避让（图层遮盖时）
+        fmIm.avoid(false);
 
         this.state.imList.push(fmIm);
         this.state.imgLayer.addMarker(fmIm);
-        fmIm.alwaysShow();
+        // fmIm.alwaysShow();
 
         // 为图片标注添加信息窗
         // this.addPopInfoWindow(fmIm);
@@ -689,7 +693,7 @@ export default class Home extends React.Component{
                                 im.moveTo({
                                     x: coordsTag.x,
                                     y: coordsTag.y,
-                                    time: 1,
+                                    time: 3,
                                     callback: function () {
                                         console.log("位置更新完毕");
                                     
@@ -792,12 +796,12 @@ removeStoreImage=(model)=>{
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span>
 
-                <div  id="btnsGroup" className="btnsGroup">
+                <div  id="fmbtnsGroup" className="fmbtnsGroup">
                     <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
 
                     <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示人员</button>
                    
-                    <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button>
+                    {/* <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button> */}
                    
                     <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除所有标注</button>
                 </div>

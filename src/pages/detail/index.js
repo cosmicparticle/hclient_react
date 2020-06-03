@@ -359,7 +359,7 @@ export default class Detail extends React.Component{
             },
           });
     }
-    requestSelect=(selectId)=>{ //有下拉菜单时，请求下拉选项操作       
+    requestSelect=(selectId)=>{ //有下拉菜单时，请求下拉选项操作
         let fieldIds = ""
         selectId.forEach((item)=>{
             fieldIds+=item+","
@@ -377,6 +377,26 @@ export default class Detail extends React.Component{
             })
         }
     }
+
+    requestSelect4Template=(selectId)=>{ //有下拉菜单时，请求下拉选项操作
+        let fieldIds = ""
+        selectId.forEach((item)=>{
+            fieldIds+=item+","
+        })
+        if(selectId.length>0){
+            Super.super({
+                url:`api2/meta/dict/field_options`,
+                data:{
+                    fieldIds
+                },
+            }).then((res)=>{
+                this.setState({
+                    optionsMap4Template:res.optionsMap
+                })
+            })
+        }
+    }
+
     removeList=(record)=>{
         const deleKey=record.key
 
@@ -734,17 +754,35 @@ export default class Detail extends React.Component{
         })
     }
     getTemplate=(params)=>{
-        let {menuId}=this.state;
         let {templateGroupId,rfieldId,dfieldIds,excepts}=params
+        if(!rfieldId){
+            rfieldId=this.state.rfieldId;
+        }
+        if(!templateGroupId){
+            templateGroupId=this.state.templateGroupId;
+        }
+        let {menuId}=this.state;
+
         const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/${menuId}/stmpl/detailGroup/${templateGroupId}`
         Super.super({
             url:url_0,
             method:'GET',
         }).then((res)=>{
             //console.log(res)
+            if(res.config){
+                let fieldIds=[];
+                res.config.criterias.forEach((item)=> {
+                    if (item.inputType === "select" || item.inputType === "multiselect") {
+                        fieldIds.push(item.fieldId)
+                    }
+                    if (fieldIds.length > 0) {
+                        this.requestSelect4Template(fieldIds)
+                    }
+                });
+            }
             this.setState({
                 templateDtmpl:res,
-                templateGroupId: templateGroupId, //选择模板groupId
+                templateGroupId, //选择模板groupId
                 dfieldIds,
                 excepts,
                 rfieldId,
@@ -1078,6 +1116,7 @@ export default class Detail extends React.Component{
                 <TemplateList 
                     visibleTemplateList={visibleTemplateList}
                     handleCancel={this.handleCancel}
+                    optionsMap={this.state.optionsMap4Template}
                     templateDtmpl={templateDtmpl}
                     templateData={templateData}
                     menuId={menuId}

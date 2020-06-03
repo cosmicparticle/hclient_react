@@ -32,6 +32,7 @@ export default class TemplateList extends React.Component{
                 nextProps.templateData.entities.push(More)
             }
             console.log(nextProps.templateData.entities)
+
             this.setState({
                 menuId:nextProps.menuId,
                 treeData:nextProps.templateData.entities,
@@ -263,8 +264,6 @@ export default class TemplateList extends React.Component{
         console.log(selectedTreeCodes)
     }
 
-
-
     renderColumns=(columns)=>{
         let tmpIndex=0, opsIndex=0;
 
@@ -286,8 +285,10 @@ export default class TemplateList extends React.Component{
         return columns
     }
 
+
+
     render(){
-        const {templateDtmpl,visibleTemplateList,handleCancel,templateData,menuId,title,maskClosable}=this.props
+        const {templateDtmpl,visibleTemplateList,handleCancel,templateData,menuId,title,maskClosable,optionsMap}=this.props
         let {selectedRowKeys,isSeeTotal,currentPage,pageCount,formList,treeData}=this.state
         let columns=templateDtmpl&&templateDtmpl.config?templateDtmpl.config.columns:[]
         this.renderColumns(columns)
@@ -326,6 +327,8 @@ export default class TemplateList extends React.Component{
                 dataSource.push(list)
             })
         }
+
+
         
         return (
             <div>
@@ -369,7 +372,8 @@ export default class TemplateList extends React.Component{
                         maskClosable={maskClosable}
                         >
                             <div> 
-                                <BaseForm 
+                                <BaseForm
+                                    optionsMap={optionsMap}
                                     formList={formList} 
                                     filterSubmit={this.props.templateSearch} 
                                     handleOperate={this.handleOperate}

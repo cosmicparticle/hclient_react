@@ -617,14 +617,14 @@ export default class actTable extends React.Component{
                         style={{display:'inline-block'}}
                         showQuickJumper 
                         showSizeChanger 
-                        pageSizeOptions={['5','10','15','20']}
+                        pageSizeOptions={['5','10','20','50','100','500']}
                         defaultCurrent={1} 
                         current={currentPage}
                         pageSize={pageSize}
                         onChange={(page, pageSize)=>this.pageTo(page, pageSize)} 
                         onShowSizeChange={(current, size)=>this.pageTo(current, size)}
                         hideOnSinglePage={list&&list.length===0?true:false}
-                        total={pageCount}
+                        total={pageCount+1}
                         />
                 </div>
             </div>

@@ -800,7 +800,8 @@ export default class Detail extends React.Component{
 
         rfieldId? Super.super({
             url:`api2/entity/${menuId}/selecteor/selected/data/rfield/${rfieldId}`,
-        data:{
+            method:'GET',
+            query: {
             codes,
         }
     }).then((res)=>{

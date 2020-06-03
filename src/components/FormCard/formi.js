@@ -17,9 +17,10 @@ class Formi extends React.Component{
                     // if("唯一编码"===k){
                     //     continue;
                     // }
-                    if(values[k] && moment(values[k],moment.ISO_8601).isValid()){ //日期格式转换
+                    debugger
+                    if(values[k] && values[k] instanceof moment){ //日期格式转换
                         result[k]=moment(values[k]).format("YYYY-MM-DD HH:mm:ss")
-                    }else if(values[k] && values[k].originFileObj){
+                   }else if(values[k] && values[k].originFileObj){
                         result[k]=values[k].originFileObj
                     }else if(!values[k] || values[k].length===0){
                         result[k]="";

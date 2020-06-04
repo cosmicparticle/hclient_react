@@ -29,7 +29,7 @@ export default class Home extends React.Component{
             goodsImgLayer : null,
 
             //控制是否可添加电子围栏
-            addFenceMarker : true,
+            addFenceMarker : false,
             // 添加电子围栏的按钮是否点击了
             addFenceBtn : false,
     
@@ -116,20 +116,18 @@ export default class Home extends React.Component{
  //              debugger
                 if (this.state.showPeoPleImgBtn) {
                     console.log("人员定位：！！" + this.state.showPeoPleImgBtn); 
-                        this.showLocationPhoto("人员");
+                    this.showLocationPhoto("人员");
                 }
 
                 if (this.state.showCarImgBtn) {
-                        console.log("车辆定位：！！" + this.state.showCarImgBtn); 
-                        this.showLocationPhoto("车辆");
-                        // this.showLocationPhoto();
+                console.log("车辆定位：！！" + this.state.showCarImgBtn); 
+                this.showLocationPhoto("车辆");
                 }
 
                 if (this.state.showGoodsBtn) {
                     console.log("物品定位：！！" + this.state.showGoodsBtn); 
                     this.showLocationPhoto("物品");
-                    // this.showLocationPhoto();
-            }
+                }
             
                 }.bind(this), 3000);
             
@@ -191,13 +189,16 @@ export default class Home extends React.Component{
             //实例化 物品 ImageMarkerLayer
            let layerGoods = new fengmap.FMImageMarkerLayer();   
            group.addLayer(layerGoods);
-           //实例化 物品 ImageMarkerLayer
-        //    let layerCar = new fengmap.FMImageMarkerLayer();   
-        //    group.addLayer(layerCar);
+
+           //返回当前层中第一个polygonMarker,如果没有，则自动创建
+           // 实例化多边形
+          let  pm = group.getOrCreateLayer('polygonMarker');
+
            this.setState({
                    peopleImgLayer : layerPeople,
                    carImgLayer : layerCar,
                    goodsImgLayer : layerGoods,
+                   polygonLayer : pm
             })
    
            
@@ -351,24 +352,21 @@ debugger
      * 添加电子围栏
      * */
     addElectronicFence=()=> {
-        
-        if (this.state.addFenceMarker == true) {
+        if (!this.state.addFenceMarker) {
             //添加多边形标注
             this.addPolygonMarker();
+        } 
 
-            //修改可添加状态
-            this.setState({
-                addFenceMarker:false,
-                // addPeoPleImgMarker : false,
-                addFenceBtn : true,
-                removeBtn : false
-            })
-        }
+        this.state.polygonLayer.show =!this.state.addFenceMarker;
+         //修改可添加状态
+         this.setState({
+            addFenceMarker : !this.state.addFenceMarker,
+        })
     }
 
-/**
- * 按钮控制 ， 显示定位设备
- */
+    /**
+     * 按钮控制 ， 显示定位设备
+     */
     controlLocationPhoto=(typeValue)=> {
         this.showLocationPhoto(typeValue);
 
@@ -486,9 +484,6 @@ debugger
         });
           // 设置图片标注的唯一id
           fmIm.id = coordsTag.id;
-        //   name: name,
-        //   type : type,
-        //   status : status,
 
           fmIm.name = coordsTag.name;
           fmIm.type = coordsTag.type;
@@ -608,27 +603,27 @@ debugger
  //       debugger
         console.log("addPolygonMarker");
         //获取当前聚焦楼层
-        let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
+        // let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
         // let group = this.state.map.getFMGroup(1);
         //返回当前层中第一个polygonMarker,如果没有，则自动创建
-       let  pm = group.getOrCreateLayer('polygonMarker');
-        this.setState({
-            polygonLayer : pm
-        })
+    //    let  pm = group.getOrCreateLayer('polygonMarker');
+        // this.setState({
+        //     polygonLayer : pm
+        // })
 //        debugger
         //创建矩形标注
         let rma = this.createRectangleMaker();
  //       debugger
         // this.state.layer.addMarker(rma);
-        pm.addMarker(rma);
+        this.state.polygonLayer.addMarker(rma);
 
         //创建圆形标注
        let cm =  this.createCircleMaker();
-        pm.addMarker(cm);
+       this.state.polygonLayer.addMarker(cm);
 
         //创建自定义形状标注
         let cpm = this.createPolygonMaker(this.state.coords);
-        pm.addMarker(cpm);
+        this.state.polygonLayer.addMarker(cpm);
     }
 
 
@@ -775,83 +770,12 @@ debugger
 
     }
 
+    /**
+     * 解析数据后返回coordsTag
+     */
+    getCoordsTag=()=> {
 
-     /**
-         * 更新图片位置按钮事件
-         * 从后台加载新的坐标点
-         * */
-        moveMarkerFunc=()=> {
-            this.setState({
-                moveImaBtn : true,
-
-            })
-
-            Super.super({
-                url:'api2/ks/clist/location/list/data',
-                query:{
-                    pageSize:100
-                } ,
-                method:"GET"
-            }).then((res)=>{
-//                debugger
-               let arr =  res.result.entities;
-
-                arr.forEach(element => {
-    
-                    let coord = element.标签信息[0].当前坐标点;
-                    let onlyCode = element.标签信息[0].唯一编码;
-                    if (coord != undefined) {
-                        let conut = coord.indexOf(',');
-                        let conutEnd = coord.indexOf(')');
-    
-                        var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                        var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                        
-                          let  coordsTag = {
-                                x : x,
-                                y : y,
-                                id : onlyCode,
-                            }                       
-
-                            debugger
-                       let markers =  this.state.peopleImgLayer.markers;
-                    if (markers) {
-                        let im =  markers.find(imv=>imv.id == onlyCode);
-                            if (im) {
-                                im.moveTo({
-                                    x: coordsTag.x,
-                                    y: coordsTag.y,
-                                    time: 3,
-                                    callback: function () {
-                                        console.log("位置更新完毕");
-                                    
-                                    },
-                                    //更新时的回调函数
-                                    update: function (currentXY) {
-                                        console.log("实时坐标：" + currentXY.x + "," + currentXY.y);
-                                    }
-                                });
-                            } else {
-                                //添加(人的头像)图片标注
-                                this.addImageMarker(coordsTag);
-                            }
-            
-                        }                 
-                    }
-                });
-            });
-            this.setState({
-                moveImaBtn : false,
-
-            })
-        }
-
-        /**
-         * 解析数据后返回coordsTag
-         */
-        getCoordsTag=()=> {
-
-        }
+    }
 
 /**
  * 设置model颜色、透明度、边线颜色
@@ -934,7 +858,7 @@ removeStoreImage=(model)=>{
 
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
 
-                    <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
+                    <button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
 
                     <button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</button>
                     <button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</button>

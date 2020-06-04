@@ -105,7 +105,6 @@ export default class Home extends React.Component{
            // document.getElementById('tip').style.display = 'block';
            this.timer = setInterval(function () {
  //              debugger
-            console.log( "啥意思啊");
                if (this.state != undefined  && this.state.isTimer == true) {
                    console.log("触发了吗！！"); 
                 this.moveMarkerFunc();
@@ -167,6 +166,9 @@ export default class Home extends React.Component{
         this.state.map.on('mapClickNode', this.mapEevent);
     }
 
+    /**
+     * 地图点击事件
+     */
     mapEevent=(event)=>{
 
         let array=this.state.array;
@@ -315,22 +317,21 @@ debugger
 
      /**
      * 添加人物
+     * @param typeValue  显示类型。 人员、车辆、物品
      * */
-    addPeoplePhoto=()=> {
+    showLocationPhoto=(typeValue)=> {
         // 请求后台， 获取定位人员数据
 //        debugger
         Super.super({
-            // url:'api2/ks/clist/tag/list/data',  
             url:'api2/ks/clist/location/list/data',
             query:{
-                pageSize:100
+                type: typeValue, 
+                pageSize:200
             } ,
             method:"GET"
         }).then((res)=>{
  //           debugger
            let arr =  res.result.entities;
-           
-
             arr.forEach(element => {
 
                 let coord = element.标签信息[0].当前坐标点;
@@ -349,7 +350,6 @@ debugger
                         }
 
                     if (this.state.addPeoPleImgMarker == true) {                    
- //                           debugger
                                //添加(人的头像)图片标注
                         this.addImageMarker(coordsTag);
                     }
@@ -414,9 +414,7 @@ debugger
         // 设置不自动避让（图层遮盖时）
         fmIm.avoid(false);
 
-        // this.state.imList.push(fmIm);
         this.state.imgLayer.addMarker(fmIm);
-        // fmIm.alwaysShow();
 
         // 为图片标注添加信息窗
         // this.addPopInfoWindow(fmIm);
@@ -644,6 +642,7 @@ debugger
 
     /**
      * 从远程获取定位实体数据
+     * 暂时不用
      */
      getLocationList=async(typeValue)=> {
 
@@ -675,7 +674,7 @@ debugger
             })
 
             Super.super({
-                url:'api2/ks/clist/tag/list/data',  
+                url:'api2/ks/clist/location/list/data',
                 query:{
                     pageSize:100
                 } ,
@@ -686,8 +685,8 @@ debugger
 
                 arr.forEach(element => {
     
-                    let coord = element.基本属性组.当前坐标点;
-                   let onlyCode = element.默认字段组.唯一编码;
+                    let coord = element.标签信息[0].当前坐标点;
+                    let onlyCode = element.标签信息[0].唯一编码;
                     if (coord != undefined) {
                         let conut = coord.indexOf(',');
                         let conutEnd = coord.indexOf(')');
@@ -701,6 +700,7 @@ debugger
                                 id : onlyCode,
                             }                       
 
+                            debugger
                        let markers =  this.state.imgLayer.markers;
                     if (markers) {
                         let im =  markers.find(imv=>imv.id == onlyCode);
@@ -732,6 +732,14 @@ debugger
 
             })
         }
+
+        /**
+         * 解析数据后返回coordsTag
+         */
+        getCoordsTag=()=> {
+
+        }
+
 /**
  * 设置model颜色、透明度、边线颜色
  * */
@@ -815,9 +823,9 @@ removeStoreImage=(model)=>{
 
                     <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
 
-                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示人员</button>
-                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示物品</button>
-                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.getLocationList.bind(this, '人员')}>显示车辆</button>
+                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.showLocationPhoto.bind(this, '人员')}>显示人员</button>
+                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.showLocationPhoto.bind(this, '物品')}>显示物品</button>
+                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.showLocationPhoto.bind(this, '车辆')}>显示车辆</button>
                    
                     {/* <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button> */}
                    

@@ -755,12 +755,11 @@ export default class Detail extends React.Component{
     }
     getTemplate=(params)=>{
         let {templateGroupId,rfieldId,dfieldIds,excepts}=params
-        if(!rfieldId){
+        if(!rfieldId && !templateGroupId){
             rfieldId=this.state.rfieldId;
-        }
-        if(!templateGroupId){
             templateGroupId=this.state.templateGroupId;
         }
+      
         let {menuId}=this.state;
 
         const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/${menuId}/stmpl/detailGroup/${templateGroupId}`

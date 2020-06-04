@@ -79,9 +79,6 @@ export default class Home extends React.Component{
                 }
             ],
     
-            // 设备定位标签数据
-            coordsTagArr : [],
-    
             // 是否执行定时任务
             isTimer : false,
     
@@ -205,7 +202,7 @@ export default class Home extends React.Component{
             buttonTypeText = '我是鼠标右键点击';
             console.log('我是鼠标右键点击');
         }
-
+debugger
         //地图模型
         let target = event.target;
         if (!target) {
@@ -213,6 +210,7 @@ export default class Home extends React.Component{
         }
         //筛选点击类型,打印拾取信息
         switch (target.nodeType) {
+
             //地面模型
             case fengmap.FMNodeType.FLOOR:
                 if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) return;
@@ -222,11 +220,13 @@ export default class Home extends React.Component{
                     this.state.selectedModel.selected = false;
                 }
                 //弹出信息框
-                alert(info);
+                // alert(info);
+                console.log(info);
                 break;
 
             //model模型
             case fengmap.FMNodeType.MODEL:
+                debugger
                 if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) {
                     this.setState({
                         clickedPOI : false
@@ -256,26 +256,36 @@ export default class Home extends React.Component{
 
                 setTimeout(function () {
                     //弹出信息框
-                    alert(info);
+                    // alert(info);
+                    console.log(info);
                 }, 300);
                 break;
 
             //公共设施、图片标注模型
             case fengmap.FMNodeType.FACILITY:
+
+                break;
             case fengmap.FMNodeType.IMAGE_MARKER:
 
-                this.setState({
-                    clickedPOI :true,
-                    eventID : event.eventInfo.eventID,
-                })
+                // this.setState({
+                //     clickedPOI :true,
+                //     eventID : event.eventInfo.eventID,
+                // })
 
-                 info = '拾取对象类型： 公共设施 \n' +
-                    '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
-                if (this.state.selectedModel) {
-                    this.state.selectedModel.selected = false;
-                }
+                //  info = '拾取对象类型： 公共设施 \n' +
+                //     '地图位置坐标：x: ' + event.eventInfo.coord.x + '，y:' + event.eventInfo.coord.y;
+                // if (this.state.selectedModel) {
+                //     this.state.selectedModel.selected = false;
+                // }
                 //弹出信息框
-                alert(info);
+                // alert(info);
+
+                  // 为图片标注添加信息窗
+                  let markers =  this.state.imgLayer.markers;
+debugger
+
+                  let fmIm =  markers.find(imv=>imv.id == target.id);
+                this.addPopInfoWindow(fmIm);
                 break;
         }
 
@@ -304,13 +314,14 @@ export default class Home extends React.Component{
 
 
      /**
-     * 添加人物头像
+     * 添加人物
      * */
     addPeoplePhoto=()=> {
         // 请求后台， 获取定位人员数据
 //        debugger
         Super.super({
-            url:'api2/ks/clist/tag/list/data',  
+            // url:'api2/ks/clist/tag/list/data',  
+            url:'api2/ks/clist/location/list/data',
             query:{
                 pageSize:100
             } ,
@@ -322,8 +333,8 @@ export default class Home extends React.Component{
 
             arr.forEach(element => {
 
-                let coord = element.基本属性组.当前坐标点;
-               let onlyCode = element.默认字段组.唯一编码;
+                let coord = element.标签信息[0].当前坐标点;
+               let onlyCode = element.标签信息[0].唯一编码;
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
@@ -336,8 +347,6 @@ export default class Home extends React.Component{
                             y : y,
                             id : onlyCode,
                         }
-
-                    this.state.coordsTagArr.push(coordsTag);
 
                     if (this.state.addPeoPleImgMarker == true) {                    
  //                           debugger
@@ -353,7 +362,6 @@ export default class Home extends React.Component{
              this.setState({
                 addPeoPleImgMarker : false,
                 addPeoPleImgBtn : true,
-                // moveImaBtn : true,
                 removeBtn : false
             })
 
@@ -367,22 +375,7 @@ export default class Home extends React.Component{
         })
 
 
-        // if (this.state.addPeoPleImgMarker == true) {
-        //     debugger
-        //     this.state.coordsTagArr.forEach(coordsTag => {
-        //         debugger
-        //            //添加(人的头像)图片标注
-        //          this.addImageMarker(coordsTag);
-        //     });         
 
-        //     //修改可添加状态
-        //     this.setState({
-        //         addPeoPleImgMarker : false,
-        //         addPeoPleImgBtn : true,
-        //         // moveImaBtn : true,
-        //         removeBtn : false
-        //     })
-        // }
     }
     
 
@@ -408,7 +401,7 @@ export default class Home extends React.Component{
             //标注y坐标点
             y: coordsTag.y,
             //设置图片路径
-            url: require('./images/people3.png'),
+            url: require('./images/people4.png'),
             //设置图片显示尺寸
             size: 20,   
             //标注高度，大于model的高度
@@ -421,7 +414,7 @@ export default class Home extends React.Component{
         // 设置不自动避让（图层遮盖时）
         fmIm.avoid(false);
 
-        this.state.imList.push(fmIm);
+        // this.state.imList.push(fmIm);
         this.state.imgLayer.addMarker(fmIm);
         // fmIm.alwaysShow();
 
@@ -435,6 +428,9 @@ export default class Home extends React.Component{
      */
      addPopInfoWindow=(marker)=> {   
         if (marker) {
+
+            let id = marker.id;
+
             //添加绑定marker信息窗
             var ctlOpt = {
                 //设置弹框的宽度
@@ -442,7 +438,7 @@ export default class Home extends React.Component{
                 //设置弹框的高度px
                 height: 100,
                 //设置弹框的内容，文本或html页面元素
-                content: '<a target="_bank" href="https://www.fengmap.com">这是一个绑定marker信息框</a>',
+                content: '标签id: ' + id,
                 //关闭回调函数
                 closeCallBack: function () {
                     //信息窗点击关闭操作
@@ -636,6 +632,7 @@ export default class Home extends React.Component{
          if (this.state.imgLayer) {
              //移除该层的所有标注
              this.state.imgLayer.removeAll();
+            // this.state.imgLayer.show = false;
              //修改可添加状态
              this.setState({
                 addPeoPleImgMarker:true,
@@ -643,6 +640,27 @@ export default class Home extends React.Component{
              })
          }
 
+    }
+
+    /**
+     * 从远程获取定位实体数据
+     */
+     getLocationList=async(typeValue)=> {
+
+         await Super.super({
+            url:'api2/ks/clist/location/list/data',
+            query:{
+                type: typeValue,
+                pageSize:100
+            } ,
+            method:"GET"
+        }).then((res)=>{
+            debugger
+            console.log("44444");
+            return  res.result.entities;
+        })
+
+    console.log("3233333");
     }
 
 
@@ -681,14 +699,11 @@ export default class Home extends React.Component{
                                 x : x,
                                 y : y,
                                 id : onlyCode,
-                            }
-    
-                        // this.state.coordsTagArr.push(coordsTag);
-                        
-                        //marker已存在，设置marker的位置，setPosition ( x, y, gid, height )
-                    if (this.state.imList) {
-                        // this.state.im.setPosition(this.state.im.x + 10, this.state.im.y + 10, 1, 2);
-                        let im =  this.state.imList.find(imv=>imv.id == onlyCode);
+                            }                       
+
+                       let markers =  this.state.imgLayer.markers;
+                    if (markers) {
+                        let im =  markers.find(imv=>imv.id == onlyCode);
                             if (im) {
                                 im.moveTo({
                                     x: coordsTag.x,
@@ -704,8 +719,8 @@ export default class Home extends React.Component{
                                     }
                                 });
                             } else {
-                                //            //添加(人的头像)图片标注
-                                    this.addImageMarker(coordsTag);
+                                //添加(人的头像)图片标注
+                                this.addImageMarker(coordsTag);
                             }
             
                         }                 
@@ -801,6 +816,8 @@ removeStoreImage=(model)=>{
                     <button  className={this.state.addFenceBtn===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</button>
 
                     <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示人员</button>
+                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.addPeoplePhoto.bind(this)}>显示物品</button>
+                    <button  className={this.state.addPeoPleImgBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.getLocationList.bind(this, '人员')}>显示车辆</button>
                    
                     {/* <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button> */}
                    

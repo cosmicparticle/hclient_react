@@ -550,7 +550,7 @@ debugger
                 //设置弹框的高度px
                 height: 100,
                 //设置弹框的内容，文本或html页面元素
-                content:  name,
+                content:  '类型：' +type + '<br/>标签id：' + id+ ' <br/>姓名：' + name  ,
                 //关闭回调函数
                 closeCallBack: function () {
                     //信息窗点击关闭操作

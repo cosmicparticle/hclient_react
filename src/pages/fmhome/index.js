@@ -368,6 +368,7 @@ debugger
      * 按钮控制 ， 显示定位设备
      */
     controlLocationPhoto=(typeValue)=> {
+        // 显示定位图片
         this.showLocationPhoto(typeValue);
 
         if (typeValue == "人员") {
@@ -521,7 +522,7 @@ debugger
                     }
                 }      
             }
-
+debugger
         // 为图片标注添加信息窗
         // this.addPopInfoWindow(fmIm);
     }
@@ -546,6 +547,7 @@ debugger
                 height: 100,
                 //设置弹框的内容，文本或html页面元素
                 content:  '类型：' +type + '<br/>标签id：' + id+ ' <br/>姓名：' + name  ,
+                // content: name,
                 //关闭回调函数
                 closeCallBack: function () {
                     //信息窗点击关闭操作

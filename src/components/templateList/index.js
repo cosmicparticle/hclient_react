@@ -397,17 +397,17 @@ export default class TemplateList extends React.Component{
                                         >
                                         {isSeeTotal?`共${isSeeTotal}条`:'点击查看总数'}
                                     </span>
-                                    <Pagination 
+                                    <Pagination
                                         style={{display:'inline-block'}}
                                         showQuickJumper 
                                         showSizeChanger 
-                                        pageSizeOptions={['5','10','15','20']}
+                                        pageSizeOptions={['5','10','20','50']}
                                         defaultCurrent={1} 
                                         current={currentPage}
                                         onChange={(page, pageSize)=>this.pageTo(page, pageSize)} 
                                         onShowSizeChange={(current, size)=>this.pageTo(current, size)}
                                         hideOnSinglePage={true}
-                                        total={pageCount}
+                                        total={pageCount+1}
                                         />
                                 </div>
                             </div>                                     

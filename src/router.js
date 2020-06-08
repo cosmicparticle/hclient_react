@@ -23,6 +23,7 @@ export default class iRouter extends React.Component{
                             <Admin>
                                 <Switch>
                                     <Route path='/home' component={Home} exact/>
+                                    <Route path='/customPage/:menuId/fm/:type' component={Home} exact/>
                                     <Route path='/customPage/:menuId/:pageName(.+)' component={CustomPageRouter}/>
                                     <Route path="/:menuId" component={ActTable} exact />
                                     <Route path="/relation/:menuId/:ratmplId/:rootCode" component={ActTable} exact />
@@ -34,7 +35,6 @@ export default class iRouter extends React.Component{
                                     <Route path="/:menuId/:type/:code" component={Detail} exact/>
                                     <Route path="/relation/:menuId/:ratmplId/:rootCode/:type/:code" component={Detail} exact/>
                                     <Route path="/:menuId/:type/:code/:nodeId" component={Detail} exact />
-
                                     <Redirect to="/home"/>
                                 </Switch>
                                 

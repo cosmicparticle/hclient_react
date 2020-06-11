@@ -955,7 +955,7 @@ trace=()=>{
 
 
 tracetwo=(coordsTag)=>{
-
+    this.addImageMarker(coordsTag);
 
     let athis = this;
     let coodsTagListA = athis.state.coodsTagList;

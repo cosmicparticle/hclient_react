@@ -99,6 +99,10 @@ export default class Home extends React.Component{
             // 是否可以追踪
             isTrace : false,
             traceCount:0,
+
+            // 清除所有标注按钮
+            clearMakerBtn : false, 
+            popMarkerList : [],
         }
     }
 
@@ -401,11 +405,9 @@ debugger
      */
     controlLocationPhoto=(typeValue)=> {
         // 显示定位图片
-        
         if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) { 
             this.showLocationPhoto(typeValue);
         }
-
 
         if (typeValue == "人员") {
             // 控制人员点击按钮
@@ -481,7 +483,6 @@ debugger
                                     y : y, 
                                 }
                             this.addImageMarker(coordsTag);
-                        
                         }                 
                     }
                 });
@@ -547,7 +548,6 @@ debugger
                         time: 3,
                         callback: function () {
                             console.log("位置更新完毕");
-                        
                         },
                         //更新时的回调函数
                         update: function (currentXY) {
@@ -559,10 +559,10 @@ debugger
                         //添加(人的头像)图片标注
                         this.state.peopleImgLayer.addMarker(fmIm);
                     } else if (type == "车辆") {
-                        //添加(人的头像)图片标注
+                        //添加(车辆头像)图片标注
                         this.state.carImgLayer.addMarker(fmIm);
                     } else if (type == "物品") {
-                        //添加(人的头像)图片标注
+                        //添加(物品头像)图片标注
                         this.state.goodsImgLayer.addMarker(fmIm);
                     }
                 }      
@@ -602,6 +602,10 @@ debugger
             //添加弹框到地图上，绑定marker
             var popMarker = new fengmap.FMPopInfoWindow(this.state.map, ctlOpt, marker);
             //popMarker.close(); 关闭信息窗
+
+            // 保存信息框到当前数组中
+            this.state.popMarkerList.push(popMarker);
+
         } else {
             //独立信息窗坐标点
             var target = {
@@ -639,6 +643,7 @@ debugger
             };
             //添加弹框到地图上，独立信息窗
             var popMarker = new fengmap.FMPopInfoWindow(this.state.map, ctlOpt);
+            this.state.popMarkerList.push(popMarker);
         }
     }
 
@@ -896,6 +901,31 @@ removeStoreImage=(model)=>{
 }
 
 /**
+ * 清除所有的 标注， 及弹框
+ */
+clearMaker=()=>{
+    this.setState({
+        showPeoPleImgBtn: false,
+        showCarImgBtn : false, 
+        showGoodsBtn: false, 
+        // clearMakerBtn : true,
+    })
+
+    this.state.popMarkerList.forEach(popMarker => {
+         popMarker.close()
+     });
+     // 清空弹框的数组    
+    this.setState({
+        popMarkerList:[],
+    })
+
+    this.state.peopleImgLayer.removeAll();
+    this.state.carImgLayer.removeAll();
+    this.state.goodsImgLayer.removeAll();
+}
+
+
+/**
  * 人员追踪按钮点击事件
  */
 trace=()=>{
@@ -955,6 +985,7 @@ trace=()=>{
 
 
 tracetwo=(coordsTag)=>{
+    // 添加一个图片标注，
     this.addImageMarker(coordsTag);
 
     let athis = this;
@@ -1027,7 +1058,6 @@ play=()=>{
         //     this.addImageMarker(coordsTag);
 
         // });
-       
     });
     
     // 设置可追踪
@@ -1087,11 +1117,13 @@ initFormList=()=>{
         const b =  <button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</button>
         const c = <button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</button>
         const d =  <button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</button>
+        const e =  <button  className={this.state.clearMakerBtn===true?'clearMakerBtn active':'clearMakerBtn'} onClick={this.clearMaker.bind(this)}>清除所有</button>
         
         formItemList.push(a)
         formItemList.push(b)
         formItemList.push(c)
         formItemList.push(d)
+        formItemList.push(e)
         console.log("其他");
     }
 

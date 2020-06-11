@@ -1121,8 +1121,10 @@ initFormList=()=>{
         format="YYYY/MM/DD HH:mm:ss"
         onOk={this.onOk.bind(this)}
         />
+
+        // 
         const bb =  <button  onClick={this.trace.bind(this)}>显示追踪人员</button>
-        const cc =  <button  onClick={this.play.bind(this)}>播放追踪数据</button>
+        const cc =  <button  className={this.state.isTrace===true?'isTrace active':'isTrace'}   onClick={this.play.bind(this)}>播放追踪数据</button>
         formItemList.push(aa)
         formItemList.push(bb)
         formItemList.push(cc)

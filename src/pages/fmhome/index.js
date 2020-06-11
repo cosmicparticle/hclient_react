@@ -126,21 +126,31 @@ export default class Home extends React.Component{
            this.timer = setInterval(function () {
  //              debugger
                 if (this.state.showPeoPleImgBtn) {
+                    debugger
                     console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn); 
                     this.showLocationPhoto("人员");
                 }
 
                 if (this.state.showCarImgBtn) {
+                    debugger
                 console.log("车辆实时定位：！！" + this.state.showCarImgBtn); 
                 this.showLocationPhoto("车辆");
                 }
 
                 if (this.state.showGoodsBtn) {
+                    debugger
                     console.log("物品实时定位：！！" + this.state.showGoodsBtn); 
                     this.showLocationPhoto("物品");
                 }
 
+               
+            
+                }.bind(this), 3000);
+            });
+
+            this.timer2 = setInterval(function () {
                 if (this.state.isTrace) {
+                    debugger
                     console.log("人员追踪：！！" + this.state.isTrace); 
                    
                     let coodsTagListB =  this.state.coodsTagList;
@@ -161,9 +171,7 @@ debugger
                     })
 
                 }
-            
-                }.bind(this), 3000);
-            });
+            }.bind(this), 100);
             
             const {menuId,type}=this.props.match?this.props.match.params:this.props
             this.setState({
@@ -547,11 +555,11 @@ debugger
                         y: coordsTag.y,
                         time: 3,
                         callback: function () {
-                            console.log("位置更新完毕");
+                            // console.log("位置更新完毕");
                         },
                         //更新时的回调函数
                         update: function (currentXY) {
-                            console.log("实时坐标：" + currentXY.x + "," + currentXY.y);
+                            // console.log("实时坐标：" + currentXY.x + "," + currentXY.y);
                         }
                     });
                 } else {
@@ -919,9 +927,17 @@ clearMaker=()=>{
         popMarkerList:[],
     })
 
-    this.state.peopleImgLayer.removeAll();
-    this.state.carImgLayer.removeAll();
-    this.state.goodsImgLayer.removeAll();
+    if (this.state.peopleImgLayer) {
+        this.state.peopleImgLayer.removeAll();
+    }
+    if (this.state.carImgLayer) {
+        this.state.carImgLayer.removeAll();
+    }
+    if (this.state.goodsImgLayer) {
+        this.state.goodsImgLayer.removeAll();
+    }
+        
+   
 }
 
 
@@ -1062,7 +1078,7 @@ play=()=>{
     
     // 设置可追踪
     this.setState({
-        isTrace:true,
+        isTrace:!this.state.isTrace,
         traceCount:0
     })
     
@@ -1087,6 +1103,8 @@ onOk=(ov)=>{
  * 初始化按钮
  */
 initFormList=()=>{
+
+  
     const { RangePicker } = DatePicker;
     const { Option } = Select;
     
@@ -1108,6 +1126,8 @@ initFormList=()=>{
         formItemList.push(aa)
         formItemList.push(bb)
         formItemList.push(cc)
+
+       
     } else if (type ==3) {
         const bb =  <button >历史轨迹</button>
         formItemList.push(bb)

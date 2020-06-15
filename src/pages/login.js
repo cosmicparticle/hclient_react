@@ -83,6 +83,7 @@ class Loginit extends React.Component{
                                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                         placeholder="密码"
                                         onChange={this.handleChange("password")}
+                                        onKeyDown={this.handleKeyDown}
                                         />
                                 )}
                         </FormItem>

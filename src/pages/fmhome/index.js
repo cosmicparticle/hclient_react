@@ -1216,23 +1216,32 @@ onOk=(ov)=>{
  * @param {*} e 
  */
 singleOk=(e)=>{
-    let singleLocatingEntity = this.state.singleLocatingEntity;
-    let singleStartTime = this.state.singleStartTime;
+    // 获取定位实体对应的标签标号
+    let singleDate =  this.state.singleDate;
+    let singleLocatingEntity =  this.state.singleLocatingEntity;
+    let singleStartTime =   this.state.singleStartTime;
     let singleEndTime =  this.state.singleEndTime;
 
-    if (singleLocatingEntity ===null) {
-        message.info("请选择定位实体!")                    
+    if (singleDate === null) {
+        message.info("请选择日期!")  
         e.preventDefault();  
-        return                  
-    }
+        return   
+        }
     if (singleStartTime === null || singleEndTime === null) {
         message.info("请选择开始时间和结束时间!")  
         e.preventDefault();  
         return                       
     }
+    if (singleLocatingEntity ===null) {
+        message.info("请选择定位实体!")                    
+        e.preventDefault();  
+        return                  
+    }
 
+     singleStartTime = singleDate + " " +singleStartTime;
+     singleEndTime = singleDate + " " +singleEndTime;
     //  加载历史轨迹
-    this.singleHis(singleLocatingEntity, singleStartTime, singleEndTime, 10000)
+    this.singleHis(singleLocatingEntity, singleStartTime, singleEndTime, 100000)
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
@@ -1350,26 +1359,35 @@ initFormList=()=>{
                  }>
                     {this.getSelectList()}              
                 </Select>
-        const date =  <DatePicker onChange={()=>{}} />
-        const bb = <RangePicker  
-                        
-                        // showTime
-               
-                        // format="YYYY/MM/DD HH:mm:ss"
-                    //     onOk={(obj)=>{
-                    //         let startTime = obj[0].format("YYYY-MM-DD HH:mm:ss");
-                    //         let endTime = obj[1].format("YYYY-MM-DD HH:mm:ss");
-                    //         console.log("startTime: " + startTime);
-                    //         console.log("endTime: " + endTime);
-                    //         this.setState({
-                    //             singleStartTime:startTime,
-                    //             singleEndTime:endTime,
-                    //         })
-
-                    //     }
-                    // }
-                        />
-
+        const date =  <DatePicker onChange={(ov)=>{
+                                 let singleDate = ov.format("YYYY-MM-DD");
+                                    console.log(singleDate);
+                                 this.setState({
+                                singleDate:singleDate,
+                                })
+                             }} />
+        const bb = <div>
+                    <TimePicker  placeholder="开始时间"
+                        defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
+                        onChange={(time, timeString)=>{
+                            console.log(timeString);   
+                                this.setState({
+                                    singleStartTime:timeString
+                                })
+                            }
+                         }
+                    />
+                    <TimePicker  placeholder="结束时间"
+                        defaultOpenValue={moment('18:00:00', 'HH:mm:ss')}
+                        onChange={(time, timeString)=>{
+                            console.log(timeString);   
+                                this.setState({
+                                    singleEndTime:timeString
+                                })
+                            }
+                         }
+                    />
+                </div>
         const cc =  <Button onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
         
         

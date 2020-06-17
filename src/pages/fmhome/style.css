@@ -43,7 +43,7 @@ body {
 }
 
 .fmbtnsGroup button {
-    padding: 8px;
+    /* padding: 8px; */
     cursor: pointer;
     display: block;
     margin-bottom: 5px;

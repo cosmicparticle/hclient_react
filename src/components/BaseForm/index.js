@@ -69,6 +69,20 @@ class BaseForm extends React.Component{
                             )}
                         </FormItem>
                         formItemList.push(TIMEPICKER)
+                    }else if(item.inputType==="datetime"){
+                        const TIMEPICKER= <FormItem label={label} key={field}>
+                            {getFieldDecorator(field,{initialValue:value?moment(value,'YYYY-MM-DD HH:mm:ss'):undefined})(
+                                <DatePicker
+                                    showTime={true}
+                                    format='YYYY-MM-DD HH:mm:ss'
+                                    locale={locale}
+                                    placeholder={`请输入${label}`}
+                                    style={{width:225}}
+                                    getCalendarContainer={trigger => trigger.parentNode}
+                                />
+                            )}
+                        </FormItem>
+                        formItemList.push(TIMEPICKER)
                     }else if(item.inputType==="decimal" ){
                         const decimal= <FormItem label={label} key={field}>
                             {getFieldDecorator(field,{initialValue:value?value:""})(

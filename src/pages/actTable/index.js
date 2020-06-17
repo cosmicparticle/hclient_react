@@ -305,18 +305,17 @@ export default class actTable extends React.Component{
                 const old=params[k];
                 //日期格式转换
                 if(params[k] instanceof Array){
-
                     const arr=[]
                     params[k].forEach(item=>{
                         arr.push(moment(item).format("YYYY-MM-DD"))
                     }) 
                     params[k]=arr.join("~")
                 }else{
-                    params[k]=moment(params[k]).format("YYYY-MM-DD")
+                    params[k]=moment(params[k]).format("YYYY-MM-DD  HH:mm:ss")
                 }
 
-                if(params[k]&& params[k].indexOf("Invalid date") != -1 ){
-                    params[k]=old.join(",")
+                if(params[k] && params[k].indexOf("Invalid date") != -1 ){
+                    params[k]=params[k].join(",")
                 }
 
             }else if(params[k] ==="Invalid date"){

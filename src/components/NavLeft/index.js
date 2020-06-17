@@ -1,17 +1,20 @@
 import React from 'react'
-import { Menu} from 'antd';
+import { Menu, Button} from 'antd';
 //import Super from "./../../super"
 import { NavLink,withRouter } from 'react-router-dom'
 import './index.css'
 import Units from '../../units'
 const SubMenu = Menu.SubMenu;
 
+
+
 class NavLeft extends React.Component{
 
 	state={
 		menuTreeNode:[],
 		selectedKeys:[],
-		openKeys:[]
+		openKeys:[],
+		collapsed: false,
 	}
 	getCurrentMenuId(){
         const pathname = this.props.history.location.pathname;
@@ -87,12 +90,25 @@ class NavLeft extends React.Component{
 			openKeys
 		})
 	}
+
+
+	toggleCollapsed = () => {
+		this.setState({
+		  collapsed: !this.state.collapsed,
+		});
+	  };
+
 	render(){
 		const { menuTreeNode,selectedKeys,openKeys }=this.state
+		
 		return (
 			<div>
 				<div className="logo">
 					<a href="#/home"><h1>{Units.programName_NavLeft()}</h1></a>
+					{/* <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}> */}
+						{/* {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)} */}
+						按钮
+					{/* </Button> */}
 				</div>
 				<Menu 
 					mode="inline"
@@ -100,9 +116,11 @@ class NavLeft extends React.Component{
 					onOpenChange={this.handleOpen} //手风琴
 					selectedKeys={selectedKeys}
 					openKeys={openKeys}
+					inlineCollapsed={this.state.collapsed}
 					>
 					{menuTreeNode}
 				</Menu>
+				
 			</div>
 		)
 	}

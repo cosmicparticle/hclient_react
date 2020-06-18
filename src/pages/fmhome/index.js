@@ -233,10 +233,8 @@ debugger
 
 
             this.timer3 = setInterval(function () {
-
                 // 人员历史轨迹
                 if (this.state.isSingleTrack) {
-                   
                     debugger
                     let singleLocatingEntityA = this.state.singleLocatingEntity;
                     let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
@@ -269,14 +267,30 @@ debugger
                     debugger
                     if (coordsTag != undefined) {
                         debugger
+                        console.log("播放坐标时间： " + coordsTag.time);
+                        console.log("当前数组index： " + this.state.playCount + " : 对应时间：" + singLeList[this.state.playCount]);
                         this.addImageMarker(coordsTag);
                     }  
                    
-                        this.setState({
-                            curPlayCount: singLeList[this.state.playCount],
-                            playCount : this.state.playCount+1,
+                    // 我直接就拿了下一个数据点， 这样 不行
 
+
+                     let nextTime = singLeList[this.state.playCount];
+                     let shortVal = nextTime - this.state.curPlayCount;
+                     if (shortVal < 2000) {
+                        this.setState({
+                            curPlayCount: nextTime,
+                            playCount : this.state.playCount+1,
+    
                         })
+                     } else {
+                            nextTime = this.state.curPlayCount + 1800;
+                            this.setState({
+                                curPlayCount: nextTime,
+                                // playCount : this.state.playCount+1,
+        
+                            })
+                     }                
 
                     if (len <= this.state.playCount) {
                         message.info("轨迹播放完毕");
@@ -289,7 +303,7 @@ debugger
                     } 
                   
                 }
-            }.bind(this), 100);
+            }.bind(this), 10);
             
             const {menuId,type}=this.props.match?this.props.match.params:this.props
             this.setState({
@@ -629,10 +643,10 @@ debugger
 debugger
         let markers = null;
         let type = coordsTag.type;
-        let urlv = require('./images/people4.png');
+        let urlv = require('./images/renxiang.png');
         if (type == "人员") {
              markers =  this.state.peopleImgLayer.markers;
-             urlv = require('./images/people4.png');
+             urlv = require('./images/renxiang.png');
         } else if (type == "车辆") {
             markers =  this.state.carImgLayer.markers;
             urlv = require('./images/car.png');
@@ -649,7 +663,7 @@ debugger
             //设置图片路径
             url: urlv,
             //设置图片显示尺寸
-            size: 20,   
+            size: 25,   
             //标注高度，大于model的高度
             height: 1,
             // alwaysShow: true,
@@ -1074,9 +1088,12 @@ clearMaker=()=>{
         // clearMakerBtn : true,
     })
 
-    this.state.popMarkerList.forEach(popMarker => {
-         popMarker.close()
-     });
+    if (this.state.popMarkerList != null) {
+        this.state.popMarkerList.forEach(popMarker => {
+            popMarker.close()
+        });
+    }
+    
      // 清空弹框的数组    
     this.setState({
         popMarkerList:[],
@@ -1381,13 +1398,11 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 /**
  * 播放单个人员历史轨迹
  */
-singlePlay=(e)=>{
+singlePlay= (e)=>{
     console.log("开始播放---");
-    
     // 控制播放和暂停
     this.setState({
         isSingleTrack: !this.state.isSingleTrack,
-      
     })
 
 }
@@ -1451,7 +1466,7 @@ initFormList=()=>{
         // 获取所有人员
       const aa = <Select labelInValue  style={{ width: 120 }}  onSelect={
                     (obj)=>{ 
-                        console.log(obj.key) 
+                        // console.log(obj.key) 
                         this.setState({singleLocatingEntity:obj.key})
                     }
                  }>
@@ -1499,7 +1514,7 @@ initFormList=()=>{
         const ee = <Slider  min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
             onChange={
                 (value)=>{ 
-                    console.log("value: " + value)
+                    // console.log("value: " + value)
                     this.setState({
                     curPlayCount: value,
                 });
@@ -1597,7 +1612,7 @@ handleChange=(ov)=>{
  */
 getSelectList=()=>{  
     let data = this.state.coodsTagList;
-    console.log(data);
+    // console.log(data);
 debugger
 
     if(!data){

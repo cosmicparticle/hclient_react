@@ -121,6 +121,7 @@ export default class Home extends React.Component{
             isSingleTrack:false,
             // 播放到历史轨迹数组中的第几个对象
             curPlayCount:0,
+            playCount:0,
             // 对应进度条的位置
             singleSliderCount:0,
 
@@ -233,7 +234,6 @@ debugger
 
             this.timer3 = setInterval(function () {
 
-
                 // 人员历史轨迹
                 if (this.state.isSingleTrack) {
                    
@@ -243,7 +243,10 @@ debugger
                     let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
                     let singleHisObj = this.state.singleHisObj;
                             
-                    if (singleHisObj === undefined) {
+                    // 获取存放时间的数组及长度
+                    let singLeList = singleHisObj[singleLocatingEntityA];
+                   
+                    if (singLeList === undefined) {
                         message.info("没有找到历史轨迹数据！")
                         this.setState({
                             isSingleTrack: false,
@@ -251,17 +254,17 @@ debugger
                         })
                         return
                     }
+
+                    let len = singLeList.length;
+
                     let coordsTag = null;
                     if (this.state.curPlayCount === 0) {
                         this.setState({
                             curPlayCount: singleStartTimeStamp
                         })
-                         coordsTag = singleHisObj[singleStartTimeStamp]
-             
-                       
+                         coordsTag = singleHisObj[singleStartTimeStamp]   
                     } else {
-                         coordsTag = singleHisObj[this.state.curPlayCount]  
-                        
+                         coordsTag = singleHisObj[this.state.curPlayCount]   
                     }
                     debugger
                     if (coordsTag != undefined) {
@@ -269,30 +272,22 @@ debugger
                         this.addImageMarker(coordsTag);
                     }  
                    
-                   
-                     
                         this.setState({
-                            curPlayCount: this.state.curPlayCount + 1000   
+                            curPlayCount: singLeList[this.state.playCount],
+                            playCount : this.state.playCount+1,
+
                         })
 
-                    if (singleEndTimeStamp < this.state.curPlayCount) {
+                    if (len <= this.state.playCount) {
                         message.info("轨迹播放完毕");
                         this.setState({
                             isSingleTrack: false,
                             curPlayCount:0,
+                            playCount:0,
                         })
                         return
                     } 
-                    // else {
-
-                    //     let coordsTag = singleHislist[this.state.curPlayCount]
-                    //     this.addImageMarker(coordsTag);
-   
-                    //    this.setState({
-                    //        curPlayCount:this.state.curPlayCount+1
-                    //    })
-                    // }
-
+                  
                 }
             }.bind(this), 100);
             
@@ -1289,6 +1284,8 @@ singleOk=(e)=>{
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
 
+    message.info("轨迹加载完成！");
+
     let  marksA = {
         0: '',
         10: '',
@@ -1326,6 +1323,9 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
     let singleHisObjA = athis.state.singleHisObj;
 
     singleHisObjA = {}
+    singleHisObjA[tagCode]=[]
+   
+
 
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
@@ -1364,7 +1364,9 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
             if (singleHisObjA[timeHisTs] ==undefined) {
                 singleHisObjA[timeHisTs] = {}
             }
+
             singleHisObjA[timeHisTs] = coordsTagHistory;
+            singleHisObjA[tagCode].push(timeHisTs);
         })    
 
         athis.setState({

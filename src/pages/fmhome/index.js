@@ -232,78 +232,78 @@ debugger
             }.bind(this), 100);
 
 
-            this.timer3 = setInterval(function () {
-                // 人员历史轨迹
-                if (this.state.isSingleTrack) {
-                    debugger
-                    let singleLocatingEntityA = this.state.singleLocatingEntity;
-                    let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-                    let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-                    let singleHisObj = this.state.singleHisObj;
+            // this.timer3 = setInterval(function () {
+            //     // 人员历史轨迹
+            //     if (this.state.isSingleTrack) {
+            //         debugger
+            //         let singleLocatingEntityA = this.state.singleLocatingEntity;
+            //         let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
+            //         let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
+            //         let singleHisObj = this.state.singleHisObj;
                             
-                    // 获取存放时间的数组及长度
-                    let singLeList = singleHisObj[singleLocatingEntityA];
+            //         // 获取存放时间的数组及长度
+            //         let singLeList = singleHisObj[singleLocatingEntityA];
                    
-                    if (singLeList === undefined) {
-                        message.info("没有找到历史轨迹数据！")
-                        this.setState({
-                            isSingleTrack: false,
-                            curPlayCount:0,
-                        })
-                        return
-                    }
+            //         if (singLeList === undefined) {
+            //             message.info("没有找到历史轨迹数据！")
+            //             this.setState({
+            //                 isSingleTrack: false,
+            //                 curPlayCount:0,
+            //             })
+            //             return
+            //         }
 
-                    let len = singLeList.length;
+            //         let len = singLeList.length;
 
-                    let coordsTag = null;
-                    if (this.state.curPlayCount === 0) {
-                        this.setState({
-                            curPlayCount: singleStartTimeStamp
-                        })
-                         coordsTag = singleHisObj[singleStartTimeStamp]   
-                    } else {
-                         coordsTag = singleHisObj[this.state.curPlayCount]   
-                    }
-                    debugger
-                    if (coordsTag != undefined) {
-                        debugger
-                        console.log("播放坐标时间： " + coordsTag.time);
-                        console.log("当前数组index： " + this.state.playCount + " : 对应时间：" + singLeList[this.state.playCount]);
-                        this.addImageMarker(coordsTag);
-                    }  
+            //         let coordsTag = null;
+            //         if (this.state.curPlayCount === 0) {
+            //             this.setState({
+            //                 curPlayCount: singleStartTimeStamp
+            //             })
+            //              coordsTag = singleHisObj[singleStartTimeStamp]   
+            //         } else {
+            //              coordsTag = singleHisObj[this.state.curPlayCount]   
+            //         }
+            //         debugger
+            //         if (coordsTag != undefined) {
+            //             debugger
+            //             console.log("播放坐标时间： " + coordsTag.time);
+            //             console.log("当前数组index： " + this.state.playCount + " : 对应时间：" + singLeList[this.state.playCount]);
+            //             this.addImageMarker(coordsTag);
+            //         }  
                    
-                    // 我直接就拿了下一个数据点， 这样 不行
+            //         // 我直接就拿了下一个数据点， 这样 不行
 
 
-                     let nextTime = singLeList[this.state.playCount];
-                     let shortVal = nextTime - this.state.curPlayCount;
-                     if (shortVal < 2000) {
-                        this.setState({
-                            curPlayCount: nextTime,
-                            playCount : this.state.playCount+1,
+            //          let nextTime = singLeList[this.state.playCount];
+            //          let shortVal = nextTime - this.state.curPlayCount;
+            //          if (shortVal < 2000) {
+            //             this.setState({
+            //                 curPlayCount: nextTime,
+            //                 playCount : this.state.playCount+1,
     
-                        })
-                     } else {
-                            nextTime = this.state.curPlayCount + 1800;
-                            this.setState({
-                                curPlayCount: nextTime,
-                                // playCount : this.state.playCount+1,
+            //             })
+            //          } else {
+            //                 nextTime = this.state.curPlayCount + 1800;
+            //                 this.setState({
+            //                     curPlayCount: nextTime,
+            //                     // playCount : this.state.playCount+1,
         
-                            })
-                     }                
+            //                 })
+            //          }                
 
-                    if (len <= this.state.playCount) {
-                        message.info("轨迹播放完毕");
-                        this.setState({
-                            isSingleTrack: false,
-                            curPlayCount:0,
-                            playCount:0,
-                        })
-                        return
-                    } 
+            //         if (len <= this.state.playCount) {
+            //             message.info("轨迹播放完毕");
+            //             this.setState({
+            //                 isSingleTrack: false,
+            //                 curPlayCount:0,
+            //                 playCount:0,
+            //             })
+            //             return
+            //         } 
                   
-                }
-            }.bind(this), 10);
+            //     }
+            // }.bind(this), 10);
             
             const {menuId,type}=this.props.match?this.props.match.params:this.props
             this.setState({
@@ -597,7 +597,6 @@ debugger
                 } ,
                 method:"GET"
             }).then((res)=>{
-                
                let arr =  res.result.entities;
                 arr.forEach(element => {
                     if ( element.标签信息) {
@@ -638,8 +637,9 @@ debugger
     /**
      * fengmap.FMImageMarker 自定义图片标注对象，为自定义图层。
      * https://www.fengmap.com/docs/js/v2.5.0/fengmap.FMImageMarker.html
+     * @param seconds 播放速度秒
      **/
-    addImageMarker=(coordsTag)=> {
+    addImageMarker=(coordsTag, seconds=3)=> {
 debugger
         let markers = null;
         let type = coordsTag.type;
@@ -685,7 +685,7 @@ debugger
                     im.moveTo({
                         x: coordsTag.x,
                         y: coordsTag.y,
-                        time: 6,
+                        time: seconds,
                         callback: function () {
                             // console.log("位置更新完毕");
                         },
@@ -1301,7 +1301,7 @@ singleOk=(e)=>{
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
 
-    message.info("轨迹加载完成！");
+ 
 
     let  marksA = {
         0: '',
@@ -1314,15 +1314,7 @@ singleOk=(e)=>{
         70: '',
         80: '',
         90: '',
-        100: '',
-        110: '',
-        120: '',
-        130: '',
-        140: '',
-        150: '',
-        160: '',
-        170: '',
-        180: singleEndTime,
+        100: singleEndTime,
       }
     // 数据加载完成， 修改marks
     // this.setState({
@@ -1392,18 +1384,88 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
         
         console.log("hhha: singleHisObjA: ");
         console.log(singleHisObjA);
+        message.info("轨迹加载完成！");
+    })
+}
+
+/**
+ * 睡眠一会
+ * @param {*} ms 
+ */
+  sleep= async (ms)=> {
+    return await new Promise(function(resolve, reject) {
+        setTimeout(resolve,ms);
     })
 }
 
 /**
  * 播放单个人员历史轨迹
  */
-singlePlay= (e)=>{
+singlePlay= async (e)=>{
     console.log("开始播放---");
     // 控制播放和暂停
     this.setState({
         isSingleTrack: !this.state.isSingleTrack,
     })
+
+    // 人员历史轨迹
+        debugger
+        if (!this.state.isSingleTrack) {       
+            let singleLocatingEntityA = this.state.singleLocatingEntity;
+            let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
+            let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
+            let singleHisObj = this.state.singleHisObj;
+                    
+            // 获取存放时间的数组及长度
+            let singLeList = singleHisObj[singleLocatingEntityA];
+            if (singLeList === undefined) {
+                message.info("没有找到历史轨迹数据！")
+                this.setState({
+                    isSingleTrack: false,
+                    curPlayCount:0,
+                })
+                return
+            }
+
+            let len = singLeList.length;
+
+            let coordsTag = null;
+            // 显示第一个数据
+            this.addImageMarker(singLeList[this.state.playCount], 1);
+
+            for(let i=this.state.playCount;i<len;i++){ 
+                let prevTime = singLeList[i];
+                let curTime = null;
+                if (i+1 < len) {
+                    // 证明i不是最后一个
+                    curTime = singLeList[i+1];
+                }
+                        
+            if (curTime != null) {
+                    let  stamp = curTime - prevTime;
+                    coordsTag = singleHisObj[curTime] 
+                    this.addImageMarker(coordsTag, stamp / 1000 / 10);
+                    console.log((stamp) + "毫秒后执行我！");
+                    this.setState({
+                        curPlayCount: curTime,
+                        playCount : this.state.playCount+1,
+                    })
+                    await this.sleep(stamp / 10)    
+            }
+            
+            
+            }
+
+            if (len <= this.state.playCount) {
+                message.info("轨迹播放完毕");
+                this.setState({
+                    isSingleTrack: false,
+                    curPlayCount:0,
+                    playCount:0,
+                })
+                return
+            }
+        }
 
 }
 
@@ -1414,7 +1476,7 @@ formatter(value) {
     let   singleStartTime = this.state.singleStartTime;
     // 获取结束时间
     let   singleEndTime =  this.state.singleEndTime;
-
+debugger
     if (singleStartTime != null) {
         debugger
         let myDate = new Date(value);
@@ -1422,6 +1484,29 @@ formatter(value) {
         let m =myDate.getMinutes();
         let s = myDate.getSeconds();
         let abc = h+ ":" + m + ":" + s
+
+
+             let singleLocatingEntityA = this.state.singleLocatingEntity;
+            let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
+            let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
+            let singleHisObj = this.state.singleHisObj;
+                    debugger
+            // 获取存放时间的数组及长度
+            let singLeList = singleHisObj[singleLocatingEntityA];
+            if (singLeList === undefined) {
+                // message.info("没有找到历史轨迹数据！")
+                // this.setState({
+                //     isSingleTrack: false,
+                // })
+             
+            } else {
+                // var aa = singLeList.find(item => item.value > value);
+                // let count = singLeList.indexOf('aa')  //1
+    
+                // this.setState({
+                //     playCount: count==0?0 :count-1,
+                // })
+            }
     
         return `${abc}`;
     }

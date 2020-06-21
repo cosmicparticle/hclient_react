@@ -61,7 +61,7 @@ class ModelForm extends React.Component{
 		this.child=ref
     }
     render(){
-        const { formList,type,form,title,visibleForm,handleCancel,getOptions,options,maskClosable }=this.props;
+        const { formList,type,form,title,visibleForm,handleCancel,getOptions,options,maskClosable,deleteRFieldValue}=this.props;
         return(
             <Modal
                 title={title}
@@ -83,6 +83,7 @@ class ModelForm extends React.Component{
                         getOptions={getOptions}
                         options={options}
                         flag={false}
+                        deleteRFieldValue={deleteRFieldValue}
                         />          
                 </Form>       
             </Modal> 

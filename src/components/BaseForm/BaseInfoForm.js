@@ -64,7 +64,7 @@ export default class BaseInfoForm extends React.Component{
     ;
     initFormList=()=>{
         const { getFieldDecorator } = this.props.form?this.props.form:"";
-        const { formList,width,type,getTemplate,getDetailFormTmpl }=this.props
+        const { formList,width,type,getTemplate,getDetailFormTmpl,deleteRFieldValue}=this.props
         const formItemList=[]; 
         console.log(formList)
         if(formList && formList.length>0){
@@ -382,6 +382,9 @@ export default class BaseInfoForm extends React.Component{
                                             </Button>
                                             <Button  type="dashed" icon="select" onClick={()=>getTemplate({rfieldId:item.id,excepts:code?[code]:[]})}>
                                             </Button>
+                                            {item.type==="refselect"?
+                                            <Button  type="dashed" icon="delete" onClick={()=>deleteRFieldValue(item.id)}>
+                                            </Button>:""}
                                         </div> :  <Button  type="link" title="查看详情" onClick={()=>getDetailFormTmpl({modalType:"detail",rfieldId:item.id},{code})}>
                                             {value}
                                         </Button> : available?

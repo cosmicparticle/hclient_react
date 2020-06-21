@@ -822,6 +822,26 @@ export default class Detail extends React.Component{
         let {templateGroupId,excepts,dfieldIds}=this.state;
         this.getTemplate({templateGroupId,excepts,dfieldIds,searchParams:params})
     }
+
+    deleteRFieldValue=(rfieldId)=>{
+        let {columns}=this.state
+        let continueMark=true;
+        columns.forEach((column)=>{
+        if(column.fields){
+            column.fields.forEach(field=>{
+                if(!continueMark){
+                    return ;
+                }
+                if(field.id===rfieldId){
+                    field.value=null;
+                    continueMark=false;
+                }
+            })
+        }
+        });
+        this.setState({});
+    };
+
     TemplatehandleOk=(params)=>{
         let {codes,formTmplGroupId,isNew,ddfieldIds,formRfieldId}=params
         let {menuId,dfieldIds,templateGroupId,dataSource,columns,dtmplGroup,rfieldId}=this.state
@@ -1089,7 +1109,8 @@ export default class Detail extends React.Component{
                         baseInfo={this.baseInfo}
                         getOptions={this.getOptions}
                         setPassword={(fieldValue)=>this.visibleModal(fieldValue,'showSetPass','确定修改密码吗？')}
-                    />:""}                            
+                        deleteRFieldValue={this.deleteRFieldValue}
+                    />:""}
                 <ModelForm
                     handleCancel={this.handleCancel}
                     handleOk={this.modelhandleOk}
@@ -1100,6 +1121,7 @@ export default class Detail extends React.Component{
                     options={options}
                     title={title}
                     maskClosable={false}
+                    deleteRFieldValue={this.deleteRFieldValue}
                 />
                 <Drawer
                     title="查看历史"

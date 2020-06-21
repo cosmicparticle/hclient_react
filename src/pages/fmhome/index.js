@@ -118,7 +118,7 @@ export default class Home extends React.Component{
                 // "t15151551":{}
             },
             // 是否播放历史轨迹
-            isSingleTrack:false,
+            isSingleTrack: false,
             // 播放到历史轨迹数组中的第几个对象
             curPlayCount:0,
             playCount:0,
@@ -1403,8 +1403,12 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
  */
 singlePlay= async (e)=>{
     console.log("开始播放---");
+     // 控制播放和暂停
+     this.setState({
+        isSingleTrack: !this.state.isSingleTrack,
+    })
     // 人员历史轨迹
-        if (!this.state.isSingleTrack) {       
+        if (!this.state.isSingleTrack) {     
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
@@ -1415,8 +1419,8 @@ singlePlay= async (e)=>{
             if (singLeList === undefined) {
                 message.info("没有找到历史轨迹数据！")
                 this.setState({
-                    isSingleTrack: false,
-                    curPlayCount:singLeList[0],
+                    isSingleTrack: true,
+                    curPlayCount:singleStartTimeStamp,
                 })
                 return
             }
@@ -1425,23 +1429,22 @@ singlePlay= async (e)=>{
             let coordsTag = null;
             // 显示第一个数据
             this.addImageMarker(singleHisObj[singLeList[0]], 1);
-           
             for(let i=0;i<len;i++){ 
-                // console.log(this.state.isSingleTrack);
-                // if(this.state.isSingleTrack) {
-                //     return
-                // }
+
+                console.log( "this.state.isSingleTrack: " + this.state.isSingleTrack);
+                if (i>1 && !this.state.isSingleTrack) {
+                    break
+                }
+
                 let prevTime = singLeList[i];
                 let curTime = null;
                 if (i+1 < len) {
-                    // 证明i不是最后一个
+                    // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
                 }
-                
-                this.setState({
-                    curPlayCount:prevTime,
-                })
-                        
+
+               
+                                        
             if (curTime != null) {
                     let  stamp = curTime - prevTime;
                     // 按照10倍速度播放
@@ -1451,6 +1454,7 @@ singlePlay= async (e)=>{
                     console.log((stamp) + "毫秒后执行我！");
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
                     console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
+                    console.log(" this.state.playCount: " + this.state.playCount);
                     for (var j=1; j<aaa; j++) {
                         await this.sleep(1) 
                         console.log(1+ "毫秒后执行我！");
@@ -1460,7 +1464,7 @@ singlePlay= async (e)=>{
                     }
 
                     this.setState({
-                        // curPlayCount: curTime,
+                        curPlayCount: curTime,
                         playCount : this.state.playCount+1,
                     })
                     // await this.sleep(aaa)    
@@ -1479,10 +1483,7 @@ singlePlay= async (e)=>{
             }
         }
 
-     // 控制播放和暂停
-    this.setState({
-        isSingleTrack: !this.state.isSingleTrack,
-    })
+   
 
 }
 
@@ -1615,16 +1616,18 @@ initFormList=()=>{
         const ee = <Slider  min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
             onChange={
                 (value)=>{ 
-                    // console.log("value: " + value)
+                 console.log("Slider 改变 value: " + value)
                 this.setState({
                     curPlayCount: value,
+                    isSingleTrack:false,
+                    
                 });
                 }
             } 
             value={this.state.curPlayCount}
            tipFormatter={this.formatter.bind(this)} tooltipVisible   />
       
-        const dd =  <Button onClick={(e)=>{this.singlePlay(e)}}>播放</Button>
+        const dd =  <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={(e)=>{this.singlePlay(e)}}>播放</Button>
         formItemList.push(date)
        
         formItemList.push(bb)

@@ -1430,11 +1430,12 @@ singlePlay= async (e)=>{
             // 显示第一个数据
             this.addImageMarker(singleHisObj[singLeList[0]], 1);
             for(let i=0;i<len;i++){ 
-
                 console.log( "this.state.isSingleTrack: " + this.state.isSingleTrack);
                 if (i>1 && !this.state.isSingleTrack) {
                     break
                 }
+
+                console.log(" i: " + i);
 
                 let prevTime = singLeList[i];
                 let curTime = null;
@@ -1442,27 +1443,24 @@ singlePlay= async (e)=>{
                     // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
                 }
-
-               
-                                        
+                             
             if (curTime != null) {
                     let  stamp = curTime - prevTime;
                     // 按照10倍速度播放
                     let aaa = stamp / 10;
                     coordsTag = singleHisObj[curTime] 
-                    this.addImageMarker(coordsTag, (stamp / 1000) / 10);
+                    this.addImageMarker(coordsTag, (aaa / 1000));
                     console.log((stamp) + "毫秒后执行我！");
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
                     console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
-                    for (var j=1; j<aaa; j++) {
-                        await this.sleep(1) 
+                    for (var j=1; j<10; j++) {
+                        await this.sleep(0.01) 
                         console.log(1+ "毫秒后执行我！");
                         this.setState({
                             curPlayCount: this.state.curPlayCount + aaa,
                         })
                     }
-
                     this.setState({
                         curPlayCount: curTime,
                         playCount : this.state.playCount+1,

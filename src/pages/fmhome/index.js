@@ -1403,13 +1403,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
  */
 singlePlay= async (e)=>{
     console.log("开始播放---");
-    // 控制播放和暂停
-    this.setState({
-        isSingleTrack: !this.state.isSingleTrack,
-    })
-
     // 人员历史轨迹
-        debugger
         if (!this.state.isSingleTrack) {       
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
@@ -1422,37 +1416,55 @@ singlePlay= async (e)=>{
                 message.info("没有找到历史轨迹数据！")
                 this.setState({
                     isSingleTrack: false,
-                    curPlayCount:0,
+                    curPlayCount:singLeList[0],
                 })
                 return
             }
 
             let len = singLeList.length;
-
             let coordsTag = null;
             // 显示第一个数据
-            this.addImageMarker(singLeList[this.state.playCount], 1);
-
-            for(let i=this.state.playCount;i<len;i++){ 
+            this.addImageMarker(singleHisObj[singLeList[0]], 1);
+           
+            for(let i=0;i<len;i++){ 
+                // console.log(this.state.isSingleTrack);
+                // if(this.state.isSingleTrack) {
+                //     return
+                // }
                 let prevTime = singLeList[i];
                 let curTime = null;
                 if (i+1 < len) {
                     // 证明i不是最后一个
                     curTime = singLeList[i+1];
                 }
+                
+                this.setState({
+                    curPlayCount:prevTime,
+                })
                         
             if (curTime != null) {
                     let  stamp = curTime - prevTime;
+                    // 按照10倍速度播放
+                    let aaa = stamp / 10;
                     coordsTag = singleHisObj[curTime] 
-                    this.addImageMarker(coordsTag, stamp / 1000 / 10);
+                    this.addImageMarker(coordsTag, (stamp / 1000) / 10);
                     console.log((stamp) + "毫秒后执行我！");
+                    console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
+                    console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
+                    for (var j=1; j<aaa; j++) {
+                        await this.sleep(1) 
+                        console.log(1+ "毫秒后执行我！");
+                        this.setState({
+                            curPlayCount: this.state.curPlayCount + aaa,
+                        })
+                    }
+
                     this.setState({
-                        curPlayCount: curTime,
+                        // curPlayCount: curTime,
                         playCount : this.state.playCount+1,
                     })
-                    await this.sleep(stamp / 10)    
+                    // await this.sleep(aaa)    
             }
-            
             
             }
 
@@ -1466,6 +1478,11 @@ singlePlay= async (e)=>{
                 return
             }
         }
+
+     // 控制播放和暂停
+    this.setState({
+        isSingleTrack: !this.state.isSingleTrack,
+    })
 
 }
 
@@ -1485,8 +1502,7 @@ debugger
         let s = myDate.getSeconds();
         let abc = h+ ":" + m + ":" + s
 
-
-             let singleLocatingEntityA = this.state.singleLocatingEntity;
+            let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
             let singleHisObj = this.state.singleHisObj;
@@ -1600,7 +1616,7 @@ initFormList=()=>{
             onChange={
                 (value)=>{ 
                     // console.log("value: " + value)
-                    this.setState({
+                this.setState({
                     curPlayCount: value,
                 });
                 }

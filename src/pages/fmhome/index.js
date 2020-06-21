@@ -304,7 +304,16 @@ debugger
                   
             //     }
             // }.bind(this), 10);
-            
+
+
+        this.timer4 = setInterval(function () {
+            if (this.state.isSingleTrack) { 
+               this.setState({
+                    curPlayCount: this.state.curPlayCount + 1000,
+                })
+            }
+        }.bind(this), 100);
+
             const {menuId,type}=this.props.match?this.props.match.params:this.props
             this.setState({
                 mmtType : type,
@@ -1454,18 +1463,19 @@ singlePlay= async (e)=>{
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
                     console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
-                    for (var j=1; j<10; j++) {
-                        await this.sleep(0.01) 
-                        console.log(1+ "毫秒后执行我！");
-                        this.setState({
-                            curPlayCount: this.state.curPlayCount + aaa,
-                        })
-                    }
+                    // for (var j=1; j<10; j++) {
+                    //     // 循环
+                    //     await this.sleep(0.01) 
+                    //     console.log(1+ "毫秒后执行我！");
+                    //     this.setState({
+                    //         curPlayCount: this.state.curPlayCount + aaa,
+                    //     })
+                    // }
                     this.setState({
-                        curPlayCount: curTime,
+                        // curPlayCount: curTime,
                         playCount : this.state.playCount+1,
                     })
-                    // await this.sleep(aaa)    
+                    await this.sleep(aaa)    
             }
             
             }

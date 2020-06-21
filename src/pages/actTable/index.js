@@ -188,7 +188,7 @@ export default class actTable extends React.Component{
         this.setState({
             list:dataSource,
             pageInfo:data.pageInfo,
-            currentPage:data.pageInfo.pageNo,      
+            currentPage:data.pageInfo.pageNo,
             pageCount:isSeeTotal?isSeeTotal:noSeeTotal,
             Loading:false,
             pageSize:data.pageInfo.pageSize,
@@ -315,7 +315,7 @@ export default class actTable extends React.Component{
                 }
 
                 if(params[k] && params[k].indexOf("Invalid date") != -1 ){
-                    params[k]=params[k].join(",")
+                    params[k]=old.join(",")
                 }
 
             }else if(params[k] ==="Invalid date"){

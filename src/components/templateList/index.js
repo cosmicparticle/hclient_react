@@ -401,7 +401,7 @@ export default class TemplateList extends React.Component{
                                         style={{display:'inline-block'}}
                                         showQuickJumper 
                                         showSizeChanger 
-                                        pageSizeOptions={['5','10','20','50']}
+                                        pageSizeOptions={['5','10','50','100']}
                                         defaultCurrent={1} 
                                         current={currentPage}
                                         onChange={(page, pageSize)=>this.pageTo(page, pageSize)} 

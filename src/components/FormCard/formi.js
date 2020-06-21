@@ -17,7 +17,7 @@ class Formi extends React.Component{
                     // if("唯一编码"===k){
                     //     continue;
                     // }
-                    debugger
+                    // debugger
                     if(values[k] && values[k] instanceof moment){ //日期格式转换
                         result[k]=moment(values[k]).format("YYYY-MM-DD HH:mm:ss")
                    }else if(values[k] && values[k].originFileObj){
@@ -36,7 +36,7 @@ class Formi extends React.Component{
         this.props.form.resetFields()
     }
     initDetailsList=()=>{
-        const {dtmplGroup,columns,dataSource,type,loading,options,form}=this.props
+        const {dtmplGroup,columns,dataSource,type,loading,options,form,deleteRFieldValue}=this.props
         //console.log(dtmplGroup)
         return dtmplGroup.map((item)=>{
             if(item.composite && columns){
@@ -76,6 +76,7 @@ class Formi extends React.Component{
                             options={options}
                             form={form}
                             setPassword={this.props.setPassword}
+                            deleteRFieldValue={deleteRFieldValue}
                         />
             }
         })

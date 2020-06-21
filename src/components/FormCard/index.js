@@ -6,7 +6,7 @@ import EditTable from "../EditTable";
 export default class FormCard extends React.Component{
 
     initDetailsList=()=>{
-        const { formList,type,form,loading,options }=this.props
+        const { formList,type,form,loading,options,deleteRFieldValue}=this.props
         if(formList && formList.fields.length>0){ 
             const title=formList.title
             const fields=formList.fields
@@ -29,6 +29,7 @@ export default class FormCard extends React.Component{
                             getDetailFormTmpl={this.props.getDetailFormTmpl}
                             options={options}
                             setPassword={this.props.setPassword}
+                            deleteRFieldValue={deleteRFieldValue}
                             />
                     </Card>        
         }

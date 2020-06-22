@@ -1441,6 +1441,7 @@ singlePlay= async (e)=>{
            // 寻找i的值
             for(let i=0;i<len;i++){  
                 if ((i+1) == len) {
+                    console.log("-----11111-------");
                     center = 0;
                     break;
                 }
@@ -1451,11 +1452,15 @@ singlePlay= async (e)=>{
 
                 if (this.state.curPlayCount - singLeList[0] <=0) {
                     center = 0;
+                    console.log("-----2222-------");
                     break;
                 }
 
                 if (this.state.curPlayCount - singLeList[len -1] >=0) {
-                    center = 0;
+                    console.log("this.state.curPlayCount: " + this.state.curPlayCount);
+                    console.log("singLeList[len -1]: " + singLeList[len -1]);
+                    center = len -1;
+                    console.log("-----33331-------");
                     break;
                 }
 

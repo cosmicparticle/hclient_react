@@ -183,19 +183,19 @@ export default class Home extends React.Component{
            this.timer = setInterval(function () {
  //              debugger
                 if (this.state.showPeoPleImgBtn) {
-                    debugger
+                    
                     console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn); 
                     this.showLocationPhoto("人员");
                 }
 
                 if (this.state.showCarImgBtn) {
-                    debugger
+                    
                 console.log("车辆实时定位：！！" + this.state.showCarImgBtn); 
                 this.showLocationPhoto("车辆");
                 }
 
                 if (this.state.showGoodsBtn) {
-                    debugger
+                    
                     console.log("物品实时定位：！！" + this.state.showGoodsBtn); 
                     this.showLocationPhoto("物品");
                 }
@@ -208,14 +208,15 @@ export default class Home extends React.Component{
             this.timer2 = setInterval(function () {
                 // 人员追踪
                 if (this.state.isTrace) {
-                    debugger
+                    
                     console.log("人员追踪：！！" + this.state.isTrace); 
                    
                     let coodsTagListB =  this.state.coodsTagList;
                     let traceCountA =  this.state.traceCount
                     coodsTagListB.forEach(element => {
                         let length = element.coordsTagListHistory.length;
-debugger
+
+
                         if (length > traceCountA) {
                             let coordsTag =   element.coordsTagListHistory[traceCountA];
                            
@@ -223,7 +224,7 @@ debugger
                         }
 
                     });
-                    debugger
+                    
                     this.setState({
                         traceCount:traceCountA+1
                     })
@@ -306,6 +307,7 @@ debugger
             // }.bind(this), 10);
 
 
+            // 每100毫秒， 增加1秒， 10倍速度
         this.timer4 = setInterval(function () {
             if (this.state.isSingleTrack) { 
                this.setState({
@@ -649,7 +651,7 @@ debugger
      * @param seconds 播放速度秒
      **/
     addImageMarker=(coordsTag, seconds=3)=> {
-debugger
+
         let markers = null;
         let type = coordsTag.type;
         let urlv = require('./images/renxiang.png');
@@ -967,7 +969,7 @@ debugger
             } ,
             method:"GET"
         }).then((res)=>{
-            debugger
+            
             let arr =  res.result.entities;
        
             const coodsTagListA = [];
@@ -1417,7 +1419,7 @@ singlePlay= async (e)=>{
         isSingleTrack: !this.state.isSingleTrack,
     })
     // 人员历史轨迹
-        if (!this.state.isSingleTrack) {     
+        // if (!this.state.isSingleTrack) {     
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
@@ -1435,14 +1437,51 @@ singlePlay= async (e)=>{
             }
 
             let len = singLeList.length;
+            let center = 0;
+           // 寻找i的值
+            for(let i=0;i<len;i++){  
+
+               
+
+                if ((i+1) == len) {
+                    center = i;
+                    break;
+                }
+
+                let min = singLeList[i];
+                let max = singLeList[i+1];
+                debugger
+
+                if (this.state.curPlayCount - singLeList[0] <=0) {
+                    center = 0;
+                    break;
+                }
+
+                if (this.state.curPlayCount - singLeList[len -1] >=0) {
+                    center = 0;
+                    break;
+                }
+
+                if ((this.state.curPlayCount - min >=0) && (this.state.curPlayCount - max <=0)) {
+                    center = i;
+                    console.log("------------");
+                    break;
+                }
+
+            }
+            debugger
+            console.log(" center: " + center);
+
+           
             let coordsTag = null;
             // 显示第一个数据
-            this.addImageMarker(singleHisObj[singLeList[0]], 1);
-            for(let i=0;i<len;i++){ 
+            this.addImageMarker(singleHisObj[singLeList[center]], 1);
+            for(let i=center;i<len;i++){ 
                 console.log( "this.state.isSingleTrack: " + this.state.isSingleTrack);
-                if (i>1 && !this.state.isSingleTrack) {
-                    break
-                }
+                // if (this.state.isSingleTrack == false) {
+                //     console.log("暂停了");
+                //     break
+                // }
 
                 console.log(" i: " + i);
 
@@ -1463,16 +1502,8 @@ singlePlay= async (e)=>{
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
                     console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
-                    // for (var j=1; j<10; j++) {
-                    //     // 循环
-                    //     await this.sleep(0.01) 
-                    //     console.log(1+ "毫秒后执行我！");
-                    //     this.setState({
-                    //         curPlayCount: this.state.curPlayCount + aaa,
-                    //     })
-                    // }
+                   
                     this.setState({
-                        // curPlayCount: curTime,
                         playCount : this.state.playCount+1,
                     })
                     await this.sleep(aaa)    
@@ -1484,12 +1515,12 @@ singlePlay= async (e)=>{
                 message.info("轨迹播放完毕");
                 this.setState({
                     isSingleTrack: false,
-                    curPlayCount:0,
+                    curPlayCount:singleStartTimeStamp,
                     playCount:0,
                 })
                 return
             }
-        }
+        // }
 
    
 
@@ -1502,9 +1533,9 @@ formatter(value) {
     let   singleStartTime = this.state.singleStartTime;
     // 获取结束时间
     let   singleEndTime =  this.state.singleEndTime;
-debugger
+
     if (singleStartTime != null) {
-        debugger
+        
         let myDate = new Date(value);
         let h =myDate.getHours();
         let m =myDate.getMinutes();
@@ -1515,7 +1546,7 @@ debugger
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
             let singleHisObj = this.state.singleHisObj;
-                    debugger
+                    
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
             if (singLeList === undefined) {
@@ -1600,6 +1631,7 @@ initFormList=()=>{
                                 this.setState({
                                     singleStartTime:timeString,
                                     singleStartTimeStamp:singleStartTimeStamp,
+                                    curPlayCount:singleStartTimeStamp,
                                 })
                             }
                          }
@@ -1612,6 +1644,7 @@ initFormList=()=>{
                                 this.setState({
                                     singleEndTime:timeString,
                                     singleEndTimeStamp:singleEndTimeStamp,
+                                    curPlayCount:this.state.singleStartTimeStamp,
                                 })
                             }
                          }
@@ -1627,8 +1660,7 @@ initFormList=()=>{
                  console.log("Slider 改变 value: " + value)
                 this.setState({
                     curPlayCount: value,
-                    isSingleTrack:false,
-                    
+                    isSingleTrack:false,//
                 });
                 }
             } 
@@ -1725,7 +1757,7 @@ handleChange=(ov)=>{
 getSelectList=()=>{  
     let data = this.state.coodsTagList;
     // console.log(data);
-debugger
+
 
     if(!data){
         return [];

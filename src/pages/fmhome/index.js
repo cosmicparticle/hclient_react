@@ -1440,11 +1440,8 @@ singlePlay= async (e)=>{
             let center = 0;
            // 寻找i的值
             for(let i=0;i<len;i++){  
-
-               
-
                 if ((i+1) == len) {
-                    center = i;
+                    center = 0;
                     break;
                 }
 
@@ -1469,20 +1466,24 @@ singlePlay= async (e)=>{
                 }
 
             }
-            debugger
+            
             console.log(" center: " + center);
 
            
             let coordsTag = null;
             // 显示第一个数据
             this.addImageMarker(singleHisObj[singLeList[center]], 1);
+
+                let count = 0;
+
             for(let i=center;i<len;i++){ 
                 console.log( "this.state.isSingleTrack: " + this.state.isSingleTrack);
-                // if (this.state.isSingleTrack == false) {
-                //     console.log("暂停了");
-                //     break
-                // }
+                if (count >1 && this.state.isSingleTrack == false) {
+                    console.log("暂停了");
+                    break
+                }
 
+                count++;
                 console.log(" i: " + i);
 
                 let prevTime = singLeList[i];

@@ -180,59 +180,8 @@ export default class HisRoute extends React.Component{
 
         this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
-            //显示按钮
-           // document.getElementById('tip').style.display = 'block';
-           this.timer = setInterval(function () {
- //              debugger
-                if (this.state.showPeoPleImgBtn) {
-                    
-                    console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn); 
-                    this.showLocationPhoto("人员");
-                }
-
-                if (this.state.showCarImgBtn) {
-                    
-                console.log("车辆实时定位：！！" + this.state.showCarImgBtn); 
-                this.showLocationPhoto("车辆");
-                }
-
-                if (this.state.showGoodsBtn) {
-                    
-                    console.log("物品实时定位：！！" + this.state.showGoodsBtn); 
-                    this.showLocationPhoto("物品");
-                }
-             
-            
-                }.bind(this), 3000);
+          
             });
-
-
-            this.timer2 = setInterval(function () {
-                // 人员追踪
-                if (this.state.isTrace) {
-                    
-                    console.log("人员追踪：！！" + this.state.isTrace); 
-                   
-                    let coodsTagListB =  this.state.coodsTagList;
-                    let traceCountA =  this.state.traceCount
-                    coodsTagListB.forEach(element => {
-                        let length = element.coordsTagListHistory.length;
-
-
-                        if (length > traceCountA) {
-                            let coordsTag =   element.coordsTagListHistory[traceCountA];
-                           
-                            this.addImageMarker(coordsTag);
-                        }
-
-                    });
-                    
-                    this.setState({
-                        traceCount:traceCountA+1
-                    })
-
-                }
-            }.bind(this), 100);
 
             // 每100毫秒， 增加1秒， 10倍速度
         this.timer3 = setInterval(function () {
@@ -887,7 +836,6 @@ export default class HisRoute extends React.Component{
      getLocationList=(typeValue)=> {
 
        let  aThis = this;
-
          Super.super({
             url:'api2/ks/clist/location/list/data',
             query:{
@@ -1103,11 +1051,6 @@ trace=()=>{
        
     })
 
-
-    // 循环获取每个定位实体对应的一段时间内的定位数据
-
-    // 
-    
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
@@ -1246,12 +1189,11 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
     let athis = this;
     let singleHisObjA = athis.state.singleHisObj;
+   let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCode);
 
     singleHisObjA = {}
     singleHisObjA[tagCode]=[]
    
-
-
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
         query:{
@@ -1282,9 +1224,9 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
                 time: timeHistory,
                 x : xHis,
                 y : yHis, 
-                name:"初始测试",
-                type:"人员",
-                status: "正常",
+                name: coodsTag.name,
+                type: coodsTag.type,
+                status: coodsTag.status,
             }
 
             if (singleHisObjA[timeHisTs] ==undefined) {
@@ -1617,8 +1559,6 @@ handleChange=(ov)=>{
 getSelectList=()=>{  
     let data = this.state.coodsTagList;
     // console.log(data);
-
-
     if(!data){
         return [];
     } 

@@ -149,27 +149,24 @@ export default class HisRoute extends React.Component{
     }
 
     componentWillMount() {
-        console.log("componentWillMount...")
+        // console.log("componentWillMount...")
     }
 
     componentWillReceiveProps() {
-        console.log("componentWillReceiveProps...")
+        // console.log("componentWillReceiveProps...")
     }
 
     componentWillUpdate() {
-        console.log("componentWillUpdate...")
-        // this.clearMaker()
+        // console.log("componentWillUpdate...")
     }
     componentDidUpdate() {
-        console.log("componentDidUpdate...")
-        // this.clearMaker()
+        // console.log("componentDidUpdate...")
+
     }
     componentWillUnmount() {
-        console.log("componentWillUnmount...")
-        // this.clearMaker()
+        // console.log("componentWillUnmount...")
         clearInterval(this.timer);
-        clearInterval(this.timer2);
-        clearInterval(this.timer3);
+
     }
 
     componentDidMount() {
@@ -184,19 +181,13 @@ export default class HisRoute extends React.Component{
             });
 
             // 每100毫秒， 增加1秒， 10倍速度
-        this.timer3 = setInterval(function () {
+        this.timer = setInterval(function () {
             if (this.state.isSingleTrack) { 
                this.setState({
                     curPlayCount: this.state.curPlayCount + 1000,
                 })
             }
         }.bind(this), 100);
-
-            const {menuId,type}=this.props.match?this.props.match.params:this.props
-            this.setState({
-                mmtType : type,
-                menuId,
-            })
         
     }
     openMap=()=>{
@@ -1322,10 +1313,12 @@ singlePlay= async (e)=>{
                 count++;
 
                 let prevTime = singLeList[i];
+                console.log("i: " + i + " prevTime:"+ prevTime)
                 let curTime = null;
                 if (i+1 < len) {
                     // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
+                    console.log("i+1: " + (i+1) + " curTime:"+ curTime);
                 }
                              
             if (curTime != null) {

@@ -1,18 +1,19 @@
 import React from 'react'
 import {Col, Row} from 'antd';
-//import fengmap from "../../fengmap/fengmap.core.min"; //核心包
 import fengmap from 'fengmap';
-import './style.css';
-import Super from "./../../super"
-import Units from './../../units'
+import '../style.css';
+import Super from "./../../../super"
+import Units from './../../../units'
 import moment from 'moment';
 import { Select, Button, message, Slider,DatePicker, TimePicker } from 'antd';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
-import TimeSlider from './TimeSlider'
 
 const Option = Select.Option;
 
-export default class Home extends React.Component{
+/**
+ * 历史轨迹
+ */
+export default class HisRoute extends React.Component{
 
     constructor(props) {
         super(props);
@@ -580,16 +581,16 @@ export default class Home extends React.Component{
 
         let markers = null;
         let type = coordsTag.type;
-        let urlv = require('./images/renxiang.png');
+        let urlv = require('../images/renxiang.png');
         if (type == "人员") {
              markers =  this.state.peopleImgLayer.markers;
-             urlv = require('./images/renxiang.png');
+             urlv = require('../images/renxiang.png');
         } else if (type == "车辆") {
             markers =  this.state.carImgLayer.markers;
-            urlv = require('./images/car.png');
+            urlv = require('../images/car.png');
         } else if (type == "物品") {
             markers =  this.state.goodsImgLayer.markers;
-            urlv = require('./images/goods.png');
+            urlv = require('../images/goods.png');
         }
        
        let fmIm = new fengmap.FMImageMarker({
@@ -979,7 +980,7 @@ addStoreImage=(model)=> {
     var storeImage = {
         size: [10, 10],
         height: 2,
-        image: './images/logo.png',
+        image: '../images/logo.png',
         angle: 0
     };
     //自定义StoreImage的方法
@@ -1472,26 +1473,6 @@ initFormList=()=>{
     const { Option } = Select;
     
     const formItemList=[];
-    const {type}=this.props.match?this.props.match.params:this.props
-    if (type ==2) {
-        const aa = <DatePicker
-        ranges={{
-            Today: [moment(), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-        }}
-        showTime
-        locale={locale}
-        format="YYYY/MM/DD HH:mm:ss"
-        onOk={this.onOk.bind(this)}
-        />
-        const bb =  <Button  onClick={this.trace.bind(this)}>显示追踪人员</Button>
-        const cc =  <Button  className={this.state.isTrace===true?'isTrace active':'isTrace'}   onClick={this.play.bind(this)}>播放追踪数据</Button>
-        formItemList.push(aa)
-        formItemList.push(bb)
-        formItemList.push(cc)
-
-       
-    } else if (type ==3) {
 // 人员历史轨迹
            const row =  <Row key={1}>
                 <Col span={3}>
@@ -1569,31 +1550,6 @@ initFormList=()=>{
             </Row>
         // 获取所有人员
         formItemList.push(row)
-
-    } else {
-
-        const row =  <Row key={1}>
-                        <Col span={3}>
-                            <Button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</Button>
-                        </Col>
-                        <Col span={2}>
-                       <Button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</Button>
-                        </Col>
-                        <Col span={2}>
-                        <Button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</Button>
-      
-                        </Col>
-                        <Col span={2}>
-                            <Button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</Button>
-                        </Col>
-                        <Col span={2}>
-                             <Button  className={this.state.clearMakerBtn===true?'clearMakerBtn active':'clearMakerBtn'} onClick={this.clearMaker.bind(this)}>清除所有</Button>
-                        </Col>
-                    </Row>
-
-        
-        formItemList.push(row)
-    }
 
     return formItemList;
 }
@@ -1684,13 +1640,7 @@ getSelectList=()=>{
                
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
                     {this.initFormList()}              
-                <br/>
-
-
-                    {/* <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button> */}
-                   
-                    {/* <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除所有标注</button> */}
-                </div>
+                 </div>
             </div>
         );
     }

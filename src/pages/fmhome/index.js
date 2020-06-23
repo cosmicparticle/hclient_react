@@ -137,21 +137,6 @@ export default class Home extends React.Component{
                 80: '',
                 90: '',
                 100: '',
-                110: '',
-                120: '',
-                130: '',
-                140: '',
-                150: '',
-                160: '',
-                170: '',
-                180: '',
-                
-                // 100: {
-                //   style: {
-                //     color: '#f50',
-                //   },
-                //   label: <strong>100°C</strong>,
-                // },
               }
 
 
@@ -167,11 +152,31 @@ export default class Home extends React.Component{
     }
 
     componentWillMount() {
-       
+        console.log("componentWillMount...")
+    }
+
+    componentWillReceiveProps() {
+        console.log("componentWillReceiveProps...")
+    }
+
+    componentWillUpdate() {
+        console.log("componentWillUpdate...")
+        // this.clearMaker()
+    }
+    componentDidUpdate() {
+        console.log("componentDidUpdate...")
+        // this.clearMaker()
+    }
+    componentWillUnmount() {
+        console.log("componentWillUnmount...")
+        // this.clearMaker()
+        clearInterval(this.timer);
+        clearInterval(this.timer2);
+        clearInterval(this.timer3);
     }
 
     componentDidMount() {
-
+        console.log("componentDidMount...")
          // 封装人员的数据
          this.getLocationList("人员");
         this.openMap();
@@ -232,83 +237,8 @@ export default class Home extends React.Component{
                 }
             }.bind(this), 100);
 
-
-            // this.timer3 = setInterval(function () {
-            //     // 人员历史轨迹
-            //     if (this.state.isSingleTrack) {
-            //         debugger
-            //         let singleLocatingEntityA = this.state.singleLocatingEntity;
-            //         let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-            //         let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-            //         let singleHisObj = this.state.singleHisObj;
-                            
-            //         // 获取存放时间的数组及长度
-            //         let singLeList = singleHisObj[singleLocatingEntityA];
-                   
-            //         if (singLeList === undefined) {
-            //             message.info("没有找到历史轨迹数据！")
-            //             this.setState({
-            //                 isSingleTrack: false,
-            //                 curPlayCount:0,
-            //             })
-            //             return
-            //         }
-
-            //         let len = singLeList.length;
-
-            //         let coordsTag = null;
-            //         if (this.state.curPlayCount === 0) {
-            //             this.setState({
-            //                 curPlayCount: singleStartTimeStamp
-            //             })
-            //              coordsTag = singleHisObj[singleStartTimeStamp]   
-            //         } else {
-            //              coordsTag = singleHisObj[this.state.curPlayCount]   
-            //         }
-            //         debugger
-            //         if (coordsTag != undefined) {
-            //             debugger
-            //             console.log("播放坐标时间： " + coordsTag.time);
-            //             console.log("当前数组index： " + this.state.playCount + " : 对应时间：" + singLeList[this.state.playCount]);
-            //             this.addImageMarker(coordsTag);
-            //         }  
-                   
-            //         // 我直接就拿了下一个数据点， 这样 不行
-
-
-            //          let nextTime = singLeList[this.state.playCount];
-            //          let shortVal = nextTime - this.state.curPlayCount;
-            //          if (shortVal < 2000) {
-            //             this.setState({
-            //                 curPlayCount: nextTime,
-            //                 playCount : this.state.playCount+1,
-    
-            //             })
-            //          } else {
-            //                 nextTime = this.state.curPlayCount + 1800;
-            //                 this.setState({
-            //                     curPlayCount: nextTime,
-            //                     // playCount : this.state.playCount+1,
-        
-            //                 })
-            //          }                
-
-            //         if (len <= this.state.playCount) {
-            //             message.info("轨迹播放完毕");
-            //             this.setState({
-            //                 isSingleTrack: false,
-            //                 curPlayCount:0,
-            //                 playCount:0,
-            //             })
-            //             return
-            //         } 
-                  
-            //     }
-            // }.bind(this), 10);
-
-
             // 每100毫秒， 增加1秒， 10倍速度
-        this.timer4 = setInterval(function () {
+        this.timer3 = setInterval(function () {
             if (this.state.isSingleTrack) { 
                this.setState({
                     curPlayCount: this.state.curPlayCount + 1000,
@@ -1092,6 +1022,7 @@ removeStoreImage=(model)=>{
  * 清除所有的 标注， 及弹框
  */
 clearMaker=()=>{
+    console.log("clearMaker...")
     this.setState({
         showPeoPleImgBtn: false,
         showCarImgBtn : false, 
@@ -1311,29 +1242,6 @@ singleOk=(e)=>{
     }
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
-
- 
-
-    let  marksA = {
-        0: '',
-        10: '',
-        20: '',
-        30: '',
-        40: '',
-        50: '',
-        60: '',
-        70: '',
-        80: '',
-        90: '',
-        100: singleEndTime,
-      }
-    // 数据加载完成， 修改marks
-    // this.setState({
-    //     marks: marksA,
-
-    // })
-
-
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
@@ -1358,6 +1266,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
         method:"GET"
     }).then((res)=>{
         let arrHistory =  res.result.entities;
+        debugger
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
             let  tagCodeHistory= element.基本属性组.标签编号;
@@ -1418,8 +1327,7 @@ singlePlay= async (e)=>{
      this.setState({
         isSingleTrack: !this.state.isSingleTrack,
     })
-    // 人员历史轨迹
-        // if (!this.state.isSingleTrack) {     
+            // 人员历史轨迹
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
@@ -1438,58 +1346,41 @@ singlePlay= async (e)=>{
 
             let len = singLeList.length;
             let center = 0;
-           // 寻找i的值
+           // 寻找 this.state.curPlayCount 对应数组中的下标
             for(let i=0;i<len;i++){  
                 if ((i+1) == len) {
-                    console.log("-----11111-------");
                     center = 0;
                     break;
                 }
-
                 let min = singLeList[i];
                 let max = singLeList[i+1];
-                debugger
-
                 if (this.state.curPlayCount - singLeList[0] <=0) {
                     center = 0;
-                    console.log("-----2222-------");
                     break;
                 }
-
                 if (this.state.curPlayCount - singLeList[len -1] >=0) {
-                    console.log("this.state.curPlayCount: " + this.state.curPlayCount);
-                    console.log("singLeList[len -1]: " + singLeList[len -1]);
-                    center = len -1;
-                    console.log("-----33331-------");
+                     center = len -1;
                     break;
                 }
-
                 if ((this.state.curPlayCount - min >=0) && (this.state.curPlayCount - max <=0)) {
                     center = i;
-                    console.log("------------");
                     break;
                 }
-
             }
             
             console.log(" center: " + center);
-
-           
             let coordsTag = null;
             // 显示第一个数据
             this.addImageMarker(singleHisObj[singLeList[center]], 1);
-
-                let count = 0;
-
+            // 判断第一次进入    
+            let count = 0;
             for(let i=center;i<len;i++){ 
-                console.log( "this.state.isSingleTrack: " + this.state.isSingleTrack);
+                console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
                 if (count >1 && this.state.isSingleTrack == false) {
-                    console.log("暂停了");
+                    console.log("暂停设备移动");
                     break
                 }
-
                 count++;
-                console.log(" i: " + i);
 
                 let prevTime = singLeList[i];
                 let curTime = null;
@@ -1501,18 +1392,19 @@ singlePlay= async (e)=>{
             if (curTime != null) {
                     let  stamp = curTime - prevTime;
                     // 按照10倍速度播放
-                    let aaa = stamp / 10;
+                    let tStamp = stamp / 10;
                     coordsTag = singleHisObj[curTime] 
-                    this.addImageMarker(coordsTag, (aaa / 1000));
+                    this.addImageMarker(coordsTag, (tStamp / 1000));
                     console.log((stamp) + "毫秒后执行我！");
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
-                    console.log("当前时间： " + (coordsTag.time) + " this.state.curPlayCount : " + new Date(this.state.curPlayCount));
+                    console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
                    
                     this.setState({
                         playCount : this.state.playCount+1,
                     })
-                    await this.sleep(aaa)    
+                    // 睡眠多少毫秒
+                    await this.sleep(tStamp)    
             }
             
             }
@@ -1525,10 +1417,7 @@ singlePlay= async (e)=>{
                     playCount:0,
                 })
                 return
-            }
-        // }
-
-   
+            }   
 
 }
 
@@ -1579,7 +1468,8 @@ formatter(value) {
 /**
  * 初始化按钮
  */
-initFormList=()=>{ 
+initFormList=()=>{  
+
     // 人员追踪
 
     // const { RangePicker } = TimePicker;
@@ -1598,10 +1488,8 @@ initFormList=()=>{
         format="YYYY/MM/DD HH:mm:ss"
         onOk={this.onOk.bind(this)}
         />
-
-        // 
-        const bb =  <button  onClick={this.trace.bind(this)}>显示追踪人员</button>
-        const cc =  <button  className={this.state.isTrace===true?'isTrace active':'isTrace'}   onClick={this.play.bind(this)}>播放追踪数据</button>
+        const bb =  <Button  onClick={this.trace.bind(this)}>显示追踪人员</Button>
+        const cc =  <Button  className={this.state.isTrace===true?'isTrace active':'isTrace'}   onClick={this.play.bind(this)}>播放追踪数据</Button>
         formItemList.push(aa)
         formItemList.push(bb)
         formItemList.push(cc)
@@ -1609,92 +1497,106 @@ initFormList=()=>{
        
     } else if (type ==3) {
 // 人员历史轨迹
-
-        // 获取所有人员
-      const aa = <Select labelInValue  style={{ width: 120 }}  onSelect={
-                    (obj)=>{ 
-                        // console.log(obj.key) 
-                        this.setState({singleLocatingEntity:obj.key})
-                    }
-                 }>
-                    {this.getSelectList()}              
-                </Select>
-        const date =  <DatePicker onChange={(ov)=>{
+           const row =  <Row key={1}>
+                <Col span={3}>
+                    <DatePicker onChange={(ov)=>{
                                  let singleDate = ov.format("YYYY-MM-DD");
                                     console.log(singleDate);
                                  this.setState({
                                 singleDate:singleDate,
                                 })
                              }} />
-        const bb = <div>
-                    <TimePicker  placeholder="开始时间"
-                        defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
-                        onChange={(time, timeString)=>{
-                            console.log(timeString);   
+                </Col>           
+                <Col span={3}>
+                        <TimePicker   placeholder="开始时间"
+                            defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
+                            onChange={(time, timeString)=>{
+                                console.log(timeString);   
 
-                                let singleStartTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
-                                console.log("singleStartTimeStamp:" + singleStartTimeStamp);          
-                                this.setState({
-                                    singleStartTime:timeString,
-                                    singleStartTimeStamp:singleStartTimeStamp,
-                                    curPlayCount:singleStartTimeStamp,
-                                })
+                                    let singleStartTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
+                                    console.log("singleStartTimeStamp:" + singleStartTimeStamp);          
+                                    this.setState({
+                                        singleStartTime:timeString,
+                                        singleStartTimeStamp:singleStartTimeStamp,
+                                        curPlayCount:singleStartTimeStamp,
+                                    })
+                                }
                             }
-                         }
-                    />
-                    <TimePicker  placeholder="结束时间"
-                        defaultOpenValue={moment('10:00:00', 'HH:mm:ss')}
-                        onChange={(time, timeString)=>{
-                            console.log(timeString);   
-                            let singleEndTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
-                                this.setState({
-                                    singleEndTime:timeString,
-                                    singleEndTimeStamp:singleEndTimeStamp,
-                                    curPlayCount:this.state.singleStartTimeStamp,
-                                })
+                        />
+                      </Col>  
+                      <Col span={3}>
+                        <TimePicker   placeholder="结束时间"
+                            defaultOpenValue={moment('10:00:00', 'HH:mm:ss')}
+                            onChange={(time, timeString)=>{
+                                console.log(timeString);   
+                                let singleEndTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
+                                    this.setState({
+                                        singleEndTime:timeString,
+                                        singleEndTimeStamp:singleEndTimeStamp,
+                                        curPlayCount:this.state.singleStartTimeStamp,
+                                    })
+                                }
                             }
-                         }
-                    />
-                </div>
-        const cc =  <Button onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
-        
-    
-        // marks={this.state.marks}
-        const ee = <Slider  min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
-            onChange={
-                (value)=>{ 
-                 console.log("Slider 改变 value: " + value)
-                this.setState({
-                    curPlayCount: value,
-                    isSingleTrack:false,//
-                });
-                }
-            } 
-            value={this.state.curPlayCount}
-           tipFormatter={this.formatter.bind(this)} tooltipVisible   />
-      
-        const dd =  <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={(e)=>{this.singlePlay(e)}}>播放</Button>
-        formItemList.push(date)
-       
-        formItemList.push(bb)
-        formItemList.push(aa)
-        formItemList.push(cc)
-        formItemList.push(ee)
-        formItemList.push(dd)
+                        />
+                </Col>
+                <Col span={3}>
+                    <Select labelInValue  style={{ width: 120,}}  onSelect={
+                        (obj)=>{ 
+                            this.setState({singleLocatingEntity:obj.key})
+                        }
+                    }>
+                        {this.getSelectList()}              
+                    </Select>
+                </Col>
+                <Col span={2}>
+                     <Button  onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
+                </Col>
+
+                 <Col span={8}>
+            <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
+                    onChange={
+                        (value)=>{ 
+                        console.log("Slider 改变 value: " + value)
+                        this.setState({
+                            curPlayCount: value,
+                            isSingleTrack:false,//
+                        });
+                        }
+                    } 
+                    value={this.state.curPlayCount}
+                tipFormatter={this.formatter.bind(this)} tooltipVisible   />
+                </Col>
+                <Col span={2}>
+                    <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={(e)=>{this.singlePlay(e)}}>播放</Button>
+                </Col>
+
+            </Row>
+        // 获取所有人员
+        formItemList.push(row)
+
     } else {
 
-        const a =  <Button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</Button>
-        const b =  <Button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</Button>
-        const c = <Button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</Button>
-        const d =  <Button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</Button>
-        const e =  <Button  className={this.state.clearMakerBtn===true?'clearMakerBtn active':'clearMakerBtn'} onClick={this.clearMaker.bind(this)}>清除所有</Button>
-        
-        formItemList.push(a)
-        formItemList.push(b)
-        formItemList.push(c)
-        formItemList.push(d)
-        formItemList.push(e)
+        const row =  <Row key={1}>
+                        <Col span={3}>
+                            <Button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</Button>
+                        </Col>
+                        <Col span={2}>
+                       <Button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</Button>
+                        </Col>
+                        <Col span={2}>
+                        <Button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</Button>
+      
+                        </Col>
+                        <Col span={2}>
+                            <Button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</Button>
+                        </Col>
+                        <Col span={2}>
+                             <Button  className={this.state.clearMakerBtn===true?'clearMakerBtn active':'clearMakerBtn'} onClick={this.clearMaker.bind(this)}>清除所有</Button>
+                        </Col>
+                    </Row>
 
+        
+        formItemList.push(row)
     }
 
     return formItemList;

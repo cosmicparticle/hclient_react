@@ -134,8 +134,15 @@ export default class HisRoute extends React.Component{
                 80: '',
                 90: '',
                 100: '',
-              }
-
+              },
+              // 是否可以画线
+              addLineState: true,
+            //当前的路线
+            naviLines : [],
+            //当前线路的坐标点
+            points: [
+                    
+            ],        
 
         }
     }
@@ -1101,34 +1108,6 @@ tracetwo=(coordsTag)=>{
     })
 }
 
-/**
- * 播放人员追踪
- */
-play=()=>{
-    let coodsTagListA = this.state.coodsTagList
-    
-    console.log("333333" + coodsTagListA);
-
-    // 拿到历史坐标点， 显示标注， 并移动标注
-    coodsTagListA.forEach(element => {
-
-            this.addImageMarker(element);
-          
-        // element.coordsTagListHistory.forEach(coordsTag => {
-        //     debugger
-        //     this.addImageMarker(coordsTag);
-
-        // });
-    });
-    
-    // 设置可追踪
-    this.setState({
-        isTrace:!this.state.isTrace,
-        traceCount:0
-    })
-    
-
-}
 
 /**
  * 获取日期时间
@@ -1332,6 +1311,15 @@ singlePlay= async (e)=>{
                     console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
                    
+                    let point=  {
+                        x: coordsTag.x, 
+                        y: coordsTag.y, 
+                        z: 1
+                    }
+                    this.state.points.push(point);
+
+                    this.addMarkerFunc(this.state.points)
+
                     this.setState({
                         playCount : this.state.playCount+1,
                     })
@@ -1360,51 +1348,138 @@ formatter(value) {
     let   singleStartTime = this.state.singleStartTime;
     // 获取结束时间
     let   singleEndTime =  this.state.singleEndTime;
-
     if (singleStartTime != null) {
-        
         let myDate = new Date(value);
         let h =myDate.getHours();
         let m =myDate.getMinutes();
         let s = myDate.getSeconds();
         let abc = h+ ":" + m + ":" + s
-
-            let singleLocatingEntityA = this.state.singleLocatingEntity;
-            let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-            let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-            let singleHisObj = this.state.singleHisObj;
-                    
-            // 获取存放时间的数组及长度
-            let singLeList = singleHisObj[singleLocatingEntityA];
-            if (singLeList === undefined) {
-                // message.info("没有找到历史轨迹数据！")
-                // this.setState({
-                //     isSingleTrack: false,
-                // })
-             
-            } else {
-                // var aa = singLeList.find(item => item.value > value);
-                // let count = singLeList.indexOf('aa')  //1
-    
-                // this.setState({
-                //     playCount: count==0?0 :count-1,
-                // })
-            }
-    
         return `${abc}`;
     }
-
     return `${value}`;
 }
+
+
+/**
+         * 添加线标注按钮事件
+         * singlePlay= async (e)=>{
+         * */
+        addMarkerFunc= (points)=> {
+            if (this.state.addLineState) {
+
+                let naviResults = [
+                    {
+                        groupId: 1,
+                        points: points,
+                     },
+                ]
+
+                // this.setState({
+                //     addLineState: false,
+                // })
+                //配置第一条路径线的线型、线宽、透明度等参数
+                var lineStyle1 = {
+                    //设置线的宽度
+                    lineWidth: 5,
+                    //是否开启平滑线功能
+                    smooth: true,
+                    //设置FMARROW线型线的颜色，十六进制颜色值
+                    //godColor: '#FF0000',
+                    //设置FMARROW线型线边线的颜色,十六进制颜色值
+                    //godEdgeColor: '#FF0000',
+                    //设置线的类型为导航线
+                    lineType: fengmap.FMLineType.FMARROW,
+                    //设置线动画,false为动画
+                    noAnimate: true
+                };
+
+                //绘制第一条路径线
+                this.drawLines(naviResults, lineStyle1);
+
+                //配置第二条路径线的线型、颜色、线宽、透明度等
+                // var lineStyle2 = {
+                //     //设置线的宽度
+                //     lineWidth: 5,
+                //     //设置线的类型
+                //     lineType: fengmap.FMLineType.FULL,
+                //     //设置线的颜色, 只支持修改非FMARROW线型的线的颜色
+                //     color: '#FF0000'
+                // };
+                //绘制第二条路径线
+                // drawLines(naviResults2, lineStyle2);
+
+            }
+        }
+
+        /**
+         * 删除线标注按钮事件
+         * */
+        deleteMarkerFunc=()=> {
+            //清除线标注
+            this.clearNaviLines();
+            this.setState({
+                addLineState: true,
+            })
+        }
+
+        /**
+         * 绘制线图层
+         * fengmap.FMLineMarker为线图层，可包含很多条折线类FMSegment。
+         * https://www.fengmap.com/docs/js/v2.5.0/fengmap.FMLineMarker.html
+         * */
+        drawLines=(results, lineStyle)=> {
+            //创建路径线图层
+            var line = new fengmap.FMLineMarker();
+            //循环results中坐标点集合，通过坐标点绘制路径线
+            for (var i = 0; i < results.length; i++) {
+                var result = results[i];
+                var gid = result.groupId;
+                var points = result.points;
+                //创建FMSegment点集，一个点集代表一条折线
+                var seg = new fengmap.FMSegment();
+                seg.groupId = gid;
+                seg.points = points;
+                //将FMSegment绘制到线图层上
+                line.addSegment(seg);
+                //绘制线
+                this.state.map.drawLineMark(line, lineStyle);
+                this.state.naviLines.push(line);
+            }
+        }
+        /**
+         * 清除路径线
+         * */
+        clearNaviLines=()=> {
+            //方法一：清除所有路径线
+            this.state.map.clearLineMark();
+
+            //方法二：清除所有路径线
+            /*if (naviLines.length != 0) {
+                for (var i = 0; i < naviLines.length; i++) {
+                    if (naviLines[i])
+                        map.clearLineMark(naviLines[i]);
+                }
+                naviLines = [];
+            }*/
+
+            //方法三：清除所有路径线
+            /*if (naviLines.length != 0) {
+                for (var i = 0; i < naviLines.length; i++) {
+                    if (naviLines[i]) {
+                        //移除路径线
+                        map.removeLineMarker(naviLines[i]);
+                    }
+                }
+                naviLines = [];
+            }*/
+        }
+
 
 /**
  * 初始化按钮
  */
 initFormList=()=>{  
 
-    // 人员追踪
-
-    // const { RangePicker } = TimePicker;
     const { Option } = Select;
     
     const formItemList=[];
@@ -1486,6 +1561,23 @@ initFormList=()=>{
         // 获取所有人员
         formItemList.push(row)
 
+
+  const aa =  
+        <div>
+            <Button  onClick={(e)=>{
+                let points = [
+                    {x: 13297225, y: 4113840, z: 1},
+                    {x: 13297189, y: 4113900, z: 1},
+                    {x: 13297130, y: 4113852, z: 1}
+                ]
+                this.addMarkerFunc(points)
+            }}>画线</Button>
+
+            <Button  onClick={(e)=>{
+                this.deleteMarkerFunc()
+            }}>清除线</Button>
+        </div>
+        formItemList.push(aa)
     return formItemList;
 }
 
@@ -1569,8 +1661,6 @@ getSelectList=()=>{
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
-                {/* <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span> */}
-               
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
                     {this.initFormList()}              
                  </div>

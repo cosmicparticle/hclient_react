@@ -136,7 +136,9 @@ export default class HisRoute extends React.Component{
                 100: '',
               },
             //当前的路线
-            naviLines : [],    
+            naviLines : [],   
+            // 存放画线的点集
+            points : [],
 
         }
     }
@@ -1310,7 +1312,7 @@ singlePlay= async (e)=>{
             }
            
             // 存放画线的点
-            let points = [];
+            // let points = [];
 
             // 判断第一次进入    
             let count = 0;
@@ -1347,9 +1349,10 @@ singlePlay= async (e)=>{
                         y: coordsTag.y, 
                         z: 1
                     }
-                    points.push(point)
+                    // points.push(point)
+                    this.state.points.push(point)
                     this.deleteMarkerFunc()
-                    this.addMarkerFunc(points)
+                    this.addMarkerFunc(this.state.points)
 
                     this.setState({
                         playCount : this.state.playCount+1,

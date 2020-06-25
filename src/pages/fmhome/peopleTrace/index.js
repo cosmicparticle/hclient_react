@@ -179,7 +179,7 @@ export default class PeopleTrace extends React.Component{
         this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
-           // document.getElementById('tip').style.display = 'block';
+            document.getElementById('fmbtnsGroup').style.display = 'block';
                
             });
 

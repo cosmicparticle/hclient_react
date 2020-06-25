@@ -233,7 +233,7 @@ export default class HisRoute extends React.Component{
         this.state.map.on('loadComplete', ()=> { 
             console.log('地图加载完成！');
             //显示按钮
-           // document.getElementById('tip').style.display = 'block';
+           document.getElementById('fmbtnsGroup').style.display = 'block';
             
            // 初始化 图层
            let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
@@ -1507,7 +1507,6 @@ formatter(value) {
 initFormList=()=>{  
 
     const { Option } = Select;
-    
     const formItemList=[];
 // 人员历史轨迹
            const row =  <Row key={1}>
@@ -1692,9 +1691,9 @@ getSelectList=()=>{
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
-                <div  id="fmbtnsGroup" className="fmbtnsGroup">
-                    {this.initFormList()}              
-                 </div>
+                    <div  id="fmbtnsGroup" className="fmbtnsGroup">
+                        {this.initFormList()}              
+                    </div>
             </div>
         );
     }

@@ -178,7 +178,7 @@ export default class Home extends React.Component{
         this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
-           // document.getElementById('tip').style.display = 'block';
+            document.getElementById('fmbtnsGroup').style.display = 'block';
            this.timer = setInterval(function () {
  //              debugger
                 if (this.state.showPeoPleImgBtn) {

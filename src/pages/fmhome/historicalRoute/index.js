@@ -1570,9 +1570,12 @@ initFormList=()=>{
                     onChange={
                         (value)=>{ 
                         console.log("Slider 改变 value: " + value)
-                          // 清除已经存在的线
-                        this.deleteMarkerFunc()
-                        this.clearMaker()
+
+                        if (this.state.singleEndTimeStamp != value){
+                            // 清除已经存在的线
+                            this.deleteMarkerFunc()
+                            this.clearMaker()
+                        }                    
 
                         this.setState({
                             curPlayCount: value,

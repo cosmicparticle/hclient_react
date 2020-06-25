@@ -1274,7 +1274,7 @@ singlePlay= async (e)=>{
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
 
-            if (singLeList.length === 0) {
+            if (singLeList === undefined || singLeList.length === 0) {
                 message.info("无历史轨迹数据！")
                 this.setState({
                     isSingleTrack: false,

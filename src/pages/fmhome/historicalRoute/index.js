@@ -135,14 +135,8 @@ export default class HisRoute extends React.Component{
                 90: '',
                 100: '',
               },
-              // 是否可以画线
-              addLineState: true,
             //当前的路线
-            naviLines : [],
-            //当前线路的坐标点
-            points: [
-                    
-            ],        
+            naviLines : [],    
 
         }
     }
@@ -1238,7 +1232,6 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
         } ,
         method:"GET"
     }).then((res)=>{
-        console.log("哇哦");
         result  =  res;     
     })
 
@@ -1262,10 +1255,10 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
  */
 singlePlay= async (e)=>{
     console.log("开始播放---");
-     // 控制播放和暂停
-     this.setState({
-        isSingleTrack: !this.state.isSingleTrack,
-    })
+            // 控制播放和暂停
+            this.setState({
+                isSingleTrack: !this.state.isSingleTrack,
+            })
             // 人员历史轨迹
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
@@ -1274,7 +1267,6 @@ singlePlay= async (e)=>{
                     
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
-            debugger
 
             if (singLeList.length === 0) {
                 message.info("无历史轨迹数据！")
@@ -1309,7 +1301,7 @@ singlePlay= async (e)=>{
                 }
             }
             
-            console.log(" center: " + center);
+            // console.log(" center: " + center);
             let coordsTag = null;
             // 显示第一个数据
             coordsTag =  singleHisObj[singLeList[center]];
@@ -1317,10 +1309,13 @@ singlePlay= async (e)=>{
                 this.addImageMarker(coordsTag, 1);
             }
            
+            // 存放画线的点
+            let points = [];
+
             // 判断第一次进入    
             let count = 0;
             for(let i=center;i<len;i++){ 
-                console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
+                // console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
                 if (count >1 && this.state.isSingleTrack == false) {
                     console.log("暂停设备移动");
                     break
@@ -1328,12 +1323,12 @@ singlePlay= async (e)=>{
                 count++;
 
                 let prevTime = singLeList[i];
-                console.log("i: " + i + " prevTime:"+ prevTime)
+                // console.log("i: " + i + " prevTime:"+ prevTime)
                 let curTime = null;
                 if (i+1 < len) {
                     // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
-                    console.log("i+1: " + (i+1) + " curTime:"+ curTime);
+                    // console.log("i+1: " + (i+1) + " curTime:"+ curTime);
                 }
                              
             if (curTime != null) {
@@ -1342,19 +1337,19 @@ singlePlay= async (e)=>{
                     let tStamp = stamp / 10;
                     coordsTag = singleHisObj[curTime] 
                     this.addImageMarker(coordsTag, (tStamp / 1000));
-                    console.log((stamp) + "毫秒后执行我！");
-                    console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
-                    console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
-                    console.log(" this.state.playCount: " + this.state.playCount);
+                    // console.log((stamp) + "毫秒后执行我！");
+                    // console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
+                    // console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
+                    // console.log(" this.state.playCount: " + this.state.playCount);
                    
                     let point=  {
                         x: coordsTag.x, 
                         y: coordsTag.y, 
                         z: 1
                     }
-                    this.state.points.push(point);
-
-                    this.addMarkerFunc(this.state.points)
+                    points.push(point)
+                    this.deleteMarkerFunc()
+                    this.addMarkerFunc(points)
 
                     this.setState({
                         playCount : this.state.playCount+1,
@@ -1401,7 +1396,6 @@ formatter(value) {
          * singlePlay= async (e)=>{
          * */
         addMarkerFunc= (points)=> {
-            if (this.state.addLineState) {
 
                 let naviResults = [
                     {
@@ -1410,9 +1404,6 @@ formatter(value) {
                      },
                 ]
 
-                // this.setState({
-                //     addLineState: false,
-                // })
                 //配置第一条路径线的线型、线宽、透明度等参数
                 var lineStyle1 = {
                     //设置线的宽度
@@ -1444,7 +1435,6 @@ formatter(value) {
                 //绘制第二条路径线
                 // drawLines(naviResults2, lineStyle2);
 
-            }
         }
 
         /**
@@ -1453,9 +1443,6 @@ formatter(value) {
         deleteMarkerFunc=()=> {
             //清除线标注
             this.clearNaviLines();
-            this.setState({
-                addLineState: true,
-            })
         }
 
         /**
@@ -1580,9 +1567,14 @@ initFormList=()=>{
                     onChange={
                         (value)=>{ 
                         console.log("Slider 改变 value: " + value)
+                          // 清除已经存在的线
+                        this.deleteMarkerFunc()
+                        this.clearMaker()
+
                         this.setState({
                             curPlayCount: value,
                             isSingleTrack:false,//
+                            points:[],
                         });
                         }
                     } 
@@ -1613,7 +1605,7 @@ initFormList=()=>{
                 this.deleteMarkerFunc()
             }}>清除线</Button>
         </div>
-        formItemList.push(aa)
+        // formItemList.push(aa)
     return formItemList;
 }
 
@@ -1663,10 +1655,7 @@ handleChange=(ov)=>{
                 }                 
             }
            
-        });
-    
-      
-       
+        }); 
      
     })
 

@@ -1128,7 +1128,7 @@ onOk=(ov)=>{
  * 单个人员历史轨迹， 加载轨迹事件
  * @param {*} e 
  */
-singleOk=(e)=>{
+singleOk= async (e)=>{
     // 获取定位实体对应的标签标号
     let singleDate =  this.state.singleDate;
     let singleLocatingEntity =  this.state.singleLocatingEntity;
@@ -1150,40 +1150,33 @@ singleOk=(e)=>{
         e.preventDefault();  
         return                  
     }
+
     //  加载历史轨迹
-    this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
+    this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 1500)
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
-singleHis=(tagCode, startTime, endTime, pageSize)=>{
+singleHis= async (tagCode, startTime, endTime, pageSize)=>{
 
-    let athis = this;
-    let singleHisObjA = athis.state.singleHisObj;
-   let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCode);
-
+    let singleHisObjA = this.state.singleHisObj;
+    let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCode);
     singleHisObjA = {}
     singleHisObjA[tagCode]=[]
-   
-    Super.super({
-        url:'api2/ks/clist/location/tag/list/data',
-        query:{
-            tagCode: tagCode, 
-            startTime:startTime,
-            endTime:endTime,
-            pageSize:pageSize
-        } ,
-        method:"GET"
-    }).then((res)=>{
+
+    let count = 1;
+    while(true) {
+
+        let res = await this.getLocationHis(tagCode, startTime, endTime, count, 1500)
+       
         let arrHistory =  res.result.entities;
-        debugger
+        
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
             let  tagCodeHistory= element.基本属性组.标签编号;
             let timeHistory = element.基本属性组.采集时间;
           
           let timeHisTs =  new Date(timeHistory).getTime();
-            // console.log(timeHistory + "   " +timeHisTs);
-
+          
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
             var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
@@ -1205,17 +1198,54 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
             singleHisObjA[timeHisTs] = coordsTagHistory;
             singleHisObjA[tagCode].push(timeHisTs);
-        })    
+        }) 
 
-        athis.setState({
+
+        count++
+        let isEndList = res.result.isEndList;
+        if(isEndList) {
+            console.log("请求数据结束");
+            break;
+        }
+    }  
+
+        this.setState({
             singleHisObj:singleHisObjA
         })
         
         console.log("hhha: singleHisObjA: ");
         console.log(singleHisObjA);
         message.info("轨迹加载完成！");
-    })
 }
+
+
+
+/**
+ *  根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
+ * 获取定位历史
+ *  */
+getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{  
+
+    let result = null;
+   await Super.super({
+        url:'api2/ks/clist/location/tag/list/data',
+        query:{
+            tagCode: tagCode, 
+            startTime:startTime,
+            endTime:endTime,
+            pageNo:pageNo,
+            pageSize:pageSize
+        } ,
+        method:"GET"
+    }).then((res)=>{
+        console.log("哇哦");
+        result  =  res;     
+    })
+
+    return result;
+}
+
+
 
 /**
  * 睡眠一会
@@ -1244,10 +1274,12 @@ singlePlay= async (e)=>{
                     
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
-            if (singLeList === undefined) {
-                message.info("没有找到历史轨迹数据！")
+            debugger
+
+            if (singLeList.length === 0) {
+                message.info("无历史轨迹数据！")
                 this.setState({
-                    isSingleTrack: true,
+                    isSingleTrack: false,
                     curPlayCount:singleStartTimeStamp,
                 })
                 return
@@ -1280,7 +1312,11 @@ singlePlay= async (e)=>{
             console.log(" center: " + center);
             let coordsTag = null;
             // 显示第一个数据
-            this.addImageMarker(singleHisObj[singLeList[center]], 1);
+            coordsTag =  singleHisObj[singLeList[center]];
+            if (coordsTag != null) {
+                this.addImageMarker(coordsTag, 1);
+            }
+           
             // 判断第一次进入    
             let count = 0;
             for(let i=center;i<len;i++){ 

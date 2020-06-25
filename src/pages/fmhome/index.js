@@ -167,8 +167,6 @@ export default class Home extends React.Component{
         console.log("componentWillUnmount...")
         // this.clearMaker()
         clearInterval(this.timer);
-        clearInterval(this.timer2);
-        clearInterval(this.timer3);
     }
 
     componentDidMount() {
@@ -205,42 +203,6 @@ export default class Home extends React.Component{
                 }.bind(this), 3000);
             });
 
-
-            this.timer2 = setInterval(function () {
-                // 人员追踪
-                if (this.state.isTrace) {
-                    
-                    console.log("人员追踪：！！" + this.state.isTrace); 
-                   
-                    let coodsTagListB =  this.state.coodsTagList;
-                    let traceCountA =  this.state.traceCount
-                    coodsTagListB.forEach(element => {
-                        let length = element.coordsTagListHistory.length;
-
-
-                        if (length > traceCountA) {
-                            let coordsTag =   element.coordsTagListHistory[traceCountA];
-                           
-                            this.addImageMarker(coordsTag);
-                        }
-
-                    });
-                    
-                    this.setState({
-                        traceCount:traceCountA+1
-                    })
-
-                }
-            }.bind(this), 100);
-
-            // 每100毫秒， 增加1秒， 10倍速度
-        this.timer3 = setInterval(function () {
-            if (this.state.isSingleTrack) { 
-               this.setState({
-                    curPlayCount: this.state.curPlayCount + 1000,
-                })
-            }
-        }.bind(this), 100);
 
             const {menuId,type}=this.props.match?this.props.match.params:this.props
             this.setState({

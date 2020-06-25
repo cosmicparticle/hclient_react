@@ -167,9 +167,7 @@ export default class PeopleTrace extends React.Component{
     componentWillUnmount() {
         console.log("componentWillUnmount...")
         // this.clearMaker()
-        clearInterval(this.timer);
-        clearInterval(this.timer2);
-        clearInterval(this.timer3);
+        clearInterval(this.timer2)
     }
 
     componentDidMount() {
@@ -182,28 +180,7 @@ export default class PeopleTrace extends React.Component{
             console.log('地图加载完成！');
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
-           this.timer = setInterval(function () {
- //              debugger
-                if (this.state.showPeoPleImgBtn) {
-                    
-                    console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn); 
-                    this.showLocationPhoto("人员");
-                }
-
-                if (this.state.showCarImgBtn) {
-                    
-                console.log("车辆实时定位：！！" + this.state.showCarImgBtn); 
-                this.showLocationPhoto("车辆");
-                }
-
-                if (this.state.showGoodsBtn) {
-                    
-                    console.log("物品实时定位：！！" + this.state.showGoodsBtn); 
-                    this.showLocationPhoto("物品");
-                }
-             
-            
-                }.bind(this), 3000);
+               
             });
 
 
@@ -233,21 +210,6 @@ export default class PeopleTrace extends React.Component{
 
                 }
             }.bind(this), 100);
-
-            // 每100毫秒， 增加1秒， 10倍速度
-        this.timer3 = setInterval(function () {
-            if (this.state.isSingleTrack) { 
-               this.setState({
-                    curPlayCount: this.state.curPlayCount + 1000,
-                })
-            }
-        }.bind(this), 100);
-
-            const {menuId,type}=this.props.match?this.props.match.params:this.props
-            this.setState({
-                mmtType : type,
-                menuId,
-            })
         
     }
     openMap=()=>{

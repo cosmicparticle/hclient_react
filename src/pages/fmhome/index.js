@@ -167,6 +167,8 @@ export default class Home extends React.Component{
         console.log("componentWillUnmount...")
         // this.clearMaker()
         clearInterval(this.timer);
+
+        this.clearMaker()
     }
 
     componentDidMount() {
@@ -987,9 +989,10 @@ clearMaker=()=>{
         showGoodsBtn: false, 
         // clearMakerBtn : true,
     })
-
+debugger
     if (this.state.popMarkerList != null) {
         this.state.popMarkerList.forEach(popMarker => {
+            console.log("popMarker: " + popMarker);
             popMarker.close()
         });
     }
@@ -1548,9 +1551,9 @@ initFormList=()=>{
                         <Col span={2}>
                             <Button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</Button>
                         </Col>
-                        <Col span={2}>
+                        {/* <Col span={2}>
                              <Button  className={this.state.clearMakerBtn===true?'clearMakerBtn active':'clearMakerBtn'} onClick={this.clearMaker.bind(this)}>清除所有</Button>
-                        </Col>
+                        </Col> */}
                     </Row>
 
         

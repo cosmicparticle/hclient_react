@@ -170,6 +170,10 @@ export default class HisRoute extends React.Component{
         // console.log("componentWillUnmount...")
         clearInterval(this.timer);
 
+        this.setState({
+            isSingleTrack: false,
+        })
+
     }
 
     componentDidMount() {
@@ -1317,7 +1321,7 @@ singlePlay= async (e)=>{
             // 判断第一次进入    
             let count = 0;
             for(let i=center;i<len;i++){ 
-                // console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
+                console.log(" count： " +count + "-" + this.state.isSingleTrack);
                 if (count >1 && this.state.isSingleTrack == false) {
                     console.log("暂停设备移动");
                     break

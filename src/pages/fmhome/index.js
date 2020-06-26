@@ -168,7 +168,7 @@ export default class Home extends React.Component{
         // this.clearMaker()
         clearInterval(this.timer);
 
-        this.clearMaker()
+        // this.clearMaker()
     }
 
     componentDidMount() {

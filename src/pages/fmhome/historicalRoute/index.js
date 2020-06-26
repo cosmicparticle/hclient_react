@@ -167,12 +167,11 @@ export default class HisRoute extends React.Component{
 
     }
     componentWillUnmount() {
-        // console.log("componentWillUnmount...")
-        clearInterval(this.timer);
-
+        console.log("componentWillUnmount...")
         this.setState({
             isSingleTrack: false,
         })
+        clearInterval(this.timer)   
 
     }
 
@@ -189,6 +188,7 @@ export default class HisRoute extends React.Component{
 
             // 每100毫秒， 增加1秒， 10倍速度
         this.timer = setInterval(function () {
+            console.log(" 每100毫秒， 增加1秒");
             if (this.state.isSingleTrack) { 
                this.setState({
                     curPlayCount: this.state.curPlayCount + 1000,
@@ -1322,7 +1322,7 @@ singlePlay= async (e)=>{
             let count = 0;
             for(let i=center;i<len;i++){ 
                 console.log(" count： " +count + "-" + this.state.isSingleTrack);
-                if (count >1 && this.state.isSingleTrack == false) {
+                if (count >1 && this.state.isSingleTrack === false) {
                     console.log("暂停设备移动");
                     break
                 }
@@ -1519,7 +1519,7 @@ initFormList=()=>{
                                  let singleDate = ov.format("YYYY-MM-DD");
                                     console.log(singleDate);
                                  this.setState({
-                                singleDate:singleDate,
+                                    singleDate:singleDate,
                                 })
                              }} />
                 </Col>           

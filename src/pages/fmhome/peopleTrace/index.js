@@ -98,6 +98,7 @@ export default class PeopleTrace extends React.Component{
             // 是否可以追踪
             isTrace : false,
             traceCount:0,
+            locationTime : null,
 
             // 清除所有标注按钮
             clearMakerBtn : false, 
@@ -540,7 +541,7 @@ export default class PeopleTrace extends React.Component{
      * @param seconds 播放速度秒
      **/
     addImageMarker=(coordsTag, seconds=3)=> {
-
+console.log("显示图片");
         let markers = null;
         let type = coordsTag.type;
         let urlv = require('../images/renxiang.png');
@@ -900,82 +901,7 @@ export default class PeopleTrace extends React.Component{
 
     }
 
-    /**
-     * 解析数据后返回coordsTag
-     */
-    getCoordsTag=()=> {
 
-    }
-
-/**
- * 设置model颜色、透明度、边线颜色
- * */
-setModelRender=(model)=> {
-    var modelColor = '#FF00FF'; //模型颜色
-    var lineColor = '#3384fd'; //模型边线颜色
-    var alpha = 1; //颜色透明度
-    if (model) {
-        //修改模型颜色及透明度
-        model.setColor(modelColor, alpha);
-        //修改模型边线的颜色及透明度
-        model.setStrokeColor(lineColor, alpha);
-    }
-}
-
-/**
- * 修改model恢复到主题中的设置
- * */
-setModelToDefault=(model)=> {
-    if (model) {
-        //将模型的颜色及透明度恢复回主题中的设置
-        model.setColorToDefault();
-        //将模型边线的颜色及透明度恢复回主题中的设置
-        model.setStrokeColorToDefault();
-    }
-}
-
-/**
- * 添加自定义storeImage
- * */
-addStoreImage=(model)=> {
-    //定义storeImage对象
-    var storeImage = {
-        size: [10, 10],
-        height: 2,
-        image: '../images/logo.png',
-        angle: 0
-    };
-    //自定义StoreImage的方法
-    model.addStoreImage(storeImage);
-    //定义键值对数据对象，方便之后删除对应storeImage
-    let storeImageData = {
-        fid: model.FID,
-        si: storeImage
-    };
-    this.state.storeImageDatas.push(storeImageData);
-}
-
-/**
- * 移除自定义storeImage
- * */
-removeStoreImage=(model)=>{
-    var storeImageData = null,
-        pIndex = 0;
-    this.state.storeImageDatas.map(function (item, index) {
-        if (item.fid === model.FID) {
-            storeImageData = item;
-            pIndex = index;
-        }
-    });
-
-    if (storeImageData != null) {
-        var storeImage = storeImageData.si;
-        //移除自定义的storeImage的方法
-        model.removeStoreImage(storeImage);
-        //从原数组中删除该数据
-        this.state.storeImageDatas.splice(pIndex, 1);
-    }
-}
 
 /**
  * 清除所有的 标注， 及弹框
@@ -1017,59 +943,95 @@ clearMaker=()=>{
 /**
  * 人员追踪按钮点击事件
  */
-trace=()=>{
-    
-    let typeValue = "人员";
-    // 获取所有人的定位数据
-    Super.super({
-        url:'api2/ks/clist/location/list/data',
+trace= async ()=>{
+    // 清除标注
+    this.clearMaker()
+
+    let locationTime = this.state.locationTime;
+    if (locationTime == null){
+        message.info("请选择时间");
+        return;
+    }
+  console.log("locationTime: " + locationTime);
+  // 获取当前时间的上下两秒的数据
+  let locationTimeStamp = new Date(locationTime).getTime();
+  
+  let startTime = moment(parseInt(locationTimeStamp-2000)).format("YYYY-MM-DD HH:mm:ss"); 
+  let endTime = moment(parseInt(locationTimeStamp+2000)).format("YYYY-MM-DD HH:mm:ss"); 
+
+  console.log("this.state.coodsTagList: ");
+  console.log(this.state.coodsTagList);
+
+  let count = 1;
+  while(true) {
+      let res = await this.getLocationHis(startTime, endTime, count, 1500)
+     
+      console.log("count:" + count)
+      console.log(res)
+      let arrHistory =  res.result.entities;
+      
+      arrHistory.forEach((element) => {
+          let coordHistory = element.基本属性组.坐标点;
+          let  tagCodeHistory= element.基本属性组.标签编号;
+          let timeHistory = element.基本属性组.采集时间;
+          let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
+
+          debugger
+          if (coodsTag != undefined){
+            let timeHisTs =  new Date(timeHistory).getTime();
+        
+            let conutHis = coordHistory.indexOf(',');
+            let conutEndHis = coordHistory.indexOf(')');
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
+      
+            let  coordsTagHistory = {
+                id : tagCodeHistory,
+                time: timeHistory,
+                x : xHis,
+                y : yHis, 
+                name: coodsTag.name,
+                type: coodsTag.type,
+                status: coodsTag.status,
+            }
+  
+            this.addImageMarker(coordsTagHistory, 1)
+          }
+        
+          
+      }) 
+      count++
+      let isEndList = res.result.isEndList;
+      if(isEndList) {
+          console.log("请求数据结束");
+          break;
+      }
+  }  
+
+}
+
+
+/**
+ *  根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
+ * 获取定位历史
+ *  */
+getLocationHis = async (startTime, endTime,pageNo, pageSize)=>{  
+
+    let result = null;
+   await Super.super({
+        url:'api2/ks/clist/location/tag/list/data',
         query:{
-            type: typeValue, 
-            pageSize:200
+            startTime:startTime,
+            endTime:endTime,
+            pageNo:pageNo,
+            pageSize:pageSize
         } ,
         method:"GET"
     }).then((res)=>{
-      
-       let arr =  res.result.entities;
-       
-        arr.forEach(element => {
-            if ( element.标签信息) {
-                let onlyCode = element.标签信息[0].唯一编码;
-                let name = element.基本属性组.名称;
-                let type = element.基本属性组.类型;
-                let status = element.基本属性组.状态;
-                let coord = element.标签信息[0].当前坐标点;
-                                          
-                if (coord != undefined) {
-                    let conut = coord.indexOf(',');
-                    let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
-                    const coordsTagListHistory = []
-                   
-                    let  coordsTag = {
-                            id : onlyCode,
-                            name: name,
-                            type : type,
-                            status : status,
-                            x : x,
-                            y : y,
-                            coordsTagListHistory:coordsTagListHistory,
-                        }
-
-                       this.tracetwo(coordsTag);               
-                }                 
-            }
-        });
-       
-       
+        result  =  res;     
     })
 
-
-    // 循环获取每个定位实体对应的一段时间内的定位数据
-
-    // 
-    
+    return result;
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
@@ -1129,46 +1091,18 @@ tracetwo=(coordsTag)=>{
     })
 }
 
-/**
- * 播放人员追踪
- */
-play=()=>{
-    let coodsTagListA = this.state.coodsTagList
-    
-    console.log("333333" + coodsTagListA);
 
-    // 拿到历史坐标点， 显示标注， 并移动标注
-    coodsTagListA.forEach(element => {
-
-            this.addImageMarker(element);
-          
-        // element.coordsTagListHistory.forEach(coordsTag => {
-        //     debugger
-        //     this.addImageMarker(coordsTag);
-
-        // });
-    });
-    
-    // 设置可追踪
-    this.setState({
-        isTrace:!this.state.isTrace,
-        traceCount:0
-    })
-    
-
-}
 
 /**
  * 获取日期时间
  */
 onOk=(ov)=>{   
-    let startTime = ov[0].format("YYYY-MM-DD HH:mm:ss");
-    let endTime = ov[1].format("YYYY-MM-DD HH:mm:ss");
-    console.log("startTime: " + startTime);
-    console.log("endTime: " + endTime);
+    console.log(ov)
+    let locationTime = ov.format("YYYY-MM-DD HH:mm:ss");
+    console.log(locationTime)
     this.setState({
-        startTime,
-        endTime
+        locationTime : locationTime,
+
     })
 }
 
@@ -1230,7 +1164,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
             let coordHistory = element.基本属性组.坐标点;
             let  tagCodeHistory= element.基本属性组.标签编号;
             let timeHistory = element.基本属性组.采集时间;
-          
+            let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
           let timeHisTs =  new Date(timeHistory).getTime();
             // console.log(timeHistory + "   " +timeHisTs);
 
@@ -1244,9 +1178,9 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
                 time: timeHistory,
                 x : xHis,
                 y : yHis, 
-                name:"初始测试",
-                type:"人员",
-                status: "正常",
+                name: coodsTag.name,
+                type: coodsTag.type,
+                status: coodsTag.status,
             }
 
             if (singleHisObjA[timeHisTs] ==undefined) {
@@ -1277,152 +1211,6 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
     })
 }
 
-/**
- * 播放单个人员历史轨迹
- */
-singlePlay= async (e)=>{
-    console.log("开始播放---");
-     // 控制播放和暂停
-     this.setState({
-        isSingleTrack: !this.state.isSingleTrack,
-    })
-            // 人员历史轨迹
-            let singleLocatingEntityA = this.state.singleLocatingEntity;
-            let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-            let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-            let singleHisObj = this.state.singleHisObj;
-                    
-            // 获取存放时间的数组及长度
-            let singLeList = singleHisObj[singleLocatingEntityA];
-            if (singLeList === undefined) {
-                message.info("没有找到历史轨迹数据！")
-                this.setState({
-                    isSingleTrack: true,
-                    curPlayCount:singleStartTimeStamp,
-                })
-                return
-            }
-
-            let len = singLeList.length;
-            let center = 0;
-           // 寻找 this.state.curPlayCount 对应数组中的下标
-            for(let i=0;i<len;i++){  
-                if ((i+1) == len) {
-                    center = 0;
-                    break;
-                }
-                let min = singLeList[i];
-                let max = singLeList[i+1];
-                if (this.state.curPlayCount - singLeList[0] <=0) {
-                    center = 0;
-                    break;
-                }
-                if (this.state.curPlayCount - singLeList[len -1] >=0) {
-                     center = len -1;
-                    break;
-                }
-                if ((this.state.curPlayCount - min >=0) && (this.state.curPlayCount - max <=0)) {
-                    center = i;
-                    break;
-                }
-            }
-            
-            console.log(" center: " + center);
-            let coordsTag = null;
-            // 显示第一个数据
-            this.addImageMarker(singleHisObj[singLeList[center]], 1);
-            // 判断第一次进入    
-            let count = 0;
-            for(let i=center;i<len;i++){ 
-                console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
-                if (count >1 && this.state.isSingleTrack == false) {
-                    console.log("暂停设备移动");
-                    break
-                }
-                count++;
-
-                let prevTime = singLeList[i];
-                let curTime = null;
-                if (i+1 < len) {
-                    // 证明 i 不是最后一个
-                    curTime = singLeList[i+1];
-                }
-                             
-            if (curTime != null) {
-                    let  stamp = curTime - prevTime;
-                    // 按照10倍速度播放
-                    let tStamp = stamp / 10;
-                    coordsTag = singleHisObj[curTime] 
-                    this.addImageMarker(coordsTag, (tStamp / 1000));
-                    console.log((stamp) + "毫秒后执行我！");
-                    console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
-                    console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
-                    console.log(" this.state.playCount: " + this.state.playCount);
-                   
-                    this.setState({
-                        playCount : this.state.playCount+1,
-                    })
-                    // 睡眠多少毫秒
-                    await this.sleep(tStamp)    
-            }
-            
-            }
-
-            if (len <= this.state.playCount) {
-                message.info("轨迹播放完毕");
-                this.setState({
-                    isSingleTrack: false,
-                    curPlayCount:singleStartTimeStamp,
-                    playCount:0,
-                })
-                return
-            }   
-
-}
-
-
-formatter(value) {
-    // value 的值是从1到一百
-    // 获取开始时间
-    let   singleStartTime = this.state.singleStartTime;
-    // 获取结束时间
-    let   singleEndTime =  this.state.singleEndTime;
-
-    if (singleStartTime != null) {
-        
-        let myDate = new Date(value);
-        let h =myDate.getHours();
-        let m =myDate.getMinutes();
-        let s = myDate.getSeconds();
-        let abc = h+ ":" + m + ":" + s
-
-            let singleLocatingEntityA = this.state.singleLocatingEntity;
-            let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-            let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-            let singleHisObj = this.state.singleHisObj;
-                    
-            // 获取存放时间的数组及长度
-            let singLeList = singleHisObj[singleLocatingEntityA];
-            if (singLeList === undefined) {
-                // message.info("没有找到历史轨迹数据！")
-                // this.setState({
-                //     isSingleTrack: false,
-                // })
-             
-            } else {
-                // var aa = singLeList.find(item => item.value > value);
-                // let count = singLeList.indexOf('aa')  //1
-    
-                // this.setState({
-                //     playCount: count==0?0 :count-1,
-                // })
-            }
-    
-        return `${abc}`;
-    }
-
-    return `${value}`;
-}
 
 /**
  * 初始化按钮
@@ -1430,8 +1218,6 @@ formatter(value) {
 initFormList=()=>{  
 
     // 人员追踪
-
-    // const { RangePicker } = TimePicker;
     const { Option } = Select;
     
     const formItemList=[];
@@ -1446,10 +1232,8 @@ initFormList=()=>{
     onOk={this.onOk.bind(this)}
     />
     const bb =  <Button  onClick={this.trace.bind(this)}>显示追踪人员</Button>
-    const cc =  <Button  className={this.state.isTrace===true?'isTrace active':'isTrace'}   onClick={this.play.bind(this)}>播放追踪数据</Button>
     formItemList.push(aa)
     formItemList.push(bb)
-    formItemList.push(cc)
        
     return formItemList;
 }
@@ -1536,8 +1320,6 @@ getSelectList=()=>{
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
-                {/* <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span> */}
-               
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
                     {this.initFormList()}              
                  </div>

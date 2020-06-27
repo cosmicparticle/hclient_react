@@ -994,7 +994,7 @@ trace= async ()=>{
           let timeHistory = element.基本属性组.采集时间;
           let coodsTag =  coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
 
-          debugger
+          
           if (coodsTag != undefined){
             let timeHisTs =  new Date(timeHistory).getTime();
         

@@ -1220,6 +1220,9 @@ singleHis= async (tagCode, startTime, endTime, pageSize)=>{
         console.log("hhha: singleHisObjA: ");
         console.log(singleHisObjA);
         message.info("轨迹加载完成！");
+
+        // 开始播放
+        this.singlePlay()
 }
 
 
@@ -1263,7 +1266,7 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
 /**
  * 播放单个人员历史轨迹
  */
-singlePlay= async (e)=>{
+singlePlay= async ()=>{
     console.log("开始播放---");
             // 控制播放和暂停
             this.setState({
@@ -1525,7 +1528,7 @@ initFormList=()=>{
                                  this.setState({
                                     singleDate:singleDate,
                                 })
-                             }} />
+                             }} disabled={this.state.isSingleTrack} />
                 </Col>           
                 <Col span={3}>
                         <TimePicker   placeholder="开始时间"
@@ -1542,7 +1545,7 @@ initFormList=()=>{
                                     })
                                 }
                             }
-                        />
+                            disabled={this.state.isSingleTrack}  />
                       </Col>  
                       <Col span={3}>
                         <TimePicker   placeholder="结束时间"
@@ -1557,10 +1560,10 @@ initFormList=()=>{
                                     })
                                 }
                             }
-                        />
+                            disabled={this.state.isSingleTrack}  />
                 </Col>
                 <Col span={3}>
-                    <Select labelInValue  style={{ width: 120,}}  onSelect={
+                    <Select disabled={this.state.isSingleTrack}  labelInValue  style={{ width: 120,}}  onSelect={
                         (obj)=>{ 
                             this.setState({singleLocatingEntity:obj.key})
                         }
@@ -1569,35 +1572,35 @@ initFormList=()=>{
                     </Select>
                 </Col>
                 <Col span={2}>
-                     <Button  onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
+                     <Button disabled={this.state.isSingleTrack}   onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
                 </Col>
 
                  <Col span={8}>
-            <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
-                    onChange={
-                        (value)=>{ 
-                        console.log("Slider 改变 value: " + value)
+                         <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
+                                onChange={
+                                    (value)=>{ 
+                                    console.log("Slider 改变 value: " + value)
 
-                        if (this.state.singleEndTimeStamp != value){
-                            // 清除已经存在的线
-                            this.deleteMarkerFunc()
-                            this.clearMaker()
-                        }                    
+                                    if (this.state.singleEndTimeStamp != value){
+                                        // 清除已经存在的线
+                                        this.deleteMarkerFunc()
+                                        this.clearMaker()
+                                    }                    
 
-                        this.setState({
-                            curPlayCount: value,
-                            isSingleTrack:false,//
-                            points:[],
-                        });
-                        }
-                    } 
-                    value={this.state.curPlayCount}
-                tipFormatter={this.formatter.bind(this)} tooltipVisible   />
-                </Col>
+                                    this.setState({
+                                        curPlayCount: value,
+                                        isSingleTrack:false,//
+                                        points:[],
+                                    });
+                                }
+                            } 
+                            value={this.state.curPlayCount}
+                        tipFormatter={this.formatter.bind(this)} tooltipVisible   />
+                    </Col>
                 <Col span={2}>
-                    <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={(e)=>{this.singlePlay(e)}}>播放</Button>
+                    <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={()=>{this.singlePlay()}}>播放</Button>
                 </Col>
-
+                    
             </Row>
         // 获取所有人员
         formItemList.push(row)

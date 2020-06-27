@@ -1282,7 +1282,7 @@ singlePlay= async ()=>{
             let singLeList = singleHisObj[singleLocatingEntityA];
 
             if (singLeList === undefined || singLeList.length === 0) {
-                message.info("无历史轨迹数据！")
+                message.info("无历史轨迹数据,请切换时间重新加载")
                 this.setState({
                     isSingleTrack: false,
                     curPlayCount:singleStartTimeStamp,
@@ -1527,7 +1527,9 @@ initFormList=()=>{
                                     console.log(singleDate);
                                  this.setState({
                                     singleDate:singleDate,
+                                    singleHisObj:{},
                                 })
+                               
                              }} disabled={this.state.isSingleTrack} />
                 </Col>           
                 <Col span={3}>
@@ -1542,6 +1544,7 @@ initFormList=()=>{
                                         singleStartTime:timeString,
                                         singleStartTimeStamp:singleStartTimeStamp,
                                         curPlayCount:singleStartTimeStamp,
+                                        singleHisObj:{},
                                     })
                                 }
                             }
@@ -1557,6 +1560,7 @@ initFormList=()=>{
                                         singleEndTime:timeString,
                                         singleEndTimeStamp:singleEndTimeStamp,
                                         curPlayCount:this.state.singleStartTimeStamp,
+                                        singleHisObj:{},
                                     })
                                 }
                             }
@@ -1565,7 +1569,10 @@ initFormList=()=>{
                 <Col span={3}>
                     <Select disabled={this.state.isSingleTrack}  labelInValue  style={{ width: 120,}}  onSelect={
                         (obj)=>{ 
-                            this.setState({singleLocatingEntity:obj.key})
+                            this.setState({
+                                singleLocatingEntity:obj.key,
+                                singleHisObj:{},
+                            })
                         }
                     }>
                         {this.getSelectList()}              

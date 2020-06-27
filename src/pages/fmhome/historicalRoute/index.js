@@ -166,13 +166,15 @@ export default class HisRoute extends React.Component{
         // console.log("componentDidUpdate...")
 
     }
-    componentWillUnmount() {
-        console.log("componentWillUnmount...")
-        this.setState({
-            isSingleTrack: false,
-        })
-        clearInterval(this.timer)   
-
+    componentWillUnmount=()=> {
+        console.log("人员历史轨迹:componentWillUnmount...")
+        this.setState=(status,callback)=>{
+  
+            
+            return;
+         }
+       
+        this.timer !=null && clearInterval(this.timer)   
     }
 
     componentDidMount() {
@@ -187,14 +189,16 @@ export default class HisRoute extends React.Component{
             });
 
             // 每100毫秒， 增加1秒， 10倍速度
-        this.timer = setInterval(function () {
-            console.log(" 每100毫秒， 增加1秒");
-            if (this.state.isSingleTrack) { 
-               this.setState({
-                    curPlayCount: this.state.curPlayCount + 1000,
-                })
-            }
-        }.bind(this), 100);
+        this.timer = null;
+            this.timer =  setInterval(function () {
+                console.log(" 每100毫秒， 增加1秒");
+                if (this.state.isSingleTrack) { 
+                   this.setState({
+                        curPlayCount: this.state.curPlayCount + 1000,
+                    })
+                }
+            }.bind(this), 100);
+        
         
     }
     openMap=()=>{

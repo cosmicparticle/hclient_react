@@ -90,7 +90,14 @@ export default class PeopleTrace extends React.Component{
                 }
             ],
 
-            coodsTagList: [],
+            // 定位实体的类型, 人员， 车辆， 物品
+            locationType:"人员",
+            // 人的定位实体
+            coodsTagListPeople: [],
+             // 车辆的定位实体
+            coodsTagListCar: [],
+             // 物品的定位实体
+            coodsTagListgoods: [],
 
             isCoodsTrue : false,
             // 进入的是人员追踪还是人员轨迹
@@ -104,38 +111,7 @@ export default class PeopleTrace extends React.Component{
             clearMakerBtn : false, 
             popMarkerList : [],
 
-
-            // 单个人员历史轨迹的属性
-            singleDate:null,
-            singleStartTime:null,
-            singleStartTimeStamp:0,
-            singleEndTime: null,
-            singleEndTimeStamp:180,
-            singleLocatingEntity:null, 
-            singleHisObj:{
-                // "t15151551":{}
-            },
-            // 是否播放历史轨迹
-            isSingleTrack: false,
-            // 播放到历史轨迹数组中的第几个对象
-            curPlayCount:0,
-            playCount:0,
-            // 对应进度条的位置
-            singleSliderCount:0,
-
-            marks : {
-                0: '',
-                10: '',
-                20: '',
-                30: '',
-                40: '',
-                50: '',
-                60: '',
-                70: '',
-                80: '',
-                90: '',
-                100: '',
-              }
+  
 
 
         }
@@ -173,10 +149,7 @@ export default class PeopleTrace extends React.Component{
 
     componentDidMount() {
         console.log("componentDidMount...")
-         // 封装人员的数据
-         this.getLocationList("人员");
         this.openMap();
-
         this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
@@ -184,6 +157,8 @@ export default class PeopleTrace extends React.Component{
                
             });
 
+        // 初始化定位实体数据
+          this.assig();
 
             this.timer2 = setInterval(function () {
                 // 人员追踪
@@ -213,6 +188,71 @@ export default class PeopleTrace extends React.Component{
             }.bind(this), 100);
         
     }
+
+    /**
+     *  初始化定位实体数据
+     */
+    assig= async ()=>{
+        console.log("初始化定位实体数据");
+        // 获取定位实体数据
+         let result1 =  await this.getLocationList("人员");
+        let coodsTagListA =  this.analysisData(result1)
+        let result2 = await this.getLocationList("车辆");
+        let coodsTagListB =this.analysisData(result2)
+        let result3 = await this.getLocationList("物品");
+        let coodsTagListC =this.analysisData(result3)
+
+        this.setState({
+            coodsTagListPeople:coodsTagListA,
+            coodsTagListCar:coodsTagListB,
+            coodsTagListgoods:coodsTagListC
+        })
+
+
+    }
+
+
+    /**
+     * 解析数据
+     * @param {} res 
+     */
+    analysisData = (res)=>{
+        let arr =  res.result.entities;
+        const coodsTagListA = [];
+        arr.forEach(element => {
+            if ( element.标签信息) {
+                let onlyCode = element.标签信息[0].唯一编码;
+                let name = element.基本属性组.名称;
+                let type = element.基本属性组.类型;
+                let status = element.基本属性组.状态;
+                let coord = element.标签信息[0].当前坐标点;
+                                          
+                if (coord != undefined) {
+                    let conut = coord.indexOf(',');
+                    let conutEnd = coord.indexOf(')');
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
+                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
+                   
+                    let  coordsTag = {
+                            id : onlyCode,
+                            name: name,
+                            type : type,
+                            status : status,
+                            x : x,
+                            y : y,
+                        }
+                    
+                    coodsTagListA.push(coordsTag); 
+                       
+                }                 
+            }
+        });
+
+        return coodsTagListA;
+
+    }
+
+
     openMap=()=>{
         let fmapID= this.state.fmapID;
 
@@ -846,59 +886,25 @@ console.log("显示图片");
     /**
      * 从远程获取定位实体数据, 并存放在变量中
      * 暂时不用
+     * @param typeValue 人员、 车辆、物品
      */
-     getLocationList=(typeValue)=> {
-
-       let  aThis = this;
-
-         Super.super({
+     getLocationList= async (typeValue, pageSize=200)=> {
+        let result = null;
+        debugger
+        await Super.super({
             url:'api2/ks/clist/location/list/data',
             query:{
                 type: typeValue,
-                pageSize:100
+                pageSize:pageSize
             } ,
             method:"GET"
         }).then((res)=>{
-            
-            let arr =  res.result.entities;
-       
-            const coodsTagListA = [];
-
-        arr.forEach(element => {
-            if ( element.标签信息) {
-                let onlyCode = element.标签信息[0].唯一编码;
-                let name = element.基本属性组.名称;
-                let type = element.基本属性组.类型;
-                let status = element.基本属性组.状态;
-                let coord = element.标签信息[0].当前坐标点;
-                                          
-                if (coord != undefined) {
-                    let conut = coord.indexOf(',');
-                    let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
-                   
-                    let  coordsTag = {
-                            id : onlyCode,
-                            name: name,
-                            type : type,
-                            status : status,
-                            x : x,
-                            y : y,
-                        }
-                    
-                    coodsTagListA.push(coordsTag); 
-                       
-                }                 
-            }
-        });
-
-        aThis.setState({
-            coodsTagList :coodsTagListA
+            console.log("zhel");
+            debugger
+            result =  res;
         })
 
-        })
-
+        return result;
     }
 
 
@@ -946,22 +952,34 @@ clearMaker=()=>{
 trace= async ()=>{
     // 清除标注
     this.clearMaker()
-
+    let locationType = this.state.locationType;
+    if (locationType == null){
+        message.info("请选择定位类型");
+        return;
+    }
     let locationTime = this.state.locationTime;
     if (locationTime == null){
         message.info("请选择时间");
         return;
     }
-  console.log("locationTime: " + locationTime);
+  console.log("locationType: " + locationType + " locationTime: " + locationTime);
   // 获取当前时间的上下两秒的数据
   let locationTimeStamp = new Date(locationTime).getTime();
   
   let startTime = moment(parseInt(locationTimeStamp-2000)).format("YYYY-MM-DD HH:mm:ss"); 
   let endTime = moment(parseInt(locationTimeStamp+2000)).format("YYYY-MM-DD HH:mm:ss"); 
 
-  console.log("this.state.coodsTagList: ");
-  console.log(this.state.coodsTagList);
+  let coodsTagList = null;
+    if (locationType ==="人员"){
+        coodsTagList = this.state.coodsTagListPeople;
+    } else if(locationType ==="车辆") {
+        coodsTagList = this.state.coodsTagListCar
+    } else if(locationType ==="物品") {
+        coodsTagList = this.state.coodsTagListgoods
+    }
 
+    console.log("coodsTagList")
+    console.log(coodsTagList)
   let count = 1;
   while(true) {
       let res = await this.getLocationHis(startTime, endTime, count, 1500)
@@ -974,7 +992,7 @@ trace= async ()=>{
           let coordHistory = element.基本属性组.坐标点;
           let  tagCodeHistory= element.基本属性组.标签编号;
           let timeHistory = element.基本属性组.采集时间;
-          let coodsTag =  this.state.coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
+          let coodsTag =  coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
 
           debugger
           if (coodsTag != undefined){
@@ -1221,17 +1239,29 @@ initFormList=()=>{
     const { Option } = Select;
     
     const formItemList=[];
+
+    const dd = <Select defaultValue="人员"  style={{ width: 120,}}  onChange={
+                    (value)=>{ 
+                        this.setState({locationType:value})
+                    }
+                 }>
+                <Option  value="人员" >人员</Option>      
+                <Option  value="车辆" >车辆</Option>      
+                <Option  value="物品" >物品</Option>           
+            </Select>
+
     const aa = <DatePicker
-    ranges={{
-        Today: [moment(), moment()],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-    }}
-    showTime
-    locale={locale}
-    format="YYYY/MM/DD HH:mm:ss"
-    onOk={this.onOk.bind(this)}
-    />
-    const bb =  <Button  onClick={this.trace.bind(this)}>显示追踪人员</Button>
+                ranges={{
+                    Today: [moment(), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                }}
+                showTime
+                locale={locale}
+                format="YYYY/MM/DD HH:mm:ss"
+                onOk={this.onOk.bind(this)}
+                />
+    const bb =  <Button  onClick={this.trace.bind(this)}>确定</Button>
+    formItemList.push(dd)
     formItemList.push(aa)
     formItemList.push(bb)
        

@@ -1155,6 +1155,16 @@ singleOk= async (e)=>{
         return                  
     }
 
+      // 清除已经存在的线
+      this.deleteMarkerFunc()
+      this.clearMaker()
+  
+      this.setState({
+          curPlayCount:this.state.singleStartTimeStamp,
+        //   points:[],
+        //   singleHisObj:{},
+      });
+
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 1500)
 }
@@ -1522,7 +1532,7 @@ initFormList=()=>{
 // 人员历史轨迹
            const row =  <Row key={1}>
                 <Col span={3}>
-                    <DatePicker onChange={(ov)=>{
+                    <DatePicker  style={{width:'100%',}} onChange={(ov)=>{
                                  let singleDate = ov.format("YYYY-MM-DD");
                                     console.log(singleDate);
                                  this.setState({
@@ -1533,7 +1543,7 @@ initFormList=()=>{
                              }} disabled={this.state.isSingleTrack} />
                 </Col>           
                 <Col span={3}>
-                        <TimePicker   placeholder="开始时间"
+                        <TimePicker style={{width:'100%',}}  placeholder="开始时间"
                             defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{
                                 console.log(timeString);   
@@ -1551,7 +1561,7 @@ initFormList=()=>{
                             disabled={this.state.isSingleTrack}  />
                       </Col>  
                       <Col span={3}>
-                        <TimePicker   placeholder="结束时间"
+                        <TimePicker  style={{width:'100%',}}   placeholder="结束时间"
                             defaultOpenValue={moment('10:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{
                                 console.log(timeString);   
@@ -1567,7 +1577,7 @@ initFormList=()=>{
                             disabled={this.state.isSingleTrack}  />
                 </Col>
                 <Col span={3}>
-                    <Select disabled={this.state.isSingleTrack}  labelInValue  style={{ width: 120,}}  onSelect={
+                    <Select  style={{width:'100%',}} disabled={this.state.isSingleTrack}  labelInValue   onSelect={
                         (obj)=>{ 
                             this.setState({
                                 singleLocatingEntity:obj.key,
@@ -1579,11 +1589,11 @@ initFormList=()=>{
                     </Select>
                 </Col>
                 <Col span={2}>
-                     <Button disabled={this.state.isSingleTrack}   onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
+                     <Button   disabled={this.state.isSingleTrack}   onClick={(e)=>{this.singleOk(e)}}>加载轨迹</Button>
                 </Col>
 
                  <Col span={8}>
-                         <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
+                         <Slider    min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
                                 onChange={
                                     (value)=>{ 
                                     console.log("Slider 改变 value: " + value)

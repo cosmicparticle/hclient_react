@@ -1537,14 +1537,14 @@ initFormList=()=>{
 
     } else {
 
-        const row =  <Row key={1}>
-                        <Col span={3}>
-                            <Button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>显示电子围栏</Button>
+        const row =  <Row  key={1}>
+                        <Col  span={2}>
+                            <Button  className={this.state.addFenceMarker===true?'addFenceBtn active':'addFenceBtn'} onClick={this.addElectronicFence.bind(this)}>电子围栏</Button>
                         </Col>
-                        <Col span={2}>
+                        <Col  span={2}>
                        <Button  className={this.state.showPeoPleImgBtn===true?'showPeoPleImgBtn active':'showPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '人员')}>显示人员</Button>
                         </Col>
-                        <Col span={2}>
+                        <Col  span={2}>
                         <Button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</Button>
       
                         </Col>

@@ -1,4 +1,3 @@
 {
-  "hydrocarbonServer":"http://116.62.163.143:85/hydrocarbon/","programName":"HYDROCARBON"
-  // "hydrocarbonServer":"http://localhost:90/hydrocarbonboot/","programName":"HYDROCARBON"
+  "hydrocarbonServer":"http://localhost:8080/hydrocarbon/","programName":"HYDROCARBON"
 }

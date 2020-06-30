@@ -122,6 +122,11 @@ export default class HisRoute extends React.Component{
             // 对应进度条的位置
             singleSliderCount:0,
 
+            // 历史轨迹播放模式
+            trackPattern: 1,
+
+
+
             marks : {
                 0: '',
                 10: '',
@@ -191,8 +196,9 @@ export default class HisRoute extends React.Component{
             // 每100毫秒， 增加1秒， 10倍速度
         this.timer = null;
             this.timer =  setInterval(function () {
-                console.log(" 每100毫秒， 增加1秒");
-                if (this.state.isSingleTrack) { 
+                // console.log(" 每100毫秒， 增加1秒");
+                if (this.state.isSingleTrack && this.state.trackPattern == 1) { 
+                    console.log(" 每100毫秒， 增加1秒");
                    this.setState({
                         curPlayCount: this.state.curPlayCount + 1000,
                     })
@@ -1277,6 +1283,19 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
  * 播放单个人员历史轨迹
  */
 singlePlay= async ()=>{
+
+    let trackPattern = this.state.trackPattern;
+
+    console.log("模式： " + trackPattern);
+
+    if (trackPattern== 2) {
+        // 按照模式2 进行播放
+
+      await  this.playTwo()
+
+        return;
+    }
+
     console.log("开始播放---");
             // 控制播放和暂停
             this.setState({
@@ -1292,7 +1311,7 @@ singlePlay= async ()=>{
             let singLeList = singleHisObj[singleLocatingEntityA];
 
             if (singLeList === undefined || singLeList.length === 0) {
-                message.info("无历史轨迹数据,请切换时间重新加载")
+                message.info("无历史轨迹数据,请重新加载")
                 this.setState({
                     isSingleTrack: false,
                     curPlayCount:singleStartTimeStamp,
@@ -1396,6 +1415,83 @@ singlePlay= async ()=>{
 
 }
 
+
+playTwo= async ()=>{
+
+    console.log("按照做标进行播放");
+
+     // 人员历史轨迹
+     let singleLocatingEntityA = this.state.singleLocatingEntity;
+     let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
+     let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
+     let singleHisObj = this.state.singleHisObj;
+            debugger 
+     // 获取存放时间的数组及长度
+     let singLeList = singleHisObj[singleLocatingEntityA];
+
+     if (singLeList === undefined || singLeList.length === 0) {
+         message.info("无历史轨迹数据,请重新加载")
+         this.setState({
+             isSingleTrack: false,
+             curPlayCount:singleStartTimeStamp,
+         })
+         return
+     }
+
+     let len = singLeList.length;
+
+
+     let coordsTag = null;
+     // 显示第一个数据
+     coordsTag =  singleHisObj[singLeList[0]];
+     if (coordsTag != null) {
+         this.addImageMarker(coordsTag, 1);
+     }
+
+      // 判断第一次进入    
+      for(let i=0;i<len;i++){ 
+          console.log("模式2 执行中")
+          let prevTime = singLeList[i];
+          let curTime = null;
+          if (i+1 < len) {
+              // 证明 i 不是最后一个
+              curTime = singLeList[i+1];
+          }
+                       
+      if (curTime != null) {
+            let coordsTagBefore = singleHisObj[prevTime]   
+              coordsTag = singleHisObj[curTime] 
+
+            if (coordsTagBefore.x != coordsTag.x && coordsTagBefore.y != coordsTag.y) {
+                this.addImageMarker(coordsTag, 1);
+
+                this.setState({
+                          curPlayCount:curTime,
+                      })
+                let point=  {
+                    x: coordsTag.x, 
+                    y: coordsTag.y, 
+                    z: 1
+                }
+                this.state.points.push(point)
+                this.deleteMarkerFunc()
+                this.addMarkerFunc(this.state.points)
+                 // 睡眠多少毫秒
+                 await this.sleep(1000) 
+            } 
+            //   this.setState({
+            //       playCount : this.state.playCount+1,
+            //   })
+      }
+
+         
+      
+      }
+
+
+
+
+}
 
 formatter(value) {
     // value 的值是从1到一百
@@ -1529,8 +1625,22 @@ initFormList=()=>{
 
     const { Option } = Select;
     const formItemList=[];
-// 人员历史轨迹
+    // 人员历史轨迹
            const row =  <Row key={1}>
+                <Col span={3}>
+                    <Select defaultValue="按时间"  style={{width:'100%',}} disabled={this.state.isSingleTrack}   onSelect={
+                        (obj)=>{ 
+                            console.log(obj);
+                            this.setState({
+                                trackPattern:obj,
+                                singleHisObj:{},
+                            })
+                        }
+                    }>
+                        <Option value="1">按时间</Option>
+                        <Option  value="2" >按坐标</Option>      
+                    </Select>
+                </Col>
                 <Col span={3}>
                     <DatePicker  style={{width:'100%',}} onChange={(ov)=>{
                                  let singleDate = ov.format("YYYY-MM-DD");

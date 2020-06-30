@@ -1279,6 +1279,13 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
     })
 }
 
+
+setSt= async ()=>{
+    this.setState({
+        isSingleTrack: !this.state.isSingleTrack,
+    })
+}
+
 /**
  * 播放单个人员历史轨迹
  */
@@ -1286,18 +1293,16 @@ singlePlay= async ()=>{
 
     let trackPattern = this.state.trackPattern;
     // 控制播放和暂停
-    this.setState({
-        isSingleTrack: !this.state.isSingleTrack,
-    })
+   await this.setSt()
     console.log("模式： " + trackPattern);
 
-    if (trackPattern== 2) {
-        // 按照模式2 进行播放
+    // if (trackPattern== 2) {
+    //     // 按照模式2 进行播放
         
-      await  this.playTwo()
+    //   await  this.playTwo()
 
-        return;
-    }
+    //     return;
+    // }
 
     console.log("开始播放---");
             // 人员历史轨迹
@@ -1369,36 +1374,64 @@ singlePlay= async ()=>{
                 if (i+1 < len) {
                     // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
-                    // console.log("i+1: " + (i+1) + " curTime:"+ curTime);
                 }
                              
             if (curTime != null) {
-                    let  stamp = curTime - prevTime;
-                    // 按照10倍速度播放
-                    let tStamp = stamp / 10;
+
+                if(this.state.trackPattern == 1 ) {
+                        let  stamp = curTime - prevTime;
+                        // 按照10倍速度播放
+                        let tStamp = stamp / 10;
+                        coordsTag = singleHisObj[curTime] 
+                        this.addImageMarker(coordsTag, (tStamp / 1000));
+                        // console.log((stamp) + "毫秒后执行我！");
+                        // console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
+                        // console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
+                        // console.log(" this.state.playCount: " + this.state.playCount);
+                    
+                        let point=  {
+                            x: coordsTag.x, 
+                            y: coordsTag.y, 
+                            z: 1
+                        }
+                        // points.push(point)
+                        this.state.points.push(point)
+                        this.deleteMarkerFunc()
+                        this.addMarkerFunc(this.state.points)
+
+                        this.setState({
+                            playCount : this.state.playCount+1,
+                        })
+                        // 睡眠多少毫秒
+                        await this.sleep(tStamp)    
+                }else {
+                    let coordsTagBefore = singleHisObj[prevTime]   
                     coordsTag = singleHisObj[curTime] 
-                    this.addImageMarker(coordsTag, (tStamp / 1000));
-                    // console.log((stamp) + "毫秒后执行我！");
-                    // console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
-                    // console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
-                    // console.log(" this.state.playCount: " + this.state.playCount);
-                   
-                    let point=  {
-                        x: coordsTag.x, 
-                        y: coordsTag.y, 
-                        z: 1
-                    }
-                    // points.push(point)
-                    this.state.points.push(point)
-                    this.deleteMarkerFunc()
-                    this.addMarkerFunc(this.state.points)
 
                     this.setState({
                         playCount : this.state.playCount+1,
                     })
-                    // 睡眠多少毫秒
-                    await this.sleep(tStamp)    
-            }
+                    if (coordsTagBefore.x != coordsTag.x && coordsTagBefore.y != coordsTag.y) {
+                        this.addImageMarker(coordsTag, 1);
+
+                        this.setState({
+                                curPlayCount:curTime,
+                        })
+                        let point=  {
+                            x: coordsTag.x, 
+                            y: coordsTag.y, 
+                            z: 1
+                        }
+                        this.state.points.push(point)
+                        this.deleteMarkerFunc()
+                        this.addMarkerFunc(this.state.points)
+                        // 睡眠多少毫秒
+                        await this.sleep(1000) 
+                    } 
+                }
+                } 
+
+                   
             
             }
 
@@ -1449,6 +1482,10 @@ playTwo= async ()=>{
 
       // 判断第一次进入    
       for(let i=0;i<len;i++){ 
+        if (this.state.isSingleTrack === false) {
+            console.log("暂停设备移动");
+            break
+        }
           console.log("模式2 执行中")
           let prevTime = singLeList[i];
           let curTime = null;

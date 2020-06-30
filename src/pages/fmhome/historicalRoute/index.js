@@ -1638,7 +1638,7 @@ initFormList=()=>{
                         }
                     }>
                         <Option value="1">按时间</Option>
-                        <Option  value="2" >按坐标</Option>      
+                        <Option  value="2" >按轨迹</Option>      
                     </Select>
                 </Col>
                 <Col span={3}>

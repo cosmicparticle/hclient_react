@@ -1285,22 +1285,21 @@ getLocationHis = async (tagCode, startTime, endTime,pageNo, pageSize)=>{
 singlePlay= async ()=>{
 
     let trackPattern = this.state.trackPattern;
-
+    // 控制播放和暂停
+    this.setState({
+        isSingleTrack: !this.state.isSingleTrack,
+    })
     console.log("模式： " + trackPattern);
 
     if (trackPattern== 2) {
         // 按照模式2 进行播放
-
+        
       await  this.playTwo()
 
         return;
     }
 
     console.log("开始播放---");
-            // 控制播放和暂停
-            this.setState({
-                isSingleTrack: !this.state.isSingleTrack,
-            })
             // 人员历史轨迹
             let singleLocatingEntityA = this.state.singleLocatingEntity;
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();

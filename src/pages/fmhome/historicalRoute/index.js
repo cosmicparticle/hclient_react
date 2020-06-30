@@ -1574,7 +1574,7 @@ initFormList=()=>{
     const formItemList=[];
     // 人员历史轨迹
            const row =  <Row key={1}>
-                <Col span={3}>
+                <Col span={2}>
                     <Select defaultValue="按时间"  style={{width:'100%',}} disabled={this.state.isSingleTrack}   onSelect={
                         (obj)=>{ 
                             console.log(obj);
@@ -1599,7 +1599,7 @@ initFormList=()=>{
                                
                              }} disabled={this.state.isSingleTrack} />
                 </Col>           
-                <Col span={3}>
+                <Col span={2}>
                         <TimePicker style={{width:'100%',}}  placeholder="开始时间"
                             defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{
@@ -1617,7 +1617,7 @@ initFormList=()=>{
                             }
                             disabled={this.state.isSingleTrack}  />
                       </Col>  
-                      <Col span={3}>
+                      <Col span={2}>
                         <TimePicker  style={{width:'100%',}}   placeholder="结束时间"
                             defaultOpenValue={moment('10:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{

@@ -247,7 +247,7 @@ export default class HisRoute extends React.Component{
         this.state.map.on('loadComplete', ()=> { 
             console.log('地图加载完成！');
             //显示按钮
-           document.getElementById('fmbtnsGroup').style.display = 'block';
+        //    document.getElementById('fmbtnsGroup').style.display = 'block';
             
            // 初始化 图层
            let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
@@ -1162,7 +1162,7 @@ singleOk= async (e)=>{
     }
 
       // 清除已经存在的线
-      this.deleteMarkerFunc()
+      this.clearNaviLines()
       this.clearMaker()
   
       this.setState({
@@ -1396,7 +1396,7 @@ singlePlay= async ()=>{
                         }
                         // points.push(point)
                         this.state.points.push(point)
-                        this.deleteMarkerFunc()
+                        this.clearNaviLines()
                         this.addMarkerFunc(this.state.points)
 
                         this.setState({
@@ -1423,7 +1423,7 @@ singlePlay= async ()=>{
                             z: 1
                         }
                         this.state.points.push(point)
-                        this.deleteMarkerFunc()
+                        this.clearNaviLines()
                         this.addMarkerFunc(this.state.points)
                         // 睡眠多少毫秒
                         await this.sleep(1000) 
@@ -1448,86 +1448,6 @@ singlePlay= async ()=>{
 }
 
 
-playTwo= async ()=>{
-
-    console.log("按照做标进行播放");
-
-     // 人员历史轨迹
-     let singleLocatingEntityA = this.state.singleLocatingEntity;
-     let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
-     let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
-     let singleHisObj = this.state.singleHisObj;
-            debugger 
-     // 获取存放时间的数组及长度
-     let singLeList = singleHisObj[singleLocatingEntityA];
-
-     if (singLeList === undefined || singLeList.length === 0) {
-         message.info("无历史轨迹数据,请重新加载")
-         this.setState({
-             isSingleTrack: false,
-             curPlayCount:singleStartTimeStamp,
-         })
-         return
-     }
-
-     let len = singLeList.length;
-
-
-     let coordsTag = null;
-     // 显示第一个数据
-     coordsTag =  singleHisObj[singLeList[0]];
-     if (coordsTag != null) {
-         this.addImageMarker(coordsTag, 1);
-     }
-
-      // 判断第一次进入    
-      for(let i=0;i<len;i++){ 
-        if (this.state.isSingleTrack === false) {
-            console.log("暂停设备移动");
-            break
-        }
-          console.log("模式2 执行中")
-          let prevTime = singLeList[i];
-          let curTime = null;
-          if (i+1 < len) {
-              // 证明 i 不是最后一个
-              curTime = singLeList[i+1];
-          }
-                       
-      if (curTime != null) {
-            let coordsTagBefore = singleHisObj[prevTime]   
-              coordsTag = singleHisObj[curTime] 
-
-            if (coordsTagBefore.x != coordsTag.x && coordsTagBefore.y != coordsTag.y) {
-                this.addImageMarker(coordsTag, 1);
-
-                this.setState({
-                          curPlayCount:curTime,
-                      })
-                let point=  {
-                    x: coordsTag.x, 
-                    y: coordsTag.y, 
-                    z: 1
-                }
-                this.state.points.push(point)
-                this.deleteMarkerFunc()
-                this.addMarkerFunc(this.state.points)
-                 // 睡眠多少毫秒
-                 await this.sleep(1000) 
-            } 
-            //   this.setState({
-            //       playCount : this.state.playCount+1,
-            //   })
-      }
-
-         
-      
-      }
-
-
-
-
-}
 
 formatter(value) {
     // value 的值是从1到一百
@@ -1591,14 +1511,6 @@ formatter(value) {
                 //绘制第二条路径线
                 // drawLines(naviResults2, lineStyle2);
 
-        }
-
-        /**
-         * 删除线标注按钮事件
-         * */
-        deleteMarkerFunc=()=> {
-            //清除线标注
-            this.clearNaviLines();
         }
 
         /**
@@ -1746,7 +1658,7 @@ initFormList=()=>{
 
                                     if (this.state.singleEndTimeStamp != value){
                                         // 清除已经存在的线
-                                        this.deleteMarkerFunc()
+                                        this.clearNaviLines()
                                         this.clearMaker()
                                     }                    
 
@@ -1781,7 +1693,7 @@ initFormList=()=>{
             }}>画线</Button>
 
             <Button  onClick={(e)=>{
-                this.deleteMarkerFunc()
+                this.clearNaviLines()
             }}>清除线</Button>
         </div>
         // formItemList.push(aa)

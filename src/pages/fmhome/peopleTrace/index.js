@@ -102,6 +102,7 @@ export default class PeopleTrace extends React.Component{
             isCoodsTrue : false,
             // 进入的是人员追踪还是人员轨迹
             mmtType : null,
+            
             // 是否可以追踪
             isTrace : false,
             traceCount:0,
@@ -153,7 +154,7 @@ export default class PeopleTrace extends React.Component{
         this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
-            document.getElementById('fmbtnsGroup').style.display = 'block';
+            // document.getElementById('fmbtnsGroup').style.display = 'block';
                
             });
 

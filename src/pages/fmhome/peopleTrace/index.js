@@ -967,8 +967,8 @@ trace= async ()=>{
   // 获取当前时间的上下两秒的数据
   let locationTimeStamp = new Date(locationTime).getTime();
   
-  let startTime = moment(parseInt(locationTimeStamp-2000)).format("YYYY-MM-DD HH:mm:ss"); 
-  let endTime = moment(parseInt(locationTimeStamp+2000)).format("YYYY-MM-DD HH:mm:ss"); 
+  let startTime = moment(parseInt(locationTimeStamp-5000)).format("YYYY-MM-DD HH:mm:ss"); 
+  let endTime = moment(parseInt(locationTimeStamp+5000)).format("YYYY-MM-DD HH:mm:ss"); 
 
   let coodsTagList = null;
     if (locationType ==="人员"){

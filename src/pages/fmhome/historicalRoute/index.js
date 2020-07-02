@@ -1296,14 +1296,6 @@ singlePlay= async ()=>{
    await this.setSt()
     console.log("模式： " + trackPattern);
 
-    // if (trackPattern== 2) {
-    //     // 按照模式2 进行播放
-        
-    //   await  this.playTwo()
-
-    //     return;
-    // }
-
     console.log("开始播放---");
             // 人员历史轨迹
             let singleLocatingEntityA = this.state.singleLocatingEntity;
@@ -1400,7 +1392,7 @@ singlePlay= async ()=>{
                         this.addMarkerFunc(this.state.points)
 
                         this.setState({
-                            playCount : this.state.playCount+1,
+                            playCount : i,
                         })
                         // 睡眠多少毫秒
                         await this.sleep(tStamp)    
@@ -1409,14 +1401,13 @@ singlePlay= async ()=>{
                     coordsTag = singleHisObj[curTime] 
 
                     this.setState({
-                        playCount : this.state.playCount+1,
+                        curPlayCount:curTime,
+                        playCount : i,
                     })
+
                     if (coordsTagBefore.x != coordsTag.x && coordsTagBefore.y != coordsTag.y) {
                         this.addImageMarker(coordsTag, 1);
 
-                        this.setState({
-                                curPlayCount:curTime,
-                        })
                         let point=  {
                             x: coordsTag.x, 
                             y: coordsTag.y, 
@@ -1434,8 +1425,9 @@ singlePlay= async ()=>{
                    
             
             }
+            debugger
 
-            if (len <= this.state.playCount) {
+            if ((len-2) <= this.state.playCount) {
                 message.info("轨迹播放完毕");
                 this.setState({
                     isSingleTrack: false,
@@ -1444,7 +1436,7 @@ singlePlay= async ()=>{
                 })
                 return
             }   
-
+            debugger
 }
 
 
@@ -1673,7 +1665,9 @@ initFormList=()=>{
                         tipFormatter={this.formatter.bind(this)} tooltipVisible   />
                     </Col>
                 <Col span={2}>
-                    <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={()=>{this.singlePlay()}}>播放</Button>
+                    <Button  className={this.state.isSingleTrack===true?'isSingleTrack active':'isSingleTrack'}   onClick={()=>{this.singlePlay()}}>
+                                {this.state.isSingleTrack===true?'暂停':' 播放'}
+                    </Button>
                 </Col>
                     
             </Row>

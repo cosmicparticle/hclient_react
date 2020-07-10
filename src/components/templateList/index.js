@@ -134,6 +134,7 @@ export default class TemplateList extends React.Component{
             const nodeId=treeNode.props.dataRef.nodeId
             Super.super({
                 url:`api2/entity/${this.state.menuId}/tree/ntmpl/${treeNode.props.code}/${treeNode.props.id}`,
+                method:"GET",
             }).then((res)=>{
                 if(res){
                     Super.super({

@@ -261,9 +261,9 @@ export default class PeopleTrace extends React.Component{
             //必要，地图容器
             container: document.getElementById('fengMap'),
             //地图数据位置
-            // mapServerURL: './data/' + fmapID,
+            mapServerURL: './data/' + fmapID,
             //主题数据位置
-            // mapThemeURL: './data/theme',
+            mapThemeURL: './data/theme',
             //设置主题
             defaultThemeName: '2001',
           mapScaleLevelRange: [16, 23],       // 比例尺级别范围， 16级到23级

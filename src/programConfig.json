@@ -1,5 +1,6 @@
 {
   "hydrocarbonServer":"http://116.62.163.143:85/hydrocarbon/",
+  // "hydrocarbonServer":"http://47.110.161.228:91/hydrocarbon/",
   "programName_NavLeft":"HYDROCARBON",
   "programName":"比想象的更需要",
   "programName_sub":"CARBON",

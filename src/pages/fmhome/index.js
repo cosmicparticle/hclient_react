@@ -17,7 +17,7 @@ export default class Home extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            // fmapID:'10347',
+            // fmapID:'90884',
             fmapID : '90884',// 工厂地图
             storeImageDatas:[],
             array:[],

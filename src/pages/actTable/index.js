@@ -149,7 +149,7 @@ export default class actTable extends React.Component{
 
             this.setState({
                 moduleTitle:res.menu.title,
-                columns:this.renderColumns(res.ltmpl.columns,res.tmplGroup?res.tmplGroup.ractions:null),
+                columns:this.renderColumns(res.ltmpl.columns,res.tmplGroup?res.tmplGroup.ractions:null,res.ltmpl.operates),
                 queryKey:res.queryKey,
                 formList:res.ltmpl.criterias,
                 tmplGroup:res.tmplGroup,
@@ -194,7 +194,7 @@ export default class actTable extends React.Component{
             pageSize:data.pageInfo.pageSize,
         })
     }
-    renderColumns=(columns,ractions)=>{
+    renderColumns=(columns,ractions,operates)=>{
         columns.forEach((item)=>{
             if(item.title==="序号"){
                 item['render']= (text, record,index) => (
@@ -207,20 +207,23 @@ export default class actTable extends React.Component{
             if(item.title==="操作"){
                 item['render']= (text, record) => (
                                 <span>
-                                    <Button 
-                                        type="primary" 
-                                        icon="align-left" 
-                                        size="small" 
-                                        onClick={()=>this.handleOperate("detail",record)}>
-                                        详情
-                                    </Button>
-                                    <Button 
-                                        type="dashed" 
-                                        icon="edit" 
-                                        size="small" 
-                                        onClick={()=>this.handleOperate("edit",record)}>
-                                        修改
-                                    </Button>
+                                    {operates && operates.length > 0 ? operates.map(it=>
+                                            it==="detail"?
+                                                <Button
+                                                    type="primary"
+                                                    icon="align-left"
+                                                    size="small"
+                                                    onClick={() => this.handleOperate("detail", record)}>
+                                                    详情
+                                                </Button>:it==="update"?
+                                                < Button
+                                                    type = "dashed"
+                                                    icon="edit"
+                                                    size="small"
+                                                    onClick={()=>this.handleOperate("edit",record)}>
+                                                    修改
+                                                </Button>:""):""
+                                        }
                                     {
                                         ractions && ractions.length>0?
                                             ractions.map(it =>

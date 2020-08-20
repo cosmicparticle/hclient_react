@@ -149,7 +149,8 @@ class BaseForm extends React.Component{
         const onlyOneDisabled=selectedRowKeys!==1?true:false
         return(
             <Form layout="inline">
-                {this.initFormList()}
+
+                {hideQuery?"":this.initFormList()}
                 <FormItem className="btns">
                     {hideQuery?"":<Button type="primary" onClick={this.handleFilterSubmit}>查询</Button>}
                     {hideDelete?"":<Button type="danger" disabled={anyDisabled} onClick={(e)=>this.props.handleOperate("delete","",e)}>删除选中</Button>}

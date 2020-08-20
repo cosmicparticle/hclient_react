@@ -82,6 +82,8 @@ export default class Detail extends React.Component{
             const premises=res.config.premises
             console.log(premises);
             const actions=res.config.actions
+            const buttonStatus=res.config.buttonStatus
+            const buttonStatus1=buttonStatus.toString();
             const menuTitle=menuId==="user"?"用户":res.menu.title
             const requestSelectArr=[] //下拉菜单选项fieldId数组
             const dtmplGroup=res.config.dtmpl.groups
@@ -115,7 +117,7 @@ export default class Detail extends React.Component{
             this.setState({
                 dtmplGroup,
                 menuTitle,
-                actions,
+                actions,buttonStatus,
                 rightNav,
                 premises,ratmplId,rootCode,
             })
@@ -977,7 +979,7 @@ export default class Detail extends React.Component{
     }
     render(){
         const { menuTitle,detailsTitle,fuseMode,loading,visibleForm,dtmplGroup,editFormList,visibleEditAddTemplate,showSetPass,
-            actions,premises,templateDtmpl,rightNav,columns,dataSource,editAddGroupId,visibleDrawer,detailHistory,oldPass,
+            actions,buttonStatus,premises,templateDtmpl,rightNav,columns,dataSource,editAddGroupId,visibleDrawer,detailHistory,oldPass,
             type,menuId,code,visibleTemplateList,fileType,title,options,templateData,formTmplGroupId,rootCode,modalType,isModal,rfieldId,formRfieldId}=this.state
         let content
         if(actions && actions.length>0){
@@ -1020,24 +1022,29 @@ export default class Detail extends React.Component{
                     {type==="new"&& menuTitle ? menuTitle+"--创建":detailsTitle }   
                     {type==="detail" && !rootCode && !isModal ?
                         <div className="fr pad">
-                            <Button 
-                                className="hoverbig" 
-                                title="导出" 
-                                onClick={this.exportDetail}>
+                            {buttonStatus && buttonStatus.detailExportButton?
+                                <Button
+                                    className="hoverbig"
+                                    title="导出"
+                                    onClick={this.exportDetail}>
                                     <Icon type="upload" />
-                            </Button>
-                            <Button 
-                                className="hoverbig" 
-                                title="查看历史" 
-                                onClick={()=>this.renderHistoryList()}>
+                                </Button>:""
+                            }
+                            {buttonStatus && buttonStatus.historyButton?
+                                <Button
+                                    className="hoverbig"
+                                    title="查看历史"
+                                    onClick={()=>this.renderHistoryList()}>
                                     <Icon type="schedule" />
-                            </Button>                                                      
-                            <Button 
-                                className="hoverbig" 
-                                title="刷新" 
-                                onClick={this.fresh}>
-                                    <Icon type="sync" />
-                            </Button>
+                                </Button>:""
+                            }
+
+                           {/*<Button */}
+                           {/*     className="hoverbig" */}
+                           {/*     title="刷新" */}
+                           {/*     onClick={this.fresh}>*/}
+                           {/*         <Icon type="sync" />*/}
+                           {/* </Button>*/}
                         </div> :
                         <div className="fr pad">
                             <div className="buttonGroup">
@@ -1047,7 +1054,7 @@ export default class Detail extends React.Component{
                                             <Icon type="swap" />
                                         </Button>
                                     </Popover>:""}
-                                {this.props.match?
+                                {this.props.match && buttonStatus && buttonStatus.saveButton ?
                                     <Button 
                                         type='primary' 
                                         icon="cloud-upload" 
@@ -1058,7 +1065,7 @@ export default class Detail extends React.Component{
                                         >保存
                                     </Button>:""}
                                 </div>
-                                {type!=="detail" && code && !rootCode?
+                                {type!=="detail" && code && buttonStatus && buttonStatus.fusionModeButton && !rootCode?
                                   <Switch
                                         checkedChildren="开" 
                                         unCheckedChildren="关" 

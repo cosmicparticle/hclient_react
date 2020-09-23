@@ -31,7 +31,7 @@ export default class BaseInfoForm extends React.Component{
             if(prevValue===" "){
                 return  prevValue;
             }else{
-                return undefined;
+                return "unsubmittedFile";
             }
         }
         const {removed}=value;
@@ -260,7 +260,15 @@ export default class BaseInfoForm extends React.Component{
  //                   console.log(fieldValue)
                     if(item.value && item.value.constructor ===File){
                         const FILE= <FormItem label={title} key={field} className='labelcss'>
-                            {  getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                            {  getFieldDecorator(fieldName,
+                                {
+                                    initialValue:"unsubmittedFile" ,
+                                    normalize: this.fileNormalize,
+                                    rules: item.validators ? [{
+                                        required: true, message: `请选择${title}`,
+                                    }] : "",
+                                },
+                                                           )(
                             <NewUpload fileList={[item.value]}
                                 width={width}
                             />
@@ -285,13 +293,26 @@ export default class BaseInfoForm extends React.Component{
                                 : !available?Units.packFile2Show(url,width)
                                     :
                                 (fieldValue_ && fieldValue_!=="无文件"?
-                                    getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                                    getFieldDecorator(fieldName,
+                                        {
+                                            initialValue:"unsubmittedFile" ,
+                                            normalize: this.fileNormalize,
+                                            rules: item.validators ? [{
+                                                required: true, message: `请选择${title}`,
+                                            }] : "",
+                                        })(
                                         <NewUpload fileList={fileList_}
                                                    width={width}
                                         />
                                     )
                                     :
-                                    getFieldDecorator(fieldName,{ normalize: this.fileNormalize,})(
+                                    getFieldDecorator(fieldName,{
+                                        initialValue:"unsubmittedFile" ,
+                                        normalize: this.fileNormalize,
+                                        rules: item.validators ? [{
+                                            required: true, message: `请选择${title}`,
+                                        }] : "",
+                                    })(
                                         <NewUpload
                                             width={width}
                                         />

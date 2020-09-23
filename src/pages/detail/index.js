@@ -554,13 +554,17 @@ export default class Detail extends React.Component{
         });
     }
     showModal = (dfieldIds,actionId) => {
-        this.baseinfo.handleBaseInfoSubmit() //获取BaseInfo数据
-        this.visibleModal(actionId,'handleOk','确定要保存修改吗')//弹出确认框
-        this.setState({
-            dfieldIds
-        })
+
+       let err=this.baseinfo.handleBaseInfoSubmit() //获取BaseInfo数据
+        if(!err){
+            this.visibleModal(actionId,'handleOk','确定要保存修改吗')//弹出确认框
+            this.setState({
+                dfieldIds
+            })
+        }
+
     }
-    baseInfo=(baseValue)=>{  
+    baseInfo=(baseValue)=>{
         const {newPass,dtmplGroup}=this.state
 
         if(newPass){

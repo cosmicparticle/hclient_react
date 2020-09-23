@@ -10,6 +10,7 @@ class Formi extends React.Component{
         this.props.onRef(this)
     }
     handleBaseInfoSubmit=()=>{
+        let err_;
         this.props.form.validateFields({ force: true }, (err, values) => { //提交再次验证
             if(!err){
                 const result={}
@@ -24,13 +25,17 @@ class Formi extends React.Component{
                         result[k]=values[k].originFileObj
                     }else if(!values[k] || values[k].length===0){
                         result[k]="";
+                    }else if(values[k]==="unsubmittedFile"){//不再提交
+
                     }else{
                         result[k]=values[k]
                     }
                 }
                 this.props.baseInfo(result)
             }
+            err_=err;
         })
+        return err_;
     }   
     reset=()=>{
         this.props.form.resetFields()

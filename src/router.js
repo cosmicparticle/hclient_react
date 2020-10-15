@@ -3,7 +3,7 @@ import { HashRouter, Route , Switch, Redirect} from 'react-router-dom'
 import App from './App'
 import Admin from './pages/admin'
 import Loginit from './pages/login'
-import Home from './pages/fmhome'
+import Home from './pages/home'
 import HisRoute from './pages/fmhome/historicalRoute'
 import PeopleTrace from './pages/fmhome/peopleTrace'
 

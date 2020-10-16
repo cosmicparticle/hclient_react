@@ -29,10 +29,11 @@ class Header extends React.Component{
 		Super.super({
 			url:'api2/meta/menu/get_blocks',                   
 		}).then((res)=>{
-			const currentBlockId=usedBlockId?usedBlockId:res.currentBlockId //判断url里有blockid
+			const currentBlockId=usedBlockId?usedBlockId:res.currentBlockId?res.currentBlockId:res[0].blockId //判断url里有blockid
+			let currentBlockItem
 			res.blocks.forEach((item)=>{
 				if(item.id===currentBlockId){
-					this.props.setCurrentList(item)
+					currentBlockItem=item
 				}
 				item.l1Menus.forEach((it)=>{
 					it.blockId=item.id
@@ -44,6 +45,10 @@ class Header extends React.Component{
 								{this.renderBlockMenu(item.l1Menus)}
 							</Menu>
 			})
+			if(!currentBlockItem){//没有匹配显示第一个
+				currentBlockItem=res.blocks[0]
+			}
+			this.props.setCurrentList(currentBlockItem)
 			this.setState({
 				blocks:res.blocks,
 				currentBlockId,

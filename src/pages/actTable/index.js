@@ -401,7 +401,7 @@ export default class actTable extends React.Component{
             })
             if(res && res.status==="suc"){
                 let hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken");
-                let url=res.url+"hydrocarbon-token="+Units.getLocalStorge("hydrocarbonToken");
+                let url=res.url+"hydrocarbon_token="+Units.getLocalStorge("hydrocarbonToken");
                 window.open(url);
             }else{
                 message.error(res.status)

@@ -1,0 +1,12 @@
+.printWeight {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.printWeight .weightRow {
+    border: 1px solid #000;
+}
+.printWeight .weightCol {
+    border: 1px solid #000;
+    text-align: center;
+}

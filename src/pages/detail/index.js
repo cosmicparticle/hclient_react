@@ -535,8 +535,8 @@ export default class Detail extends React.Component{
                     method:'GET',
                 }).then((res)=>{
                     if(res.status==="suc"){
-                        const tokenName=Units.getLocalStorge("tokenName")
-                        Units.downloadFile(`api2/entity/export/download/${res.uuid}?@token=${tokenName}`)
+                        const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")
+                        Units.downloadFile(`api2/entity/export/download/${res.uuid}?@token=${hydrocarbonToken}`)
                     }else{
                         message.error(res.status)
                     }

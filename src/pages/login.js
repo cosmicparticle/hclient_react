@@ -34,7 +34,7 @@ class Loginit extends React.Component{
                 }).then((res)=>{
                     if(res.status === 'suc'){
                         window.location.hash="#/home";
-                        Units.setLocalStorge("tokenName",res.token)
+                        Units.setLocalStorge("hydrocarbonToken",res.token)
                     }else if(res.errorMsg){
                         message.info(res.errorMsg);
                     }

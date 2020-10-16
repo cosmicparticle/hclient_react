@@ -134,8 +134,8 @@ export default class Import extends React.Component{
         message.success("刷新成功！")
     }
     downloadFile=(failedRowsFileUUID)=>{
-        const tokenName=Units.getLocalStorge("tokenName")
-        Units.downloadFile(`api2/entity/list/exporter/result/${failedRowsFileUUID}?@token=${tokenName}`)
+        const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")
+        Units.downloadFile(`api2/entity/list/exporter/result/${failedRowsFileUUID}?@token=${hydrocarbonToken}`)
     }
     onChangeNews=()=>{
         const {inputValue}=this.state

@@ -400,7 +400,9 @@ export default class actTable extends React.Component{
                 selectedRowKeys:[],
             })
             if(res && res.status==="suc"){
-                window.open(res.url);
+                let hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken");
+                let url=res.url+"hydrocarbon-token="+Units.getLocalStorge("hydrocarbonToken");
+                window.open(url);
             }else{
                 message.error(res.status)
             }

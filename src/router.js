@@ -6,7 +6,7 @@ import Loginit from './pages/login'
 import Home from './pages/home'
 import HisRoute from './pages/fmhome/historicalRoute'
 import PeopleTrace from './pages/fmhome/peopleTrace'
-
+import PrintWeighting from './pages/printweighting'
 
 import ActTable from "./pages/actTable"
 import Detail from "./pages/detail"

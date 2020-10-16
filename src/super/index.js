@@ -4,7 +4,10 @@ import Units from './../units'
 
 export default class Superagent{
     static super(options,type,load){
-        const tokenName=Units.getLocalStorge("tokenName")
+
+        const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")?Units.getLocalStorge("hydrocarbonToken")
+            :options.header && options.header.hydrocarbonToken?
+                options.header.hydrocarbonToken:null;
         let loading;
         if(options.data && options.data.isShowLoading!==false){
             loading=document.getElementById('ajaxLoading')
@@ -20,7 +23,7 @@ export default class Superagent{
         return new Promise((resolve,reject)=>{
             superagent(method,Units.api()+options.url)
                 .type(ty)
-                .set("hydrocarbon-token",tokenName)
+                .set("hydrocarbon-token",hydrocarbonToken)
                 .query(options.query||'')
                 .send(options.data)
                 .end((req,res)=>{
@@ -30,7 +33,7 @@ export default class Superagent{
                     } 
                     //console.log(res.body)
                     if(res.status===200){
-                        Units.setLocalStorge("tokenName",tokenName)
+                        Units.setLocalStorge("hydrocarbonToken",hydrocarbonToken)
                         resolve(res.body)
                     }else if(res.status===403){
                         message.info("请求权限不足,可能是token已经超时")

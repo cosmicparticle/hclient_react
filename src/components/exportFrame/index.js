@@ -102,8 +102,8 @@ export default class ExportFrame extends React.Component{
     }
     download=()=>{
         let {uuid}=this.state;
-        const tokenName=Units.getLocalStorge("tokenName")
-        Units.downloadFile(`api2/entity/list/exporter/result/${uuid}?@token=${tokenName}`)
+        const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")
+        Units.downloadFile(`api2/entity/list/exporter/result/${uuid}?@token=${hydrocarbonToken}`)
     }
     handleCancel=()=>{
         const {uuid}=this.state

@@ -31,9 +31,9 @@ export default class PrintWeight extends React.Component{
         });
          return (
             <div >
-                <Row>
+                {/*<Row>*/}
                     <PrintWeightDetail unique_code={unique_code} hydrocarbon_token={hydrocarbon_token}></PrintWeightDetail>
-                </Row>
+                {/*</Row>*/}
             </div>
         );
     }

@@ -1,12 +1,23 @@
 .printWeight {
-    width: 70%;
+    width: 60%;
     margin: 0 auto;
+    font-family: 黑体;
+    font-size: 10px;
 }
 
 .printWeight .weightRow {
     border: 1px solid #000;
 }
 .printWeight .weightCol {
-    border: 1px solid #000;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
     text-align: center;
+    height: 25px;
+}
+
+.printWeight .weightColRight {
+    border-right: 1px solid #000;
+}
+.printWeight .weightColEnd {
+    border-bottom: 1px solid #000;
 }

@@ -173,7 +173,7 @@ export default class ModelImport extends React.Component{
             message.info("请保存模板")
             return
         }
-        const tokenName=Units.getLocalStorge("tokenName")
+        const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")
         if(tmplId){
             confirm({
                 title: `确认下载`,
@@ -181,8 +181,8 @@ export default class ModelImport extends React.Component{
                 okText: '是的',
                 cancelText: '取消',
                 onOk() {
-                    const tokenName=Units.getLocalStorge("tokenName")
-                    Units.downloadFile(`api2/entity/list/importer/excel/${tmplId}?@token=${tokenName}`)
+                    const hydrocarbonToken=Units.getLocalStorge("hydrocarbonToken")
+                    Units.downloadFile(`api2/entity/list/importer/excel/${tmplId}?@token=${hydrocarbonToken}`)
                 },
             }) 
         }else{

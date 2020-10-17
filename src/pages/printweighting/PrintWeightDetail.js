@@ -79,9 +79,9 @@ export default class PrintWeightDetail extends  React.Component{
 
              let guige =  arr.物资信息[0].名称;
              let jinFactoryTime = arr.车辆台账[0].进场时间;
-          jinFactoryTime=moment(jinFactoryTime).format("YYYY-MM-DD  HH:mm:ss")
+          jinFactoryTime=moment(jinFactoryTime).format("YYYY/MM/DD  HH:mm:ss")
             let chuFactoryTime = arr.基本信息.过磅时间;
-          chuFactoryTime=moment(chuFactoryTime).format("YYYY-MM-DD  HH:mm:ss")
+          chuFactoryTime=moment(chuFactoryTime).format("YYYY/MM/DD  HH:mm:ss")
             let maoWeight = arr.毛重过磅信息[0].过磅重量;
             let piWeight = arr.皮重过磅信息[0].过磅重量;
             let jingWeight = arr.基本信息.实际重量;
@@ -105,7 +105,7 @@ export default class PrintWeightDetail extends  React.Component{
             let carID = arr.承运车辆[0].车牌号;
 debugger
         return  <div className="printWeight">
-                    <h2 style={{textAlign:"center",fontSize:"23px"}}>山东创新炭材料有限公司磅单</h2>
+                    <h2 style={{textAlign:"center",fontSize:"17px"}}>山东创新炭材料有限公司磅单</h2>
 
                     <Row   style={{}}>
                         <Col style={{textAlign:"left"}}  span={8} style={{}}>打印时间: 2020-10-17 00:30:08</Col>

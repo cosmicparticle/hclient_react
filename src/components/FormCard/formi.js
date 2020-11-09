@@ -23,7 +23,9 @@ class Formi extends React.Component{
                         result[k]=moment(values[k]).format("YYYY-MM-DD HH:mm:ss")
                    }else if(values[k] && values[k].originFileObj){
                         result[k]=values[k].originFileObj
-                    }else if(!values[k] || values[k].length===0){
+                    }else if(values[k]===0 || values[k]===0.0){
+                        result[k]=values[k];
+                    }else  if(!values[k] || values[k].length===0){
                         result[k]="";
                     }else if(values[k]==="unsubmittedFile"){//不再提交
 

@@ -1,24 +1,30 @@
+
+/* font-family: "Microsoft YaHei", 微软雅黑, MicrosoftJhengHei, 华文细黑, STHeiti, MingLiu;*/
 .printWeight {
     width: 56%;
     margin-left: 8px;
-    font-family: 宋体;
-    font-size: 11px;
+    font-family:  华文细黑,  MingLiu;
+    font-size: 12px;
     font-weight: bold;
 }
 
 .printWeight .weightRow {
-    border: 1px solid #000;
+    border: 0.1px solid #000;
+    font-family:  华文细黑,  MingLiu;
+
 }
 .printWeight .weightCol {
-    border-top: 1px solid #000;
-    border-left: 1px solid #000;
+    border-top: 0.1px solid #000;
+    border-left: 0.1px solid #000;
     text-align: center;
     height: 35px;
+    font-family:   华文细黑,  MingLiu;
+
 }
 
 .printWeight .weightColRight {
-    border-right: 1px solid #000;
+    border-right: 0.1px solid #000;
 }
 .printWeight .weightColEnd {
-    border-bottom: 1px solid #000;
+    border-bottom: 0.1px solid #000;
 }

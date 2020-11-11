@@ -145,7 +145,7 @@ export default class PrintWeightDetail extends  React.Component{
           }
 
          let dayinTime =  moment(new Date()).format("YYYY/MM/DD  HH:mm:ss")
-debugger
+
         return  <div className="printWeight">
                     <h2 style={{textAlign:"center",fontSize:"17px"}}>山东创新炭材料有限公司磅单</h2>
 

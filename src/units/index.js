@@ -10,6 +10,7 @@ const api = ProgramConfig.hydrocarbonServer;
 const programName = ProgramConfig.programName;
 const programName_sub=ProgramConfig.programName_sub;
 const programName_NavLeft=ProgramConfig.programName_NavLeft;
+const poundHeader=ProgramConfig.poundHeader?ProgramConfig.poundHeader:'磅单';
 let storageKeyPrefix = undefined;
 
 //加载本地配置
@@ -19,6 +20,7 @@ Axios.create().get('programConfig.json').then((result) => {
     window.localStorage['programName_NavLeft'] = result.data.programName_NavLeft
     window.localStorage['programName_sub'] = result.data.programName_sub
     window.localStorage['programName_Logo'] = result.data.programName_Logo
+    window.localStorage['poundHeader'] = result.data.poundHeader
 }).catch((error) => { console.log(error) });
 
 export default {
@@ -37,11 +39,28 @@ export default {
     programName_Logo(){
         return window.localStorage['programName_Logo']?window.localStorage['programName_Logo']:Logo
     },
+    poundHeader(){
+        return window.localStorage['poundHeader']?window.localStorage['poundHeader']:poundHeader
+    },
 
     formateDate(time){
         if(!time) return '';
         const date=new Date(time);
         return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
+    },
+    dateToString(date) { //日期转字符串
+        console.log(date)
+        let year = date.getFullYear();
+        let month = (date.getMonth() + 1).toString();
+        let day = (date.getDate()).toString();
+        if(month.length === 1) {
+            month = "0" + month;
+        }
+        if(day.length === 1) {
+            day = "0" + day;
+        }
+        const dateTime = year + "-" + month + "-" + day;
+        return dateTime;
     },
     pagination(data,callback){
         const page={

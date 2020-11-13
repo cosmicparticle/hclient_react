@@ -2,6 +2,7 @@ import React from 'react'
 import Super from "./../../super"
 import { Row, Col } from 'antd';
 import './index.css'
+import Units from "../../units";
 import moment from "moment";
 export default class PrintWeightDetail extends  React.Component{
 
@@ -125,7 +126,7 @@ export default class PrintWeightDetail extends  React.Component{
          let dayinTime =  moment(new Date()).format("YYYY/MM/DD  HH:mm:ss")
 
         return  <div className="printWeight" >
-                    <h2 style={{textAlign:"center",fontSize:"17px",color:"#000"}}>山东创新炭材料有限公司磅单</h2>
+                    <h2 style={{textAlign:"center",fontSize:"17px",color:"#000"}}>{Units.poundHeader()}</h2>
 
                     <Row   style={{}}>
                         <Col style={{textAlign:"left"}}  span={8} style={{}}>打印时间: {dayinTime}</Col>
@@ -133,64 +134,63 @@ export default class PrintWeightDetail extends  React.Component{
                             规格:  {guige}
                             {/*单号: {orderCode}*/}
                         </Col>
-                        <Col style={{textAlign:"right"}} span={8} >单位: kg</Col>
+                        <Col style={{textAlign:"right"}} span={7} >单位: kg</Col>
                     </Row>
 
                     <Row  gutter={[16, 16]} style={{}}>
-                        <Col className="weightCol"   span={3}>物资名称</Col>
-                        <Col className="weightCol" span={5} >{materialName}</Col>
-                        <Col className="weightCol" span={3} >进场时间</Col>
-                        <Col className="weightCol"  span={5} >{jinFactoryTime}</Col>
-                        <Col className="weightCol" span={3} >xxxx</Col>
-                        <Col className="weightCol weightColRight" span={5} >{chuFactoryTime}</Col>
-                    </Row>
-                    <Row gutter={[16, 16]}>
-                        <Col className="weightCol" span={3} >xxx</Col>
-                        <Col className="weightCol" span={5} >{guige}</Col>
-                        <Col className="weightCol" span={3} >我方毛重</Col>
-                        <Col className="weightCol" span={5} >{maoWeight}</Col>
-                        <Col className="weightCol" span={3} >对方毛重</Col>
-                        <Col className="weightCol weightColRight" span={5} >{maoWeightOpposite}</Col>
+                        <Col className="weightCol"  span={3}>物资名称</Col>
+                        <Col className="weightCol" span={6} >{materialName}</Col>
+                        <Col className="weightCol" span={3} >型号</Col>
+                        <Col className="weightCol" span={4} >{guige}</Col>
+                        <Col className="weightCol "  span={3} >车号</Col>
+                        <Col className="weightCol weightColRight" span={4} >{carID}</Col>
+
                     </Row>
                     <Row gutter={[16, 16]}>
                         <Col className="weightCol" span={3} >发货单位</Col>
-                        <Col className="weightCol" span={5} >{fahuoUnit}</Col>
-                        <Col className="weightCol" span={3} >我方皮重</Col>
-                        <Col className="weightCol" span={5} >{piWeight}</Col>
-                        <Col className="weightCol" span={3} >对方皮重</Col>
-                        <Col className="weightCol weightColRight" span={5} >{piWeightOpposite}</Col>
+                        <Col className="weightCol" span={6} >{fahuoUnit}</Col>
+                        <Col className="weightCol" span={3} >我方毛重</Col>
+                        <Col className="weightCol" span={4} >{maoWeight}</Col>
+                        <Col className="weightCol" span={3} >对方毛重</Col>
+                        <Col className="weightCol weightColRight" span={4} >{maoWeightOpposite}</Col>
                     </Row>
                     <Row gutter={[16, 16]}>
                         <Col className="weightCol" span={3} >收货单位</Col>
-                        <Col className="weightCol" span={5} >{shouhuoUnit}</Col>
-                        <Col className="weightCol" span={3} >我方净重</Col>
-                        <Col className="weightCol" span={5} >{jingWeight}</Col>
-                        <Col className="weightCol" span={3} >对方净重</Col>
-                        <Col className="weightCol weightColRight" span={5} >{jingWeightOpposite}</Col>
+                        <Col className="weightCol" span={6} >{shouhuoUnit}</Col>
+                        <Col className="weightCol" span={3} >我方皮重</Col>
+                        <Col className="weightCol" span={4} >{piWeight}</Col>
+                        <Col className="weightCol" span={3} >对方皮重</Col>
+                        <Col className="weightCol weightColRight" span={4} >{piWeightOpposite}</Col>
                     </Row>
                     <Row gutter={[16, 16]}>
+
                         <Col className="weightCol " span={3} >运输单位</Col>
-                        <Col className="weightCol " span={5} >{yunshuUnit}</Col>
-                        <Col className="weightCol "  span={3} >车号</Col>
-                        <Col className="weightCol " span={5} >{carID}</Col>
-
+                        <Col className="weightCol " span={6} >{yunshuUnit}</Col>
+                        <Col className="weightCol" span={3} >我方净重</Col>
+                        <Col className="weightCol" span={4} >{jingWeight}</Col>
+                        <Col className="weightCol" span={3} >对方净重</Col>
+                        <Col className="weightCol weightColRight" span={4} >{jingWeightOpposite}</Col>
+                    </Row>
+                    <Row gutter={[16, 16]}>
+                        <Col className="weightCol" span={3} >进场时间</Col>
+                        <Col className="weightCol"  span={6} >{jinFactoryTime}</Col>
                         <Col className="weightCol" span={3} >包数</Col>
-                        <Col className="weightCol weightColRight" span={5} >{baoshu}</Col>
+                        <Col className="weightCol " span={4} >{baoshu}</Col>
+                        <Col className="weightCol "  span={3} >块数</Col>
+                        <Col className="weightCol weightColRight" span={4} >{kuaishu}</Col>
 
-                        {/*<Col className="weightCol " span={3} >备注</Col>*/}
-                        {/*<Col className="weightCol weightColRight " span={5} > </Col>*/}
                     </Row>
                 <Row gutter={[16, 16]}>
-
                     <Col className="weightCol weightColEnd" span={3} >出场时间</Col>
-                    <Col className="weightCol weightColEnd" span={5} >{chuFactoryTime}</Col>
+                    <Col className="weightCol weightColEnd" span={6} >{chuFactoryTime}</Col>
 
                     {/*<Col className="weightCol weightColEnd" span={3} >包数</Col>*/}
                     {/*<Col className="weightCol weightColEnd" span={5} >{baoshu}</Col>*/}
-                    <Col className="weightCol weightColEnd"  span={3} >块数</Col>
-                    <Col className="weightCol weightColEnd" span={5} >{kuaishu}</Col>
                     <Col className="weightCol weightColEnd" span={3} >结算重量</Col>
-                    <Col className="weightCol weightColRight weightColEnd" span={5} > {jieSuanWeight}</Col>
+                    <Col className="weightCol  weightColEnd" span={4} > {jieSuanWeight}</Col>
+                    <Col className="weightCol weightColEnd" span={3} >备注</Col>
+                    <Col className="weightCol weightColRight weightColEnd" span={4} > </Col>
+
                 </Row>
 
                 </div>

@@ -1,8 +1,9 @@
 {
-  "hydrocarbonServer":"http://116.62.163.143:85/hydrocarbon/",
-  // "hydrocarbonServer":"http://47.110.161.228:91/hydrocarbon/",
+  "hydrocarbonServer":"http://121.196.184.205:96/hydrocarbon/",
+  "hydrocarbonServer1":"http://localhost:90/hydrocarbonboot/",
   "programName_NavLeft":"HYDROCARBON",
   "programName":"比想象的更需要",
   "programName_sub":"CARBON",
-  "programName_Logo":"logo.png"
+  "programName_Logo":"logo.png",
+  "poundHeader":"山东创新炭材料有限公司磅单"
 }

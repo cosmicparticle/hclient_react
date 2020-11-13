@@ -131,18 +131,17 @@ export default class PrintWeightDetail extends  React.Component{
                     <Row   style={{}}>
                         <Col style={{textAlign:"left"}}  span={8} style={{}}>打印时间: {dayinTime}</Col>
                         <Col style={{textAlign:"center"}} span={8} >
-                            规格:  {guige}
-                            {/*单号: {orderCode}*/}
+                            单 号: {orderCode}
                         </Col>
-                        <Col style={{textAlign:"right"}} span={7} >单位: kg</Col>
+                        <Col style={{textAlign:"right"}} span={7} >单 位: kg</Col>
                     </Row>
 
                     <Row  gutter={[16, 16]} style={{}}>
                         <Col className="weightCol"  span={3}>物资名称</Col>
                         <Col className="weightCol" span={6} >{materialName}</Col>
-                        <Col className="weightCol" span={3} >型号</Col>
+                        <Col className="weightCol" span={3} >型  号</Col>
                         <Col className="weightCol" span={4} >{guige}</Col>
-                        <Col className="weightCol "  span={3} >车号</Col>
+                        <Col className="weightCol "  span={3} >车  号</Col>
                         <Col className="weightCol weightColRight" span={4} >{carID}</Col>
 
                     </Row>
@@ -174,9 +173,9 @@ export default class PrintWeightDetail extends  React.Component{
                     <Row gutter={[16, 16]}>
                         <Col className="weightCol" span={3} >进场时间</Col>
                         <Col className="weightCol"  span={6} >{jinFactoryTime}</Col>
-                        <Col className="weightCol" span={3} >包数</Col>
+                        <Col className="weightCol" span={3} >包  数</Col>
                         <Col className="weightCol " span={4} >{baoshu}</Col>
-                        <Col className="weightCol "  span={3} >块数</Col>
+                        <Col className="weightCol "  span={3} >块  数</Col>
                         <Col className="weightCol weightColRight" span={4} >{kuaishu}</Col>
 
                     </Row>
@@ -188,7 +187,7 @@ export default class PrintWeightDetail extends  React.Component{
                     {/*<Col className="weightCol weightColEnd" span={5} >{baoshu}</Col>*/}
                     <Col className="weightCol weightColEnd" span={3} >结算重量</Col>
                     <Col className="weightCol  weightColEnd" span={4} > {jieSuanWeight}</Col>
-                    <Col className="weightCol weightColEnd" span={3} >备注</Col>
+                    <Col className="weightCol weightColEnd" span={3} >备 注</Col>
                     <Col className="weightCol weightColRight weightColEnd" span={4} > </Col>
 
                 </Row>

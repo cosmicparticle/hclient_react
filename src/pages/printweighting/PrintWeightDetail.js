@@ -60,6 +60,7 @@ export default class PrintWeightDetail extends  React.Component{
           let baoshu = null;
           let kuaishu = null;
           let jieSuanWeight = null;
+          let describe = null;
           if (baeInfo){
                  orderCode = baeInfo.订单号;
                 chuFactoryTime = baeInfo.过磅时间;
@@ -74,8 +75,8 @@ export default class PrintWeightDetail extends  React.Component{
                  baoshu =  baeInfo.包数;
                  kuaishu =  baeInfo.块数;
                 jieSuanWeight =  baeInfo.结算重量;
+              describe = baeInfo.备注;
             }
-
 
              let materialName = null;
              let guige =  null;
@@ -188,7 +189,7 @@ export default class PrintWeightDetail extends  React.Component{
                     <Col className="weightCol weightColEnd" span={3} >结算重量</Col>
                     <Col className="weightCol  weightColEnd" span={4} > {jieSuanWeight}</Col>
                     <Col className="weightCol weightColEnd" span={3} >备 注</Col>
-                    <Col className="weightCol weightColRight weightColEnd" span={4} > </Col>
+                    <Col className="weightCol weightColRight weightColEnd" span={4} > {describe}</Col>
 
                 </Row>
 

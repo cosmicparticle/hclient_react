@@ -188,7 +188,7 @@ export default class Import extends React.Component{
                     type="primary" 
                     style={{marginLeft:'10px'}} 
                     onClick={this.onChangeNews}
-                    >确定</Button>
+                    >// debugger</Button>
             </div>
         )
         return(

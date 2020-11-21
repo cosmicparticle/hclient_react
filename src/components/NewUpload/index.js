@@ -1,5 +1,6 @@
 import React from 'react'
-import {Button,Upload,Icon,message} from 'antd'
+import {Button, Upload, Icon, message, Modal} from 'antd'
+import Super from "../../super";
 
 export default class NewUpload extends React.Component{
     constructor(props){
@@ -13,12 +14,24 @@ export default class NewUpload extends React.Component{
 
     }
     handleRemove=(info)=>{
-        let fileList = []
-        this.setState({
-            fileList,
-            removed:true
+
+        Modal.confirm({
+            title: "删除提示",
+            content: "您确定删除此图片吗？",
+            okText: "确认",
+            cancelText: "取消",
+            onOk: () => {
+                let fileList = []
+                this.setState({
+                    fileList,
+                    removed:true
+                });
+                this.triggerChange({removed:true});
+            },
+            onCancel: () => {
+            }
         });
-        this.triggerChange({removed:true});
+
     }
     handleChange=(info)=>{
         let fileList = info.fileList.slice(-1)

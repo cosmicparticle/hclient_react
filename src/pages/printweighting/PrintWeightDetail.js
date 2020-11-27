@@ -134,7 +134,7 @@ export default class PrintWeightDetail extends  React.Component{
                         <Col style={{textAlign:"center"}} span={8} >
                             单 号: {orderCode}
                         </Col>
-                        <Col style={{textAlign:"right"}} span={7} >单 位: kg</Col>
+                        <Col style={{textAlign:"right"}} span={7} >单 位: T</Col>
                     </Row>
 
                     <Row  gutter={[16, 16]} style={{}}>

@@ -97,16 +97,21 @@ export default class PrintWeightDetail extends  React.Component{
                 }
              }
 
-
+debugger
             let maoWeight = null;
           if (arr.毛重过磅信息[0]){
               maoWeight = arr.毛重过磅信息[0].过磅重量;
+          }
+          if (maoWeight == null) {
+              maoWeight = baeInfo.毛重;
           }
             let piWeight = null;
           if (arr.皮重过磅信息[0]){
               piWeight =  arr.皮重过磅信息[0].过磅重量;
           }
-
+          if (piWeight == null) {
+              piWeight = baeInfo.皮重;
+          }
             let fahuoUnit = null;
             if (arr.发货单位[0]){
                 fahuoUnit = arr.发货单位[0].单位名称;
@@ -190,9 +195,14 @@ export default class PrintWeightDetail extends  React.Component{
                     <Col className="weightCol  weightColEnd" span={4} > {jieSuanWeight}</Col>
                     <Col className="weightCol weightColEnd" span={3} >备 注</Col>
                     <Col className="weightCol weightColRight weightColEnd" span={4} > {describe}</Col>
-
                 </Row>
-
+                <Row   style={{}}>
+                    <Col style={{textAlign:"left"}}  span={1} style={{}}></Col>
+                    <Col style={{textAlign:"left"}}  span={7} style={{}}>过磅员:</Col>
+                    <Col style={{textAlign:"center"}} span={5} >
+                        司 机:
+                    </Col>
+                </Row>
                 </div>
       } else {
         return <div></div>

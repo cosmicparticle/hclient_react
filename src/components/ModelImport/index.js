@@ -55,7 +55,7 @@ export default class ModelImport extends React.Component{
         const {menuId}=this.props
         this.handleVisibleChange(true)
         Super.super({
-            url:`api2/entity/list/importer/tmpls/${menuId}`,
+            url:`api2/entity/${menuId}/list/importer/tmpls`,
             method:'GET',
         }).then((res)=>{
             if(res){
@@ -69,7 +69,7 @@ export default class ModelImport extends React.Component{
         const {menuId}=this.props
         const {forType,selectWords}=this.state
         Super.super({
-            url:`api2/entity/list/importer/tmpl/${menuId}/${tmplId}`,
+            url:`api2/entity/${menuId}/list/importer/tmpl/${tmplId}`,
             method:'GET',
         }).then((res)=>{
             //console.log(res.tmpl.fields)
@@ -129,14 +129,14 @@ export default class ModelImport extends React.Component{
         let {tmplId,title,dataSource}=this.state
         const fields=this.getFields(dataSource)       
         Super.super({
-            url:`api2/entity/list/importer/tmpl/${menuId}`,
+            url:`api2/entity/${menuId}/list/importer/tmpl/`,
             method:'POST',
             data:JSON.stringify({
                     tmplId,
                     title,
                     fields,
                 })
-        },"json").then((res)=>{
+        },'json').then((res)=>{
             if(res && res.status==="suc"){
                 message.success("保存成功！")
                 this.setState({

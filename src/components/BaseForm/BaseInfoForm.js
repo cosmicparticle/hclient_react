@@ -5,7 +5,6 @@ import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
 import NewUpload from './../NewUpload'
-import PreSelect from "./../PreSelect";
 import NewCascader from './../NewCascader'
 import EditTable from "../EditTable";
 import {util} from "echarts/src/export";

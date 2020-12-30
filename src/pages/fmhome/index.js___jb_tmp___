@@ -237,7 +237,7 @@ export default class Home extends React.Component{
      * 添加多边形标注按钮事件
      * */
     addMarkerFunc=()=> {
-        debugger
+
         console.log("3333333333");
         if (this.state.addMarker == true) {
             //添加多边形标注
@@ -268,7 +268,7 @@ export default class Home extends React.Component{
         })
 
         let gpos = group.mapCoord;
-        debugger
+
        let fmIm = new fengmap.FMImageMarker({
             //标注x坐标点
             x: gpos.x,
@@ -288,7 +288,7 @@ export default class Home extends React.Component{
      * 为第一层的模型添加多边形标注图层
      * */
     addPolygonMarker=()=> {
-        debugger
+
         console.log("addPolygonMarker");
         //获取当前聚焦楼层
         let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
@@ -298,10 +298,10 @@ export default class Home extends React.Component{
         this.setState({
             polygonLayer : pm
         })
-        debugger
+
         //创建矩形标注
         let rma = this.createRectangleMaker();
-        debugger
+
         // this.state.layer.addMarker(rma);
         pm.addMarker(rma);
 
@@ -408,7 +408,7 @@ export default class Home extends React.Component{
      * 删除多边形标注按钮事件
      * */
      deleteMarkerFunc=()=> {
-            debugger
+
          this.setState({
              addBtn : false,
              removeBtn : true

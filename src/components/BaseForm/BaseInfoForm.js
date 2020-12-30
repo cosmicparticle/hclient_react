@@ -1,10 +1,11 @@
 import React from 'react'
-import {Input,Form,Select,DatePicker,InputNumber,Button,Row,Col, Icon } from 'antd'
+import {Input,Form,Select,DatePicker,InputNumber,Button,Row,Col, Icon,AutoComplete} from 'antd'
 import Units from "../../units";
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
 import NewUpload from './../NewUpload'
+import PreSelect from "./../PreSelect";
 import NewCascader from './../NewCascader'
 import EditTable from "../EditTable";
 import {util} from "echarts/src/export";
@@ -64,7 +65,7 @@ export default class BaseInfoForm extends React.Component{
     }
     ;
     initFormList=()=>{
-        debugger
+
         const { getFieldDecorator } = this.props.form?this.props.form:"";
         const { setFieldsValue } = this.props.form?this.props.form:"";
         const { formList,width,type,getTemplate,getDetailFormTmpl,deleteRFieldValue}=this.props
@@ -125,7 +126,7 @@ export default class BaseInfoForm extends React.Component{
                     </FormItem>
                     formItemList.push(DATETIME)
                 }else if(itemType==="text" || itemType===null){
-                    debugger
+
                     const TEXT= <FormItem label={title} key={field} className='labelcss'>
                                     {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                         getFieldDecorator(fieldName,{
@@ -163,10 +164,7 @@ export default class BaseInfoForm extends React.Component{
                     formItemList.push(TEXT)
                 }else if(itemType==="preselect"){
                     //  预设枚举
-                    debugger
-                     console.log(item.fieldId)
-                    const title=item.title;
-                    const TEXT= <FormItem label={title} key={field} className='labelcss'>
+                    const preselect= <FormItem label={title} key={field} className='labelcss'>
                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                             getFieldDecorator(fieldName,{
                                 initialValue:fieldValue,
@@ -174,55 +172,23 @@ export default class BaseInfoForm extends React.Component{
                                     required: true, message: `请输入${title}`,
                                 }]:"",
                             })(
-                                // <Input
-                                //     addonAfter={<Icon type="setting" />}
-                                //     name={field}
-                                //     type="text"
-                                //     style={{width:width}}
-                                //     placeholder={available?`请输入${title}`:"无需输入"}
-                                //     disabled={!available}
-                                //
-                                // />
-                                <TextArea addonAfter={<Icon type="setting" />}
-                                    placeholder={available?`请输入${title}`:"无需输入"}
-                                    style={{width:width/2}}
-                                    disabled={!available}
-                                />
+                                <AutoComplete
+                                    onFocus={()=>{this.props.getOptions(item.fieldId);}}
+                                    dataSource= {Units.getSelectArray(this.props.options)}
+                                    style={{width:width}}
+                                >
+                                    <TextArea
+                                        placeholder={available?`请输入${title}`:"无需输入"}
+                                        style={{
+                                            height: 50,
+                                        }}
+
+                                        disabled={!available}
+                                    />
+                                </AutoComplete>
                             )}
-                        <Select
-                            style={{width:width/3}}
-                            onFocus={()=>{this.props.getOptions(item.fieldId);}}
-                            placeholder={this.getplaceholder(available,title)}
-                            // getPopupContainer={trigger => trigger.parentNode}
-                            disabled={!available}
-                            notFoundContent="暂无选项"
-                            allowClear={true}
-                            showSearch
-                            onChange={
-                                (v)=>{
-                                    if (v === undefined) {
-                                        return
-                                    }
-                                    const { form } = this.props;
-                                    debugger
-                                    let preInputV = this.props.form.getFieldsValue()[fieldName]
-                                    if (preInputV == undefined) {
-                                        preInputV=""
-                                    }
-                                    const  bb = preInputV +v
-                                    console.log("bb: " + bb)
-                                   form.setFieldsValue({
-                                       [fieldName]: bb,
-                                    });
-                                }
-                            }
-                        >
-                            {Units.getSelectList(this.props.options)}
-                        </Select>
-
                     </FormItem>
-
-                    formItemList.push(TEXT)
+                    formItemList.push(preselect)
                 } else if(itemType==="select"){
  //                   console.log(item.fieldId)
 

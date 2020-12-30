@@ -31,10 +31,10 @@ export default class Detail extends React.Component{
         rootCode:null,
         isModal:false,
     }
-    componentDidMount(){        
+    componentDidMount(){
         if(!this.props.match){
             this.props.onRef3(this)
-        } 
+        }
         const {menuId,code,type,ratmplId,rootCode,isModal}=this.props.match?this.props.match.params:this.props
         const nodeId=this.props.match?this.props.match.params.nodeId:null
         const fieldGroupId=this.props.match?null:this.props.fieldGroupId
@@ -111,7 +111,7 @@ export default class Detail extends React.Component{
                 })
             }
             if(premises && premises.length>0){
-                rightNav.unshift("默认字段") 
+                rightNav.unshift("默认字段")
             }
             Storage.rightNav=rightNav //存储
             this.setState({
@@ -121,10 +121,10 @@ export default class Detail extends React.Component{
                 rightNav,
                 premises,ratmplId,rootCode,
             })
-        })  
+        })
     }
     forDescsFlag=(dtmplGroup)=>{
-        const descsFlag=[] 
+        const descsFlag=[]
         dtmplGroup.forEach((item)=>{
             if(item.composite){
                 descsFlag.push(item.composite.name)
@@ -160,7 +160,7 @@ export default class Detail extends React.Component{
                                 }
                             }
                         })
-                    }           
+                    }
                 })
                 this.detailTitle(res.entity.title,type)
                 for(let k in arrayMap){
@@ -189,9 +189,9 @@ export default class Detail extends React.Component{
                 })
            }else{
                message.error("实体不存在！")
-           }             
+           }
         })
-    }  
+    }
     renderHistoryList=(versionCode)=>{
         const {menuId,code,nodeId}=this.state
         Super.super({
@@ -209,14 +209,14 @@ export default class Detail extends React.Component{
                     return <Timeline.Item color={color} key={index}>
                                 {Units.formateDate(item.time)}<br/>
                                 {`操作人`+item.userName}
-                                {item.current?"":<Button 
-                                                    style={{marginLeft:10}} 
-                                                    code={item.code} 
-                                                    type="primary" 
-                                                    size="small" 
+                                {item.current?"":<Button
+                                                    style={{marginLeft:10}}
+                                                    code={item.code}
+                                                    type="primary"
+                                                    size="small"
                                                     onClick={this.toHistory}
                                                     >查看</Button>
-                                }                   
+                                }
                             </Timeline.Item>
                     })
             }
@@ -239,23 +239,23 @@ export default class Detail extends React.Component{
 			detailsTitle=menuTitle+"-"+dataTitle+"-详情"
 		}else if(type==="edit"){
 			detailsTitle=menuTitle+"-"+dataTitle+"-修改"
-		}			        		
-		this.setState({ 
+		}
+		this.setState({
             detailsTitle,
             menuTitle,
 		});
 	}
     renderColumns=(dtmplGroup)=>{ //editTable的表头
-        const {type}=this.state 
+        const {type}=this.state
         const columns=[]
         dtmplGroup.forEach((item)=>{
             if(item.composite){
                 item.fields.forEach((item)=>{
                     const id=item.id
-                    item["dataIndex"]=id               
+                    item["dataIndex"]=id
                     if(type==="detail"){
                         if(item.type==="decimal"){ //排序
-                            item["sorter"]=(a, b) => a[id] - b[id]; 
+                            item["sorter"]=(a, b) => a[id] - b[id];
                         }else{
                             item["sorter"]=(a, b) =>{ //排序
                                 if(a[id]&&b[id]){
@@ -279,13 +279,13 @@ export default class Detail extends React.Component{
                         id:10000,//关系默认id是10000
                         options:item.composite.relationSubdomain
                     }
-                    item.fields.unshift(rela) 
-                }      
+                    item.fields.unshift(rela)
+                }
                 const order={
                     title: '序号',
                     width:65,
                     dataIndex:'order',
-                } 
+                }
                 item.fields.unshift(order)
                 let act;
                 if(type!=="detail"){
@@ -296,25 +296,25 @@ export default class Detail extends React.Component{
                         <div className="editbtn">
                             {this.props.match && item.unallowedCreate===null && record.code.length>5?  // 临时将新增和修改同步处理，后面再优化
                                 <Button
-                                type='primary' 
-                                title="编辑当前行" 
-                                icon="edit" 
-                                size="small"  
+                                type='primary'
+                                title="编辑当前行"
+                                icon="edit"
+                                size="small"
                                 onClick={()=>this.getForm(record)}
                                 ></Button>:""}
                             {this.props.match && ( item.unallowedDelete===null  ) && record.code.length>5?
                                 <Button type='danger'
-                                icon="delete" 
-                                title="删除当前行" 
-                                size="small" 
+                                icon="delete"
+                                title="删除当前行"
+                                size="small"
                                 onClick={()=>this.visibleModal(record,'removeList','确定要删除这条记录吗')}
                                 ></Button>:""}
                             {this.props.match && item.rabcTemplateGroupId && item.rabcUnupdatable===null && record.code.length>5?
-                                <Button 
-                                    title="编辑当前实体" 
-                                    type='primary' 
-                                    icon="form" 
-                                    size="small"  
+                                <Button
+                                    title="编辑当前实体"
+                                    type='primary'
+                                    icon="form"
+                                    size="small"
                                     onClick={()=>this.getDetailFormTmpl({modalType:"edit"},record)}
                                     ></Button>:""}
                             {this.props.match && item.rabcTemplateGroupId && item.rabcUndetailable===null && record.code.length>5?
@@ -345,7 +345,7 @@ export default class Detail extends React.Component{
                     item.fields.push(act)
                 }
                 columns.push(item)
-        })   
+        })
         //console.log(columns)
         return columns
     }
@@ -368,7 +368,7 @@ export default class Detail extends React.Component{
         })
         if(selectId.length>0){
             Super.super({
-                url:`api2/meta/dict/field_options`,       
+                url:`api2/meta/dict/field_options`,
                 data:{
                     fieldIds
                 },
@@ -406,7 +406,7 @@ export default class Detail extends React.Component{
         let k=record.groupId.toString();
                 dataSource[k].forEach((item,index)=>{
                     if(item.fieldMap.key===deleKey){
-                        dataSource[k].splice(index,1); 
+                        dataSource[k].splice(index,1);
                     }
                 })
                 dataSource[k].forEach((item)=>{
@@ -437,13 +437,13 @@ export default class Detail extends React.Component{
         // }else{
         //     dfieldIds=this.state.dfieldIds
         // }
-        const formData = new FormData(); 
+        const formData = new FormData();
         if(actionId){
             formData.append("%actionId%", actionId)
         }
         for(let k in baseValue){
             formData.append(k, baseValue[k]);
-        }       
+        }
         descsFlag.forEach((item)=>{
             formData.append(`${item}.$$flag$$`, true)
         })
@@ -463,15 +463,15 @@ export default class Detail extends React.Component{
                             if(fieldMap[i].constructor===Object){ //上传图片
                                 formData.append(`${totalName}[${order}].${name}`,fieldMap[i].props.owlner);
                             }else{
-                                formData.append(`${totalName}[${order}].${name}`,fieldMap[i]); 
-                            }                          
-                        }                           
-                    }                       
+                                formData.append(`${totalName}[${order}].${name}`,fieldMap[i]);
+                            }
+                        }
+                    }
                     for(let i in fieldMap){
                         if(i==="10000"){
                             formData.append(`${totalName}[${order}].$$label$$`,fieldMap[i]);
                         }
-                    }                                  
+                    }
                 })
             }
         }
@@ -498,7 +498,7 @@ export default class Detail extends React.Component{
             url=`api2/entity/${menuId}/detail/normal`
         }
         Super.super({
-            url:url, 
+            url:url,
             data:formData,
             method:'POST'
         },'formdata').then((res)=>{
@@ -526,7 +526,7 @@ export default class Detail extends React.Component{
     exportDetail=()=>{
         const {menuId,code}=this.state
         confirm({
-            title: '确认导出当前详情页？',            
+            title: '确认导出当前详情页？',
             okText: "确认",
             cancelText: "取消",
             onOk() {
@@ -542,7 +542,7 @@ export default class Detail extends React.Component{
                     }
                 })
             },
-        });          
+        });
     }
     handleCancel = () => {
         this.setState({
@@ -577,7 +577,7 @@ export default class Detail extends React.Component{
                         }
                     })
                 }
-            }) 
+            })
             for(let k in baseValue){
                 if(k===name){
                     baseValue[k]=newPass
@@ -587,7 +587,7 @@ export default class Detail extends React.Component{
         this.setState({
             baseValue,
         });
-    } 
+    }
     //调用子组件方法
 	onRef=(ref)=>{
 		this.baseinfo=ref
@@ -597,17 +597,18 @@ export default class Detail extends React.Component{
             fuseMode:checked
         })
     }
-    getOptions=(id)=>{  
+    getOptions=(id)=>{
         const {optionsMap}=this.state
+
         if(optionsMap){
             for(let k in optionsMap){
-                if(k===id.toString()){      
+                if(k===id.toString()){
                     this.setState({
                         options:optionsMap[k]
                     })
                 }
             }
-        }        
+        }
     }
     // getFormTmpl=(record,isCreate)=>{ //创建实体（修改实体）
     //     const editAddGroupId=record.groupId.toString()
@@ -618,7 +619,7 @@ export default class Detail extends React.Component{
     //         modalType:isCreate?"new":"edit",
     //         code:record.code,
     //     })
-        
+
 //    }
 
     getDetailFormTmpl=(params,record)=>{ //查实体）
@@ -742,7 +743,7 @@ export default class Detail extends React.Component{
             dataSource[groupId].forEach((item)=>{
                 item.fieldMap.current=Math.ceil(dataSource[groupId].length/5)
             })
-        }else{     //修改记录  
+        }else{     //修改记录
             for(let k in dataSource){
                 if(k===groupId){
                     dataSource[k].forEach((item)=>{
@@ -765,7 +766,7 @@ export default class Detail extends React.Component{
             rfieldId=this.state.rfieldId;
             templateGroupId=this.state.templateGroupId;
         }
-      
+
         let {menuId}=this.state;
 
         const url_0=rfieldId?`api2/meta/tmpl/${menuId}/stmpl/rfield/${rfieldId}`:`api2/meta/tmpl/${menuId}/stmpl/detailGroup/${templateGroupId}`
@@ -804,7 +805,7 @@ export default class Detail extends React.Component{
             query:{
                 excepts:params.excepts,
                 ...params.searchParams,
-            }              
+            }
         }).then((res)=>{
             if(res){
                 this.templatePageTo(res.queryKey)
@@ -1008,8 +1009,8 @@ export default class Detail extends React.Component{
                     item.fields.forEach((it)=>{
                         premises.forEach((i)=>{
                             i.title=i.fieldTitle
-                            i.type="text"                    
-                            i.value=i.fieldValue        
+                            i.type="text"
+                            i.value=i.fieldValue
                             i.available=false
                             if(i.fieldId===it.fieldId){
                                 it.fieldAvailable=false
@@ -1023,7 +1024,7 @@ export default class Detail extends React.Component{
         return(
             <div className="detailPage">
                 <h3>
-                    {type==="new"&& menuTitle ? menuTitle+"--创建":detailsTitle }   
+                    {type==="new"&& menuTitle ? menuTitle+"--创建":detailsTitle }
                     {type==="detail" && !rootCode && !isModal ?
                         <div className="fr pad">
                             {buttonStatus && buttonStatus.detailExportButton?
@@ -1059,45 +1060,45 @@ export default class Detail extends React.Component{
                                         </Button>
                                     </Popover>:""}
                                 {this.props.match && buttonStatus && buttonStatus.saveButton ?
-                                    <Button 
-                                        type='primary' 
-                                        icon="cloud-upload" 
-                                        className="submitBtn" 
-                                        key="btn" 
-                                        onClick={this.showModal} 
+                                    <Button
+                                        type='primary'
+                                        icon="cloud-upload"
+                                        className="submitBtn"
+                                        key="btn"
+                                        onClick={this.showModal}
                                         style={{backgroundColor:fuseMode===true?"#001529":""}}
                                         >保存
                                     </Button>:""}
                                 </div>
                                 {type!=="detail" && code && buttonStatus && buttonStatus.fusionModeButton && !rootCode?
                                   <Switch
-                                        checkedChildren="开" 
-                                        unCheckedChildren="关" 
-                                        style={{marginRight:10}} 
-                                        title="融合模式" 
+                                        checkedChildren="开"
+                                        unCheckedChildren="关"
+                                        style={{marginRight:10}}
+                                        title="融合模式"
                                         onChange={this.fuseMode}/>
                                     :""}
                                 {this.props.match?
-                                    <Button 
-                                        className="hoverbig" 
-                                        title="刷新" 
+                                    <Button
+                                        className="hoverbig"
+                                        title="刷新"
                                         onClick={this.fresh}
                                         ><Icon type="sync" /></Button>:""}
-                            </div>}                                  
+                            </div>}
                 </h3>
                 {premises && premises.length>0?
-                    <Form layout="inline" autoComplete="off">  
-                        <Card 
-                            title={premisestitle} 
-                            key={premisestitle} 
+                    <Form layout="inline" autoComplete="off">
+                        <Card
+                            title={premisestitle}
+                            key={premisestitle}
                             id={premisestitle}
-                            className="hoverable" 
+                            className="hoverable"
                             headStyle={{background:"#f2f4f5"}}
                             loading={loading}
                             >
-                            <BaseInfoForm 
+                            <BaseInfoForm
                                 key={111}
-                                formList={premises} 
+                                formList={premises}
                                 type="detail"
                                 width={220}
                                 />
@@ -1127,7 +1128,7 @@ export default class Detail extends React.Component{
                     handleOk={this.modelhandleOk}
                     visibleForm={visibleForm}
                     formList={editFormList}
-                    type="edit"            
+                    type="edit"
                     getOptions={this.getOptions}
                     options={options}
                     title={title}
@@ -1145,7 +1146,7 @@ export default class Detail extends React.Component{
                                         {detailHistory}
                                     </Timeline>:"暂无历史记录"}
                 </Drawer>
-                <TemplateList 
+                <TemplateList
                     visibleTemplateList={visibleTemplateList}
                     handleCancel={this.handleCancel}
                     optionsMap={this.state.optionsMap4Template}
@@ -1162,7 +1163,7 @@ export default class Detail extends React.Component{
                     fileType={fileType}
                     maskClosable={false}
                 />
-                <EditAddTemplate 
+                <EditAddTemplate
                     visibleEditAddTemplate={visibleEditAddTemplate}
                     handleCancel={this.handleCancel}
                     menuId={menuId}
@@ -1176,16 +1177,16 @@ export default class Detail extends React.Component{
                     maskClosable={false}
                     TemplatehandleOk={this.TemplatehandleOk}
                 />
-                <SetPasswords 
+                <SetPasswords
                     showSetPass={showSetPass}
                     handleCancel={this.handleCancel}
                     oldPass={oldPass}
                     setNewPass={this.setNewPass}
                 />
                 {!rightNav||rightNav.length<3?"":
-                    this.props.match?<RightBar 
+                    this.props.match?<RightBar
                         list={rightNav}
-                    />:""}              
+                    />:""}
             </div>
         )
     }

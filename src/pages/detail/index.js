@@ -416,11 +416,11 @@ export default class Detail extends React.Component{
             dataSource
         })
     }
-    handleOk = (actionId) => {
+    handleOk = (params) => {
         const { baseValue,fuseMode,dataSource,descsFlag,fieldGroupId,nodeId,ratmplId,rootCode,rfieldId }=this.state
         const {menuId,code,type}=this.props.match?this.props.match.params:this.props
 
-        let dfieldIds=this.state.dfieldIds;
+        let dfieldIds=params?params.dfieldIds:this.state.dfieldIds;
         //在頁面中创建dfieldIds的情况暂没有想到，于是乎注释掉20200328
         //  const arr=[]
         // if(columns&&columns.length>0){
@@ -438,8 +438,8 @@ export default class Detail extends React.Component{
         //     dfieldIds=this.state.dfieldIds
         // }
         const formData = new FormData(); 
-        if(actionId){
-            formData.append("%actionId%", actionId)
+        if(params.actionId){
+            formData.append("%actionId%", params.actionId)
         }
         for(let k in baseValue){
             formData.append(k, baseValue[k]);
@@ -557,7 +557,7 @@ export default class Detail extends React.Component{
 
        let err=this.baseinfo.handleBaseInfoSubmit() //获取BaseInfo数据
         if(!err){
-            this.visibleModal(actionId,'handleOk','确定要保存修改吗')//弹出确认框
+            this.visibleModal({dfieldIds,actionId},'handleOk','确定要保存修改吗')//弹出确认框
             this.setState({
                 dfieldIds
             })
@@ -857,7 +857,7 @@ export default class Detail extends React.Component{
         if(formRfieldId){
             rfieldId=formRfieldId;
         }
-        if(ddfieldIds){
+        if(ddfieldIds && ddfieldIds!=""){
             dfieldIds=ddfieldIds
         }
 
@@ -866,8 +866,8 @@ export default class Detail extends React.Component{
             method:'GET',
             query: {
             codes,
-        }
-    }).then((res)=>{
+            }
+        }).then((res)=>{
 
 
         let continueMark=true;
@@ -903,7 +903,8 @@ export default class Detail extends React.Component{
             method:'GET',
             query:{
                 codes,
-                dfieldIds}
+                dfieldIds
+            }
         }).then((res)=>{
             // console.log(res)
             // console.log(columns)

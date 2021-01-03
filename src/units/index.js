@@ -77,10 +77,24 @@ export default {
         }
         return page
     },
-    getSelectList(data){
+    getSelectArray(data){
+        debugger
         if(!data){
             return [];
-        } 
+        }
+        const options=[]
+        data.map((item)=>{
+            options.push(item.title)
+            return false
+        })
+        debugger
+        return options
+    },
+    getSelectList(data){
+        debugger
+        if(!data){
+            return [];
+        }
         const options=[]
         data.map((item)=>{
             options.push(<Option value={item.value} key={item.title}>{item.title}</Option>)
@@ -91,7 +105,7 @@ export default {
     getRadioList(data){
         if(!data){
             return [];
-        } 
+        }
         const options=[]
         data.map((item)=>{
             options.push(<Radio value={item.id} key={item.id}>{item.name}</Radio>)
@@ -99,15 +113,15 @@ export default {
         })
         return options
     },
-    downloadFile(url) { 
-        try{ 
-            let elemIF = document.createElement("iframe");   
+    downloadFile(url) {
+        try{
+            let elemIF = document.createElement("iframe");
             elemIF.src = this.api()+url;
-            elemIF.style.display = "none";   
-            document.body.appendChild(elemIF);   
-        }catch(e){ 
+            elemIF.style.display = "none";
+            document.body.appendChild(elemIF);
+        }catch(e){
             message.error(e)
-        } 
+        }
     },
     setCookie(cname,cvalue,exdays){
         const d = new Date();
@@ -124,15 +138,15 @@ export default {
         }
         return "";
     },
-    delCookie(cname){ 
-        const exp = new Date(); 
-        exp.setTime(exp.getTime() - 1); 
-        const cval=this.getCookie(cname); 
-        if(cval!=null) 
-            document.cookie= cname + "="+cval+";expires="+exp.toGMTString(); 
+    delCookie(cname){
+        const exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        const cval=this.getCookie(cname);
+        if(cval!=null)
+            document.cookie= cname + "="+cval+";expires="+exp.toGMTString();
     },
     //随机数
-    RndNum(n){   
+    RndNum(n){
         let rnd="";
         for(let i=0;i<n;i++)
             rnd+=Math.floor(Math.random()*10);
@@ -205,7 +219,7 @@ export default {
                 _result.push(str + '=' + encodeURI(value))
             }
         }
-    
+
         return _result.length ? prefix + _result.join('&') : ''
       } ,
         urlToObj(str){
@@ -234,7 +248,7 @@ export default {
                 }
                 return false
             })
-            return res 
+            return res
             },
         deepCopy(obj) {
             var result = Array.isArray(obj) ? [] : {};
@@ -253,9 +267,9 @@ export default {
             for(let i in fieldMap){
                 if(fieldMap[i] && fieldMap[i].includes("download-files")){
                     const url=this.api()+ fieldMap[i]
-                    fieldMap[i]=<img 
-                                    style={{width:55}} 
-                                    src={url} 
+                    fieldMap[i]=<img
+                                    style={{width:55}}
+                                    src={url}
                                     alt="" />
                 }
             }

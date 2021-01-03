@@ -33,11 +33,11 @@ export default class Home extends React.Component{
             addFenceMarker : false,
             // 添加电子围栏的按钮是否点击了
             addFenceBtn : false,
-    
+
             // 控制是否添加任务头像
             addPeoPleImgMarker : true,
             // 添加人物头像的按钮是否点击了
-            showPeoPleImgBtn : false, 
+            showPeoPleImgBtn : false,
             // 显示车辆头像按钮是否点击了
             showCarImgBtn : false,
             //显示物品头像按钮是否点击了
@@ -54,11 +54,11 @@ export default class Home extends React.Component{
              circleMaker : null,
             //自定义形状标注
              polygonMarker : null,
-    
+
             removeBtn: false,
             // 人移动按钮
             moveImaBtn : false,
-    
+
             //判断当前是否点击的是poi,控制点击公共设施的时候只弹出公共设施的信息框
              clickedPOI : false,
             // 点击事件ID
@@ -99,7 +99,7 @@ export default class Home extends React.Component{
             traceCount:0,
 
             // 清除所有标注按钮
-            clearMakerBtn : false, 
+            clearMakerBtn : false,
             popMarkerList : [],
 
 
@@ -109,7 +109,7 @@ export default class Home extends React.Component{
             singleStartTimeStamp:0,
             singleEndTime: null,
             singleEndTimeStamp:180,
-            singleLocatingEntity:null, 
+            singleLocatingEntity:null,
             singleHisObj:{
                 // "t15151551":{}
             },
@@ -184,24 +184,24 @@ export default class Home extends React.Component{
            this.timer = setInterval(function () {
  //              debugger
                 if (this.state.showPeoPleImgBtn) {
-                    
-                    console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn); 
+
+                    console.log("人员实时定位：！！" + this.state.showPeoPleImgBtn);
                     this.showLocationPhoto("人员");
                 }
 
                 if (this.state.showCarImgBtn) {
-                    
-                console.log("车辆实时定位：！！" + this.state.showCarImgBtn); 
+
+                console.log("车辆实时定位：！！" + this.state.showCarImgBtn);
                 this.showLocationPhoto("车辆");
                 }
 
                 if (this.state.showGoodsBtn) {
-                    
-                    console.log("物品实时定位：！！" + this.state.showGoodsBtn); 
+
+                    console.log("物品实时定位：！！" + this.state.showGoodsBtn);
                     this.showLocationPhoto("物品");
                 }
-             
-            
+
+
                 }.bind(this), 3000);
             });
 
@@ -211,7 +211,7 @@ export default class Home extends React.Component{
                 mmtType : type,
                 menuId,
             })
-        
+
     }
     openMap=()=>{
         let fmapID= this.state.fmapID;
@@ -250,21 +250,21 @@ export default class Home extends React.Component{
         });
 
         //地图加载完成事件
-        this.state.map.on('loadComplete', ()=> { 
+        this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
-            
+
            // 初始化 图层
            let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
            //实例化 人员 ImageMarkerLayer
-           let layerPeople = new fengmap.FMImageMarkerLayer();   
+           let layerPeople = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerPeople);
            //实例化 车辆 ImageMarkerLayer
-           let layerCar = new fengmap.FMImageMarkerLayer();   
+           let layerCar = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerCar);
             //实例化 物品 ImageMarkerLayer
-           let layerGoods = new fengmap.FMImageMarkerLayer();   
+           let layerGoods = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerGoods);
 
            //返回当前层中第一个polygonMarker,如果没有，则自动创建
@@ -277,10 +277,10 @@ export default class Home extends React.Component{
                    goodsImgLayer : layerGoods,
                    polygonLayer : pm
             })
-   
-           
+
+
         });
-        
+
         //地图点击事件
         this.state.map.on('mapClickNode', this.mapEevent);
     }
@@ -348,7 +348,7 @@ export default class Home extends React.Component{
 
             //model模型
             case fengmap.FMNodeType.MODEL:
-                
+
                 if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) {
                     this.setState({
                         clickedPOI : false
@@ -388,7 +388,7 @@ export default class Home extends React.Component{
 
                 break;
             case fengmap.FMNodeType.IMAGE_MARKER:
-                
+
                 // this.setState({
                 //     clickedPOI :true,
                 //     eventID : event.eventInfo.eventID,
@@ -405,7 +405,7 @@ export default class Home extends React.Component{
 
                 let type = target.type;
                 let markers;
-                
+
                 if (type == '人员') {
                     markers = this.state.peopleImgLayer.markers;
                 } else if (type == '车辆') {
@@ -416,7 +416,7 @@ export default class Home extends React.Component{
 
                   // 为图片标注添加信息窗
                 let  fmIm =  markers.find(imv=>imv.id == target.id);
-                  
+
                 this.addPopInfoWindow(fmIm);
                 break;
         }
@@ -432,7 +432,7 @@ export default class Home extends React.Component{
         if (!this.state.addFenceMarker) {
             //添加多边形标注
             this.addPolygonMarker();
-        } 
+        }
 
         this.state.polygonLayer.show =!this.state.addFenceMarker;
          //修改可添加状态
@@ -446,7 +446,7 @@ export default class Home extends React.Component{
      */
     controlLocationPhoto=(typeValue)=> {
         // 显示定位图片
-        if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) { 
+        if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) {
             this.showLocationPhoto(typeValue);
         }
 
@@ -460,7 +460,7 @@ export default class Home extends React.Component{
             // if ( this.state.showPeoPleImgBtn) {
             //     this.state.peopleImgLayer.removeAll();
             // }
-             
+
         } else if (typeValue == "车辆") {
              // 控制车辆点击按钮
             this.setState({
@@ -489,11 +489,11 @@ export default class Home extends React.Component{
      * */
     showLocationPhoto=(typeValue)=> {
         if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) {
-            
+
             Super.super({
                 url:'api2/ks/clist/location/list/data',
                 query:{
-                    type: typeValue, 
+                    type: typeValue,
                     pageSize:200
                 } ,
                 method:"GET"
@@ -506,34 +506,34 @@ export default class Home extends React.Component{
                         let type = element.基本属性组.类型;
                         let status = element.基本属性组.状态;
                         let coord = element.标签信息[0].当前坐标点;
-                                                  
-                    
+
+
                         if (coord != undefined) {
                             let conut = coord.indexOf(',');
                             let conutEnd = coord.indexOf(')');
-                            var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
+                            var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
                             var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                            
+
                             let  coordsTag = {
                                     id : onlyCode,
                                     name: name,
                                     type : type,
                                     status : status,
                                     x : x,
-                                    y : y, 
+                                    y : y,
                                 }
                             this.addImageMarker(coordsTag);
-                        }                 
+                        }
                     }
                 });
-               
-               
+
+
             })
         } else {
-           
+
         }
     }
-    
+
 
     /**
      * fengmap.FMImageMarker 自定义图片标注对象，为自定义图层。
@@ -555,7 +555,7 @@ export default class Home extends React.Component{
             markers =  this.state.goodsImgLayer.markers;
             urlv = require('./images/goods.png');
         }
-       
+
        let fmIm = new fengmap.FMImageMarker({
             //标注x坐标点
             x: coordsTag.x,
@@ -564,7 +564,7 @@ export default class Home extends React.Component{
             //设置图片路径
             url: urlv,
             //设置图片显示尺寸
-            size: 25,   
+            size: 25,
             //标注高度，大于model的高度
             height: 1,
             // alwaysShow: true,
@@ -578,8 +578,8 @@ export default class Home extends React.Component{
           fmIm.status = coordsTag.status;
           // 设置不自动避让（图层遮盖时）
           fmIm.avoid(false);
-          
-           
+
+
         if (markers) {
             let im =  markers.find(imv=>imv.id == coordsTag.id);
                 if (im) {
@@ -606,7 +606,7 @@ export default class Home extends React.Component{
                         //添加(物品头像)图片标注
                         this.state.goodsImgLayer.addMarker(fmIm);
                     }
-                }      
+                }
             }
 
         // 为图片标注添加信息窗
@@ -614,10 +614,10 @@ export default class Home extends React.Component{
     }
 
     /**
-     * 
-     * @param {信息框控件配置} marker 
+     *
+     * @param {信息框控件配置} marker
      */
-     addPopInfoWindow=(marker)=> {   
+     addPopInfoWindow=(marker)=> {
         if (marker) {
 
             let id = marker.id;
@@ -794,7 +794,7 @@ export default class Home extends React.Component{
     /**
      * 创建自定义形状标注
      * coords 多边形的坐标点集数组
-     * 
+     *
      * */
     createPolygonMaker=(coords)=> {
         //实例化polygonMarker
@@ -815,7 +815,7 @@ export default class Home extends React.Component{
      * */
      deleteMarkerFunc=()=> {
  //           debugger
-         this.setState({            
+         this.setState({
             removeBtn : true
          })
          // 删除电子围栏
@@ -859,9 +859,9 @@ export default class Home extends React.Component{
             } ,
             method:"GET"
         }).then((res)=>{
-            
+
             let arr =  res.result.entities;
-       
+
             const coodsTagListA = [];
 
         arr.forEach(element => {
@@ -871,13 +871,13 @@ export default class Home extends React.Component{
                 let type = element.基本属性组.类型;
                 let status = element.基本属性组.状态;
                 let coord = element.标签信息[0].当前坐标点;
-                                          
+
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
-                   
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
+                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
+
                     let  coordsTag = {
                             id : onlyCode,
                             name: name,
@@ -886,10 +886,10 @@ export default class Home extends React.Component{
                             x : x,
                             y : y,
                         }
-                    
-                    coodsTagListA.push(coordsTag); 
-                       
-                }                 
+
+                    coodsTagListA.push(coordsTag);
+
+                }
             }
         });
 
@@ -985,19 +985,19 @@ clearMaker=()=>{
     console.log("clearMaker...")
     this.setState({
         showPeoPleImgBtn: false,
-        showCarImgBtn : false, 
-        showGoodsBtn: false, 
+        showCarImgBtn : false,
+        showGoodsBtn: false,
         // clearMakerBtn : true,
     })
-debugger
+
     if (this.state.popMarkerList != null) {
         this.state.popMarkerList.forEach(popMarker => {
             console.log("popMarker: " + popMarker);
             popMarker.close()
         });
     }
-    
-     // 清空弹框的数组    
+
+     // 清空弹框的数组
     this.setState({
         popMarkerList:[],
     })
@@ -1011,8 +1011,8 @@ debugger
     if (this.state.goodsImgLayer) {
         this.state.goodsImgLayer.removeAll();
     }
-        
-   
+
+
 }
 
 
@@ -1020,20 +1020,20 @@ debugger
  * 人员追踪按钮点击事件
  */
 trace=()=>{
-    
+
     let typeValue = "人员";
     // 获取所有人的定位数据
     Super.super({
         url:'api2/ks/clist/location/list/data',
         query:{
-            type: typeValue, 
+            type: typeValue,
             pageSize:200
         } ,
         method:"GET"
     }).then((res)=>{
-      
+
        let arr =  res.result.entities;
-       
+
         arr.forEach(element => {
             if ( element.标签信息) {
                 let onlyCode = element.标签信息[0].唯一编码;
@@ -1041,14 +1041,14 @@ trace=()=>{
                 let type = element.基本属性组.类型;
                 let status = element.基本属性组.状态;
                 let coord = element.标签信息[0].当前坐标点;
-                                          
+
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
+                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
                     const coordsTagListHistory = []
-                   
+
                     let  coordsTag = {
                             id : onlyCode,
                             name: name,
@@ -1059,19 +1059,19 @@ trace=()=>{
                             coordsTagListHistory:coordsTagListHistory,
                         }
 
-                       this.tracetwo(coordsTag);               
-                }                 
+                       this.tracetwo(coordsTag);
+                }
             }
         });
-       
-       
+
+
     })
 
 
     // 循环获取每个定位实体对应的一段时间内的定位数据
 
-    // 
-    
+    //
+
 }
 
 // 根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
@@ -1082,20 +1082,20 @@ tracetwo=(coordsTag)=>{
     let athis = this;
     let coodsTagListA = athis.state.coodsTagList;
     const {startTime, endTime} = athis.state;
-    
-    
+
+
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
         query:{
-            tagCode: coordsTag.id, 
+            tagCode: coordsTag.id,
             startTime:startTime,
             endTime:endTime,
             pageSize:200
         } ,
         method:"GET"
     }).then((res1)=>{
-        
-        
+
+
         let arrHistory =  res1.result.entities;
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
@@ -1104,14 +1104,14 @@ tracetwo=(coordsTag)=>{
 
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
-            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
-            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
-      
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685);
+
             let  coordsTagHistory = {
                 id : tagCodeHistory,
                 time: timeHistory,
                 x : xHis,
-                y : yHis, 
+                y : yHis,
                 name:coordsTag.name,
                 type:coordsTag.type,
                 status: coordsTag.status,
@@ -1120,12 +1120,12 @@ tracetwo=(coordsTag)=>{
             console.log("sdfjo");
         })
         coodsTagListA.push(coordsTag)
-        
+
 
         athis.setState({
             coodsTagList:coodsTagListA
         })
-        
+
         console.log("11111111" + athis.state.coodsTagList);
 
     })
@@ -1136,34 +1136,34 @@ tracetwo=(coordsTag)=>{
  */
 play=()=>{
     let coodsTagListA = this.state.coodsTagList
-    
+
     console.log("333333" + coodsTagListA);
 
     // 拿到历史坐标点， 显示标注， 并移动标注
     coodsTagListA.forEach(element => {
 
             this.addImageMarker(element);
-          
+
         // element.coordsTagListHistory.forEach(coordsTag => {
         //     debugger
         //     this.addImageMarker(coordsTag);
 
         // });
     });
-    
+
     // 设置可追踪
     this.setState({
         isTrace:!this.state.isTrace,
         traceCount:0
     })
-    
+
 
 }
 
 /**
  * 获取日期时间
  */
-onOk=(ov)=>{   
+onOk=(ov)=>{
     let startTime = ov[0].format("YYYY-MM-DD HH:mm:ss");
     let endTime = ov[1].format("YYYY-MM-DD HH:mm:ss");
     console.log("startTime: " + startTime);
@@ -1177,7 +1177,7 @@ onOk=(ov)=>{
 
 /**
  * 单个人员历史轨迹， 加载轨迹事件
- * @param {*} e 
+ * @param {*} e
  */
 singleOk=(e)=>{
     // 获取定位实体对应的标签标号
@@ -1187,19 +1187,19 @@ singleOk=(e)=>{
     let singleEndTime =  this.state.singleEndTime;
 
     if (singleDate === null) {
-        message.info("请选择日期!")  
-        e.preventDefault();  
-        return   
+        message.info("请选择日期!")
+        e.preventDefault();
+        return
         }
     if (singleStartTime === null || singleEndTime === null) {
-        message.info("请选择开始时间和结束时间!")  
-        e.preventDefault();  
-        return                       
+        message.info("请选择开始时间和结束时间!")
+        e.preventDefault();
+        return
     }
     if (singleLocatingEntity ===null) {
-        message.info("请选择定位实体!")                    
-        e.preventDefault();  
-        return                  
+        message.info("请选择定位实体!")
+        e.preventDefault();
+        return
     }
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
@@ -1213,13 +1213,13 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
     singleHisObjA = {}
     singleHisObjA[tagCode]=[]
-   
+
 
 
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
         query:{
-            tagCode: tagCode, 
+            tagCode: tagCode,
             startTime:startTime,
             endTime:endTime,
             pageSize:pageSize
@@ -1227,25 +1227,25 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
         method:"GET"
     }).then((res)=>{
         let arrHistory =  res.result.entities;
-        debugger
+
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
             let  tagCodeHistory= element.基本属性组.标签编号;
             let timeHistory = element.基本属性组.采集时间;
-          
+
           let timeHisTs =  new Date(timeHistory).getTime();
             // console.log(timeHistory + "   " +timeHisTs);
 
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
-            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
-            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
-      
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685);
+
             let  coordsTagHistory = {
                 id : tagCodeHistory,
                 time: timeHistory,
                 x : xHis,
-                y : yHis, 
+                y : yHis,
                 name:"初始测试",
                 type:"人员",
                 status: "正常",
@@ -1257,12 +1257,12 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
             singleHisObjA[timeHisTs] = coordsTagHistory;
             singleHisObjA[tagCode].push(timeHisTs);
-        })    
+        })
 
         athis.setState({
             singleHisObj:singleHisObjA
         })
-        
+
         console.log("hhha: singleHisObjA: ");
         console.log(singleHisObjA);
         message.info("轨迹加载完成！");
@@ -1271,7 +1271,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
 /**
  * 睡眠一会
- * @param {*} ms 
+ * @param {*} ms
  */
   sleep= async (ms)=> {
     return await new Promise(function(resolve, reject) {
@@ -1293,7 +1293,7 @@ singlePlay= async (e)=>{
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
             let singleHisObj = this.state.singleHisObj;
-                    
+
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
             if (singLeList === undefined) {
@@ -1308,7 +1308,7 @@ singlePlay= async (e)=>{
             let len = singLeList.length;
             let center = 0;
            // 寻找 this.state.curPlayCount 对应数组中的下标
-            for(let i=0;i<len;i++){  
+            for(let i=0;i<len;i++){
                 if ((i+1) == len) {
                     center = 0;
                     break;
@@ -1328,14 +1328,14 @@ singlePlay= async (e)=>{
                     break;
                 }
             }
-            
+
             console.log(" center: " + center);
             let coordsTag = null;
             // 显示第一个数据
             this.addImageMarker(singleHisObj[singLeList[center]], 1);
-            // 判断第一次进入    
+            // 判断第一次进入
             let count = 0;
-            for(let i=center;i<len;i++){ 
+            for(let i=center;i<len;i++){
                 console.log( "第一次进来则 count为0： " +count + "-" + this.state.isSingleTrack);
                 if (count >1 && this.state.isSingleTrack == false) {
                     console.log("暂停设备移动");
@@ -1349,25 +1349,25 @@ singlePlay= async (e)=>{
                     // 证明 i 不是最后一个
                     curTime = singLeList[i+1];
                 }
-                             
+
             if (curTime != null) {
                     let  stamp = curTime - prevTime;
                     // 按照10倍速度播放
                     let tStamp = stamp / 10;
-                    coordsTag = singleHisObj[curTime] 
+                    coordsTag = singleHisObj[curTime]
                     this.addImageMarker(coordsTag, (tStamp / 1000));
                     console.log((stamp) + "毫秒后执行我！");
                     console.log("X: " + coordsTag.x + "  Y: " + coordsTag.y);
                     console.log("标签时间： " + (coordsTag.time) + " 时间轴时间: " + new Date(this.state.curPlayCount));
                     console.log(" this.state.playCount: " + this.state.playCount);
-                   
+
                     this.setState({
                         playCount : this.state.playCount+1,
                     })
                     // 睡眠多少毫秒
-                    await this.sleep(tStamp)    
+                    await this.sleep(tStamp)
             }
-            
+
             }
 
             if (len <= this.state.playCount) {
@@ -1378,7 +1378,7 @@ singlePlay= async (e)=>{
                     playCount:0,
                 })
                 return
-            }   
+            }
 
 }
 
@@ -1391,7 +1391,7 @@ formatter(value) {
     let   singleEndTime =  this.state.singleEndTime;
 
     if (singleStartTime != null) {
-        
+
         let myDate = new Date(value);
         let h =myDate.getHours();
         let m =myDate.getMinutes();
@@ -1402,7 +1402,7 @@ formatter(value) {
             let singleStartTimeStamp = new Date(this.state.singleDate + " " + this.state.singleStartTime).getTime();
             let singleEndTimeStamp = new Date(this.state.singleDate + " " + this.state.singleEndTime).getTime();
             let singleHisObj = this.state.singleHisObj;
-                    
+
             // 获取存放时间的数组及长度
             let singLeList = singleHisObj[singleLocatingEntityA];
             if (singLeList === undefined) {
@@ -1410,16 +1410,16 @@ formatter(value) {
                 // this.setState({
                 //     isSingleTrack: false,
                 // })
-             
+
             } else {
                 // var aa = singLeList.find(item => item.value > value);
                 // let count = singLeList.indexOf('aa')  //1
-    
+
                 // this.setState({
                 //     playCount: count==0?0 :count-1,
                 // })
             }
-    
+
         return `${abc}`;
     }
 
@@ -1429,13 +1429,13 @@ formatter(value) {
 /**
  * 初始化按钮
  */
-initFormList=()=>{  
+initFormList=()=>{
 
     // 人员追踪
 
     // const { RangePicker } = TimePicker;
     const { Option } = Select;
-    
+
     const formItemList=[];
     const {type}=this.props.match?this.props.match.params:this.props
     if (type ==2) {
@@ -1455,7 +1455,7 @@ initFormList=()=>{
         formItemList.push(bb)
         formItemList.push(cc)
 
-       
+
     } else if (type ==3) {
 // 人员历史轨迹
            const row =  <Row key={1}>
@@ -1467,15 +1467,15 @@ initFormList=()=>{
                                 singleDate:singleDate,
                                 })
                              }} />
-                </Col>           
+                </Col>
                 <Col span={3}>
                         <TimePicker   placeholder="开始时间"
                             defaultOpenValue={moment('09:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{
-                                console.log(timeString);   
+                                console.log(timeString);
 
                                     let singleStartTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
-                                    console.log("singleStartTimeStamp:" + singleStartTimeStamp);          
+                                    console.log("singleStartTimeStamp:" + singleStartTimeStamp);
                                     this.setState({
                                         singleStartTime:timeString,
                                         singleStartTimeStamp:singleStartTimeStamp,
@@ -1484,12 +1484,12 @@ initFormList=()=>{
                                 }
                             }
                         />
-                      </Col>  
+                      </Col>
                       <Col span={3}>
                         <TimePicker   placeholder="结束时间"
                             defaultOpenValue={moment('10:00:00', 'HH:mm:ss')}
                             onChange={(time, timeString)=>{
-                                console.log(timeString);   
+                                console.log(timeString);
                                 let singleEndTimeStamp = new Date(this.state.singleDate + " "  + timeString).getTime();
                                     this.setState({
                                         singleEndTime:timeString,
@@ -1502,11 +1502,11 @@ initFormList=()=>{
                 </Col>
                 <Col span={3}>
                     <Select labelInValue  style={{ width: 120,}}  onSelect={
-                        (obj)=>{ 
+                        (obj)=>{
                             this.setState({singleLocatingEntity:obj.key})
                         }
                     }>
-                        {this.getSelectList()}              
+                        {this.getSelectList()}
                     </Select>
                 </Col>
                 <Col span={2}>
@@ -1514,16 +1514,16 @@ initFormList=()=>{
                 </Col>
 
                  <Col span={8}>
-            <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp} 
+            <Slider   min={this.state.singleStartTimeStamp} max={this.state.singleEndTimeStamp}
                     onChange={
-                        (value)=>{ 
+                        (value)=>{
                         console.log("Slider 改变 value: " + value)
                         this.setState({
                             curPlayCount: value,
                             isSingleTrack:false,//
                         });
                         }
-                    } 
+                    }
                     value={this.state.curPlayCount}
                 tipFormatter={this.formatter.bind(this)} tooltipVisible   />
                 </Col>
@@ -1546,7 +1546,7 @@ initFormList=()=>{
                         </Col>
                         <Col  span={2}>
                         <Button  className={this.state.showGoodsBtn===true?'addPeoPleImgBtn active':'addPeoPleImgBtn'} onClick={this.controlLocationPhoto.bind(this, '物品')}>显示物品</Button>
-      
+
                         </Col>
                         <Col span={2}>
                             <Button  className={this.state.showCarImgBtn===true?'showCarImgBtn active':'showCarImgBtn'} onClick={this.controlLocationPhoto.bind(this, '车辆')}>显示车辆</Button>
@@ -1556,7 +1556,7 @@ initFormList=()=>{
                         </Col> */}
                     </Row>
 
-        
+
         formItemList.push(row)
     }
 
@@ -1571,13 +1571,13 @@ handleChange=(ov)=>{
     Super.super({
         url:'api2/ks/clist/location/list/data',
         query:{
-            type: ov.key, 
+            type: ov.key,
             pageSize:200
         } ,
         method:"GET"
     }).then((res)=>{
 
-        
+
        let arr =  res.result.entities;
         arr.forEach(element => {
             if ( element.标签信息) {
@@ -1586,51 +1586,51 @@ handleChange=(ov)=>{
                 let type = element.基本属性组.类型;
                 let status = element.基本属性组.状态;
                 let coord = element.标签信息[0].当前坐标点;
-                                          
-            
+
+
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
                     var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                    
+
                     let  coordsTag = {
                             id : onlyCode,
                             name: name,
                             type : type,
                             status : status,
                             x : x,
-                            y : y, 
+                            y : y,
                         }
                     this.state.coodsTagList.push(coordsTag);
                     this.setState({
                         isCoodsTrue : !this.state.isCoodsTrue,
                     })
-                }                 
+                }
             }
-           
+
         });
-    
-      
-       
-     
+
+
+
+
     })
 
     // coodsTagList
-   
+
 }
 
 /**
  * 放回下拉 options
  */
-getSelectList=()=>{  
+getSelectList=()=>{
     let data = this.state.coodsTagList;
     // console.log(data);
 
 
     if(!data){
         return [];
-    } 
+    }
     const options=[]
     data.map((item)=>{
         options.push(<Option value={item.id} key={item.name}>{item.name}</Option>)
@@ -1640,20 +1640,20 @@ getSelectList=()=>{
 
 
     render(){
-     
+
         const { Option } = Select;
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 {/* <span id="tip" className="tip">请尝试使用鼠标点击地图上模型，渲染选中模型颜色</span> */}
-               
+
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
-                    {this.initFormList()}              
+                    {this.initFormList()}
                 <br/>
 
 
                     {/* <button className={this.state.moveImaBtn===true?'moveImaBtn active':'moveImaBtn'}  onClick={this.moveMarkerFunc.bind(this)}>移动人的位置</button> */}
-                   
+
                     {/* <button className={this.state.removeBtn===true?'removeBtn active':'removeBtn'} onClick={this.deleteMarkerFunc.bind(this)}>删除所有标注</button> */}
                 </div>
             </div>

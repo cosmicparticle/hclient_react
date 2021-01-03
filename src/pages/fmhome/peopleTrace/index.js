@@ -34,11 +34,11 @@ export default class PeopleTrace extends React.Component{
             addFenceMarker : false,
             // 添加电子围栏的按钮是否点击了
             addFenceBtn : false,
-    
+
             // 控制是否添加任务头像
             addPeoPleImgMarker : true,
             // 添加人物头像的按钮是否点击了
-            showPeoPleImgBtn : false, 
+            showPeoPleImgBtn : false,
             // 显示车辆头像按钮是否点击了
             showCarImgBtn : false,
             //显示物品头像按钮是否点击了
@@ -55,11 +55,11 @@ export default class PeopleTrace extends React.Component{
              circleMaker : null,
             //自定义形状标注
              polygonMarker : null,
-    
+
             removeBtn: false,
             // 人移动按钮
             moveImaBtn : false,
-    
+
             //判断当前是否点击的是poi,控制点击公共设施的时候只弹出公共设施的信息框
              clickedPOI : false,
             // 点击事件ID
@@ -102,17 +102,17 @@ export default class PeopleTrace extends React.Component{
             isCoodsTrue : false,
             // 进入的是人员追踪还是人员轨迹
             mmtType : null,
-            
+
             // 是否可以追踪
             isTrace : false,
             traceCount:0,
             locationTime : null,
 
             // 清除所有标注按钮
-            clearMakerBtn : false, 
+            clearMakerBtn : false,
             popMarkerList : [],
 
-  
+
 
 
         }
@@ -155,7 +155,7 @@ export default class PeopleTrace extends React.Component{
             console.log('地图加载完成！');
             //显示按钮
             // document.getElementById('fmbtnsGroup').style.display = 'block';
-               
+
             });
 
         // 初始化定位实体数据
@@ -164,9 +164,9 @@ export default class PeopleTrace extends React.Component{
             this.timer2 = setInterval(function () {
                 // 人员追踪
                 if (this.state.isTrace) {
-                    
-                    console.log("人员追踪：！！" + this.state.isTrace); 
-                   
+
+                    console.log("人员追踪：！！" + this.state.isTrace);
+
                     let coodsTagListB =  this.state.coodsTagList;
                     let traceCountA =  this.state.traceCount
                     coodsTagListB.forEach(element => {
@@ -175,19 +175,19 @@ export default class PeopleTrace extends React.Component{
 
                         if (length > traceCountA) {
                             let coordsTag =   element.coordsTagListHistory[traceCountA];
-                           
+
                             this.addImageMarker(coordsTag);
                         }
 
                     });
-                    
+
                     this.setState({
                         traceCount:traceCountA+1
                     })
 
                 }
             }.bind(this), 100);
-        
+
     }
 
     /**
@@ -215,7 +215,7 @@ export default class PeopleTrace extends React.Component{
 
     /**
      * 解析数据
-     * @param {} res 
+     * @param {} res
      */
     analysisData = (res)=>{
         let arr =  res.result.entities;
@@ -227,13 +227,13 @@ export default class PeopleTrace extends React.Component{
                 let type = element.基本属性组.类型;
                 let status = element.基本属性组.状态;
                 let coord = element.标签信息[0].当前坐标点;
-                                          
+
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
-                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685); 
-                   
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
+                    var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
+
                     let  coordsTag = {
                             id : onlyCode,
                             name: name,
@@ -242,10 +242,10 @@ export default class PeopleTrace extends React.Component{
                             x : x,
                             y : y,
                         }
-                    
-                    coodsTagListA.push(coordsTag); 
-                       
-                }                 
+
+                    coodsTagListA.push(coordsTag);
+
+                }
             }
         });
 
@@ -291,21 +291,21 @@ export default class PeopleTrace extends React.Component{
         });
 
         //地图加载完成事件
-        this.state.map.on('loadComplete', ()=> { 
+        this.state.map.on('loadComplete', ()=> {
             console.log('地图加载完成！');
             //显示按钮
            // document.getElementById('tip').style.display = 'block';
-            
+
            // 初始化 图层
            let group = this.state.map.getFMGroup(this.state.map.focusGroupID);
            //实例化 人员 ImageMarkerLayer
-           let layerPeople = new fengmap.FMImageMarkerLayer();   
+           let layerPeople = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerPeople);
            //实例化 车辆 ImageMarkerLayer
-           let layerCar = new fengmap.FMImageMarkerLayer();   
+           let layerCar = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerCar);
             //实例化 物品 ImageMarkerLayer
-           let layerGoods = new fengmap.FMImageMarkerLayer();   
+           let layerGoods = new fengmap.FMImageMarkerLayer();
            group.addLayer(layerGoods);
 
            //返回当前层中第一个polygonMarker,如果没有，则自动创建
@@ -318,10 +318,10 @@ export default class PeopleTrace extends React.Component{
                    goodsImgLayer : layerGoods,
                    polygonLayer : pm
             })
-   
-           
+
+
         });
-        
+
         //地图点击事件
         this.state.map.on('mapClickNode', this.mapEevent);
     }
@@ -389,7 +389,7 @@ export default class PeopleTrace extends React.Component{
 
             //model模型
             case fengmap.FMNodeType.MODEL:
-                
+
                 if (this.state.clickedPOI && event.eventInfo.eventID === this.state.eventID) {
                     this.setState({
                         clickedPOI : false
@@ -429,7 +429,7 @@ export default class PeopleTrace extends React.Component{
 
                 break;
             case fengmap.FMNodeType.IMAGE_MARKER:
-                
+
                 // this.setState({
                 //     clickedPOI :true,
                 //     eventID : event.eventInfo.eventID,
@@ -446,7 +446,7 @@ export default class PeopleTrace extends React.Component{
 
                 let type = target.type;
                 let markers;
-                
+
                 if (type == '人员') {
                     markers = this.state.peopleImgLayer.markers;
                 } else if (type == '车辆') {
@@ -457,7 +457,7 @@ export default class PeopleTrace extends React.Component{
 
                   // 为图片标注添加信息窗
                 let  fmIm =  markers.find(imv=>imv.id == target.id);
-                  
+
                 this.addPopInfoWindow(fmIm);
                 break;
         }
@@ -473,7 +473,7 @@ export default class PeopleTrace extends React.Component{
         if (!this.state.addFenceMarker) {
             //添加多边形标注
             this.addPolygonMarker();
-        } 
+        }
 
         this.state.polygonLayer.show =!this.state.addFenceMarker;
          //修改可添加状态
@@ -487,7 +487,7 @@ export default class PeopleTrace extends React.Component{
      */
     controlLocationPhoto=(typeValue)=> {
         // 显示定位图片
-        if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) { 
+        if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) {
             this.showLocationPhoto(typeValue);
         }
 
@@ -501,7 +501,7 @@ export default class PeopleTrace extends React.Component{
             // if ( this.state.showPeoPleImgBtn) {
             //     this.state.peopleImgLayer.removeAll();
             // }
-             
+
         } else if (typeValue == "车辆") {
              // 控制车辆点击按钮
             this.setState({
@@ -530,11 +530,11 @@ export default class PeopleTrace extends React.Component{
      * */
     showLocationPhoto=(typeValue)=> {
         if (!this.state.showPeoPleImgBtn || !this.state.showCarImgBtn || !this.state.showGoodsBtn) {
-            
+
             Super.super({
                 url:'api2/ks/clist/location/list/data',
                 query:{
-                    type: typeValue, 
+                    type: typeValue,
                     pageSize:200
                 } ,
                 method:"GET"
@@ -547,34 +547,34 @@ export default class PeopleTrace extends React.Component{
                         let type = element.基本属性组.类型;
                         let status = element.基本属性组.状态;
                         let coord = element.标签信息[0].当前坐标点;
-                                                  
-                    
+
+
                         if (coord != undefined) {
                             let conut = coord.indexOf(',');
                             let conutEnd = coord.indexOf(')');
-                            var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
+                            var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
                             var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                            
+
                             let  coordsTag = {
                                     id : onlyCode,
                                     name: name,
                                     type : type,
                                     status : status,
                                     x : x,
-                                    y : y, 
+                                    y : y,
                                 }
                             this.addImageMarker(coordsTag);
-                        }                 
+                        }
                     }
                 });
-               
-               
+
+
             })
         } else {
-           
+
         }
     }
-    
+
 
     /**
      * fengmap.FMImageMarker 自定义图片标注对象，为自定义图层。
@@ -596,7 +596,7 @@ console.log("显示图片");
             markers =  this.state.goodsImgLayer.markers;
             urlv = require('../images/goods.png');
         }
-       
+
        let fmIm = new fengmap.FMImageMarker({
             //标注x坐标点
             x: coordsTag.x,
@@ -605,7 +605,7 @@ console.log("显示图片");
             //设置图片路径
             url: urlv,
             //设置图片显示尺寸
-            size: 25,   
+            size: 25,
             //标注高度，大于model的高度
             height: 1,
             // alwaysShow: true,
@@ -619,8 +619,8 @@ console.log("显示图片");
           fmIm.status = coordsTag.status;
           // 设置不自动避让（图层遮盖时）
           fmIm.avoid(false);
-          
-           
+
+
         if (markers) {
             let im =  markers.find(imv=>imv.id == coordsTag.id);
                 if (im) {
@@ -647,7 +647,7 @@ console.log("显示图片");
                         //添加(物品头像)图片标注
                         this.state.goodsImgLayer.addMarker(fmIm);
                     }
-                }      
+                }
             }
 
         // 为图片标注添加信息窗
@@ -655,10 +655,10 @@ console.log("显示图片");
     }
 
     /**
-     * 
-     * @param {信息框控件配置} marker 
+     *
+     * @param {信息框控件配置} marker
      */
-     addPopInfoWindow=(marker)=> {   
+     addPopInfoWindow=(marker)=> {
         if (marker) {
 
             let id = marker.id;
@@ -835,7 +835,7 @@ console.log("显示图片");
     /**
      * 创建自定义形状标注
      * coords 多边形的坐标点集数组
-     * 
+     *
      * */
     createPolygonMaker=(coords)=> {
         //实例化polygonMarker
@@ -856,7 +856,7 @@ console.log("显示图片");
      * */
      deleteMarkerFunc=()=> {
  //           debugger
-         this.setState({            
+         this.setState({
             removeBtn : true
          })
          // 删除电子围栏
@@ -891,7 +891,7 @@ console.log("显示图片");
      */
      getLocationList= async (typeValue, pageSize=200)=> {
         let result = null;
-        debugger
+
         await Super.super({
             url:'api2/ks/clist/location/list/data',
             query:{
@@ -901,7 +901,7 @@ console.log("显示图片");
             method:"GET"
         }).then((res)=>{
             console.log("zhel");
-            debugger
+
             result =  res;
         })
 
@@ -917,8 +917,8 @@ clearMaker=()=>{
     console.log("clearMaker...")
     this.setState({
         showPeoPleImgBtn: false,
-        showCarImgBtn : false, 
-        showGoodsBtn: false, 
+        showCarImgBtn : false,
+        showGoodsBtn: false,
         // clearMakerBtn : true,
     })
 
@@ -927,8 +927,8 @@ clearMaker=()=>{
             popMarker.close()
         });
     }
-    
-     // 清空弹框的数组    
+
+     // 清空弹框的数组
     this.setState({
         popMarkerList:[],
     })
@@ -942,8 +942,8 @@ clearMaker=()=>{
     if (this.state.goodsImgLayer) {
         this.state.goodsImgLayer.removeAll();
     }
-        
-   
+
+
 }
 
 
@@ -966,9 +966,9 @@ trace= async ()=>{
   console.log("locationType: " + locationType + " locationTime: " + locationTime);
   // 获取当前时间的上下两秒的数据
   let locationTimeStamp = new Date(locationTime).getTime();
-  
-  let startTime = moment(parseInt(locationTimeStamp-5000)).format("YYYY-MM-DD HH:mm:ss"); 
-  let endTime = moment(parseInt(locationTimeStamp+5000)).format("YYYY-MM-DD HH:mm:ss"); 
+
+  let startTime = moment(parseInt(locationTimeStamp-5000)).format("YYYY-MM-DD HH:mm:ss");
+  let endTime = moment(parseInt(locationTimeStamp+5000)).format("YYYY-MM-DD HH:mm:ss");
 
   let coodsTagList = null;
     if (locationType ==="人员"){
@@ -984,48 +984,48 @@ trace= async ()=>{
   let count = 1;
   while(true) {
       let res = await this.getLocationHis(startTime, endTime, count, 1500)
-     
+
       console.log("count:" + count)
       console.log(res)
       let arrHistory =  res.result.entities;
-      
+
       arrHistory.forEach((element) => {
           let coordHistory = element.基本属性组.坐标点;
           let  tagCodeHistory= element.基本属性组.标签编号;
           let timeHistory = element.基本属性组.采集时间;
           let coodsTag =  coodsTagList.find(coodsTag=>coodsTag.id == tagCodeHistory);
 
-          
+
           if (coodsTag != undefined){
             let timeHisTs =  new Date(timeHistory).getTime();
-        
+
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
-            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
-            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
-      
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685);
+
             let  coordsTagHistory = {
                 id : tagCodeHistory,
                 time: timeHistory,
                 x : xHis,
-                y : yHis, 
+                y : yHis,
                 name: coodsTag.name,
                 type: coodsTag.type,
                 status: coodsTag.status,
             }
-  
+
             this.addImageMarker(coordsTagHistory, 1)
           }
-        
-          
-      }) 
+
+
+      })
       count++
       let isEndList = res.result.isEndList;
       if(isEndList) {
           console.log("请求数据结束");
           break;
       }
-  }  
+  }
 
 }
 
@@ -1034,7 +1034,7 @@ trace= async ()=>{
  *  根据定位实体， 获取每个定位实体对应的一段时间内的定位数据
  * 获取定位历史
  *  */
-getLocationHis = async (startTime, endTime,pageNo, pageSize)=>{  
+getLocationHis = async (startTime, endTime,pageNo, pageSize)=>{
 
     let result = null;
    await Super.super({
@@ -1047,7 +1047,7 @@ getLocationHis = async (startTime, endTime,pageNo, pageSize)=>{
         } ,
         method:"GET"
     }).then((res)=>{
-        result  =  res;     
+        result  =  res;
     })
 
     return result;
@@ -1061,20 +1061,20 @@ tracetwo=(coordsTag)=>{
     let athis = this;
     let coodsTagListA = athis.state.coodsTagList;
     const {startTime, endTime} = athis.state;
-    
-    
+
+
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
         query:{
-            tagCode: coordsTag.id, 
+            tagCode: coordsTag.id,
             startTime:startTime,
             endTime:endTime,
             pageSize:200
         } ,
         method:"GET"
     }).then((res1)=>{
-        
-        
+
+
         let arrHistory =  res1.result.entities;
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
@@ -1083,14 +1083,14 @@ tracetwo=(coordsTag)=>{
 
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
-            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
-            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
-      
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685);
+
             let  coordsTagHistory = {
                 id : tagCodeHistory,
                 time: timeHistory,
                 x : xHis,
-                y : yHis, 
+                y : yHis,
                 name:coordsTag.name,
                 type:coordsTag.type,
                 status: coordsTag.status,
@@ -1099,12 +1099,12 @@ tracetwo=(coordsTag)=>{
             console.log("sdfjo");
         })
         coodsTagListA.push(coordsTag)
-        
+
 
         athis.setState({
             coodsTagList:coodsTagListA
         })
-        
+
         console.log("11111111" + athis.state.coodsTagList);
 
     })
@@ -1115,7 +1115,7 @@ tracetwo=(coordsTag)=>{
 /**
  * 获取日期时间
  */
-onOk=(ov)=>{   
+onOk=(ov)=>{
     console.log(ov)
     let locationTime = ov.format("YYYY-MM-DD HH:mm:ss");
     console.log(locationTime)
@@ -1128,7 +1128,7 @@ onOk=(ov)=>{
 
 /**
  * 单个人员历史轨迹， 加载轨迹事件
- * @param {*} e 
+ * @param {*} e
  */
 singleOk=(e)=>{
     // 获取定位实体对应的标签标号
@@ -1138,19 +1138,19 @@ singleOk=(e)=>{
     let singleEndTime =  this.state.singleEndTime;
 
     if (singleDate === null) {
-        message.info("请选择日期!")  
-        e.preventDefault();  
-        return   
+        message.info("请选择日期!")
+        e.preventDefault();
+        return
         }
     if (singleStartTime === null || singleEndTime === null) {
-        message.info("请选择开始时间和结束时间!")  
-        e.preventDefault();  
-        return                       
+        message.info("请选择开始时间和结束时间!")
+        e.preventDefault();
+        return
     }
     if (singleLocatingEntity ===null) {
-        message.info("请选择定位实体!")                    
-        e.preventDefault();  
-        return                  
+        message.info("请选择定位实体!")
+        e.preventDefault();
+        return
     }
     //  加载历史轨迹
     this.singleHis(singleLocatingEntity,  singleDate + " " +singleStartTime, singleDate + " " +singleEndTime, 100000)
@@ -1164,13 +1164,13 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
     singleHisObjA = {}
     singleHisObjA[tagCode]=[]
-   
+
 
 
     Super.super({
         url:'api2/ks/clist/location/tag/list/data',
         query:{
-            tagCode: tagCode, 
+            tagCode: tagCode,
             startTime:startTime,
             endTime:endTime,
             pageSize:pageSize
@@ -1178,7 +1178,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
         method:"GET"
     }).then((res)=>{
         let arrHistory =  res.result.entities;
-        debugger
+
         arrHistory.forEach((element) => {
             let coordHistory = element.基本属性组.坐标点;
             let  tagCodeHistory= element.基本属性组.标签编号;
@@ -1189,14 +1189,14 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
             let conutHis = coordHistory.indexOf(',');
             let conutEndHis = coordHistory.indexOf(')');
-            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);                    
-            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685); 
-      
+            var xHis = parseInt(coordHistory.substring(1, conutHis)) + parseInt(13296848);
+            var yHis =  parseInt(coordHistory.substring(conutHis + 1, conutEndHis)) + parseInt(4113685);
+
             let  coordsTagHistory = {
                 id : tagCodeHistory,
                 time: timeHistory,
                 x : xHis,
-                y : yHis, 
+                y : yHis,
                 name: coodsTag.name,
                 type: coodsTag.type,
                 status: coodsTag.status,
@@ -1208,12 +1208,12 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
             singleHisObjA[timeHisTs] = coordsTagHistory;
             singleHisObjA[tagCode].push(timeHisTs);
-        })    
+        })
 
         athis.setState({
             singleHisObj:singleHisObjA
         })
-        
+
         console.log("hhha: singleHisObjA: ");
         console.log(singleHisObjA);
         message.info("轨迹加载完成！");
@@ -1222,7 +1222,7 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 
 /**
  * 睡眠一会
- * @param {*} ms 
+ * @param {*} ms
  */
   sleep= async (ms)=> {
     return await new Promise(function(resolve, reject) {
@@ -1234,21 +1234,21 @@ singleHis=(tagCode, startTime, endTime, pageSize)=>{
 /**
  * 初始化按钮
  */
-initFormList=()=>{  
+initFormList=()=>{
 
     // 人员追踪
     const { Option } = Select;
-    
+
     const formItemList=[];
 
     const dd = <Select defaultValue="人员"  style={{ width: 120,}}  onChange={
-                    (value)=>{ 
+                    (value)=>{
                         this.setState({locationType:value})
                     }
                  }>
-                <Option  value="人员" >人员</Option>      
-                <Option  value="车辆" >车辆</Option>      
-                <Option  value="物品" >物品</Option>           
+                <Option  value="人员" >人员</Option>
+                <Option  value="车辆" >车辆</Option>
+                <Option  value="物品" >物品</Option>
             </Select>
 
     const aa = <DatePicker
@@ -1265,7 +1265,7 @@ initFormList=()=>{
     formItemList.push(dd)
     formItemList.push(aa)
     formItemList.push(bb)
-       
+
     return formItemList;
 }
 
@@ -1277,13 +1277,13 @@ handleChange=(ov)=>{
     Super.super({
         url:'api2/ks/clist/location/list/data',
         query:{
-            type: ov.key, 
+            type: ov.key,
             pageSize:200
         } ,
         method:"GET"
     }).then((res)=>{
 
-        
+
        let arr =  res.result.entities;
         arr.forEach(element => {
             if ( element.标签信息) {
@@ -1292,51 +1292,51 @@ handleChange=(ov)=>{
                 let type = element.基本属性组.类型;
                 let status = element.基本属性组.状态;
                 let coord = element.标签信息[0].当前坐标点;
-                                          
-            
+
+
                 if (coord != undefined) {
                     let conut = coord.indexOf(',');
                     let conutEnd = coord.indexOf(')');
-                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);                    
+                    var x = parseInt(coord.substring(1, conut)) + parseInt(13296848);
                     var y =  parseInt(coord.substring(conut + 1, conutEnd)) + parseInt(4113685);
-                    
+
                     let  coordsTag = {
                             id : onlyCode,
                             name: name,
                             type : type,
                             status : status,
                             x : x,
-                            y : y, 
+                            y : y,
                         }
                     this.state.coodsTagList.push(coordsTag);
                     this.setState({
                         isCoodsTrue : !this.state.isCoodsTrue,
                     })
-                }                 
+                }
             }
-           
+
         });
-    
-      
-       
-     
+
+
+
+
     })
 
     // coodsTagList
-   
+
 }
 
 /**
  * 放回下拉 options
  */
-getSelectList=()=>{  
+getSelectList=()=>{
     let data = this.state.coodsTagList;
     // console.log(data);
 
 
     if(!data){
         return [];
-    } 
+    }
     const options=[]
     data.map((item)=>{
         options.push(<Option value={item.id} key={item.name}>{item.name}</Option>)
@@ -1346,13 +1346,13 @@ getSelectList=()=>{
 
 
     render(){
-     
+
         const { Option } = Select;
         return (
             <div >
                  <div style={this.getStyle()} id={'fengMap'}></div>
                 <div  id="fmbtnsGroup" className="fmbtnsGroup">
-                    {this.initFormList()}              
+                    {this.initFormList()}
                  </div>
             </div>
         );

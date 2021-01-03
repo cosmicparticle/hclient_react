@@ -1,5 +1,5 @@
 import React from 'react'
-import {Input,Form,Select,DatePicker,InputNumber,Button,Row,Col} from 'antd'
+import {Input,Form,Select,DatePicker,InputNumber,Button,Row,Col, Icon,AutoComplete} from 'antd'
 import Units from "../../units";
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -15,7 +15,8 @@ const { TextArea } = Input;
 export default class BaseInfoForm extends React.Component{
     state={
         fileList:[],
-        visiCascader:"none"
+        visiCascader:"none",
+        abc:"1111111111"
     }
     changeCascader=(e,available)=>{
         if(available){
@@ -63,9 +64,11 @@ export default class BaseInfoForm extends React.Component{
     }
     ;
     initFormList=()=>{
+
         const { getFieldDecorator } = this.props.form?this.props.form:"";
+        const { setFieldsValue } = this.props.form?this.props.form:"";
         const { formList,width,type,getTemplate,getDetailFormTmpl,deleteRFieldValue}=this.props
-        const formItemList=[]; 
+        const formItemList=[];
         console.log(formList)
         if(formList && formList.length>0){
             formList.forEach((item,index)=>{
@@ -91,15 +94,15 @@ export default class BaseInfoForm extends React.Component{
                                                   }]:"",
                                         })(
                                             <DatePicker
-                                                style={{width:width}} 
-                                                locale={locale} 
+                                                style={{width:width}}
+                                                locale={locale}
                                                 placeholder={this.getplaceholder(available,title)}
                                                 getCalendarContainer={trigger => trigger.parentNode}
                                                 disabled={!available}
                                                 />
                                     )}
                                 </FormItem>
-                    formItemList.push(DATE)                
+                    formItemList.push(DATE)
                 }else if(itemType==="datetime"){
                     const DATETIME= <FormItem label={title} key={field} className='labelcss'>
                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
@@ -122,6 +125,7 @@ export default class BaseInfoForm extends React.Component{
                     </FormItem>
                     formItemList.push(DATETIME)
                 }else if(itemType==="text" || itemType===null){
+
                     const TEXT= <FormItem label={title} key={field} className='labelcss'>
                                     {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                         getFieldDecorator(fieldName,{
@@ -130,15 +134,15 @@ export default class BaseInfoForm extends React.Component{
                                                     required: true, message: `请输入${title}`,
                                                 }]:"",
                                         })(
-                                            <Input 
-                                                type="text" 
+                                            <Input
+                                                type="text"
                                                 style={{width:width}}
                                                 placeholder={available?`请输入${title}`:"无需输入"}
                                                 disabled={!available}
                                                 />
                                     )}
-                                </FormItem>   
-                    formItemList.push(TEXT)                
+                                </FormItem>
+                    formItemList.push(TEXT)
                 }else if(itemType==="password"){
                     const TEXT= <FormItem label={title} key={field} className='labelcss'>
                                     {type==="detail"?<span className="infoStyle">******</span>:
@@ -148,16 +152,43 @@ export default class BaseInfoForm extends React.Component{
                                                     required: true, message: `请输入${title}`,
                                                 }]:"",
                                         })(
-                                            <Input 
-                                                type="password" 
+                                            <Input
+                                                type="password"
                                                 style={{width:width}}
                                                 placeholder={available?`请输入${title}`:"无需输入"}
                                                 onChange={(e)=>this.changePass(e,fieldValue)}
                                                 />
                                     )}
-                                </FormItem> 
-                    formItemList.push(TEXT)                
-                }else if(itemType==="select"){
+                                </FormItem>
+                    formItemList.push(TEXT)
+                }else if(itemType==="preselect"){
+                    //  预设枚举
+                    const preselect= <FormItem label={title} key={field} className='labelcss'>
+                        {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
+                            getFieldDecorator(fieldName,{
+                                initialValue:fieldValue,
+                                rules:item.validators?[{
+                                    required: true, message: `请输入${title}`,
+                                }]:"",
+                            })(
+                                <AutoComplete
+                                    onFocus={()=>{this.props.getOptions(item.fieldId);}}
+                                    dataSource= {Units.getSelectArray(this.props.options)}
+                                    style={{width:width}}
+                                >
+                                    <TextArea
+                                        placeholder={available?`请输入${title}`:"无需输入"}
+                                        style={{
+                                            height: 50,
+                                        }}
+
+                                        disabled={!available}
+                                    />
+                                </AutoComplete>
+                            )}
+                    </FormItem>
+                    formItemList.push(preselect)
+                } else if(itemType==="select"){
  //                   console.log(item.fieldId)
 
                     const SELECT= <FormItem label={title} key={field} className='labelcss'>
@@ -168,12 +199,12 @@ export default class BaseInfoForm extends React.Component{
                                                         required: true, message: `请选择${title}`,
                                                       }]:"",
                                         })(
-                                            <Select 
-                                                style={{width:width}} 
+                                            <Select
+                                                style={{width:width}}
                                                 onFocus={()=>{this.props.getOptions(item.fieldId);}}
                                                 placeholder={this.getplaceholder(available,title)}
                                                 getPopupContainer={trigger => trigger.parentNode}
-                                                disabled={!available}                                              
+                                                disabled={!available}
                                                 notFoundContent="暂无选项"
                                                 allowClear={true}
                                                 showSearch
@@ -181,8 +212,8 @@ export default class BaseInfoForm extends React.Component{
                                                     {Units.getSelectList(this.props.options)}
                                             </Select>
                                         )}
-                                    </FormItem> 
-                    formItemList.push(SELECT)    
+                                    </FormItem>
+                    formItemList.push(SELECT)
                 }else if(itemType==="multiselect"){
                     const LABEL= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
@@ -206,7 +237,7 @@ export default class BaseInfoForm extends React.Component{
                                             </Select>
                                         )}
                                 </FormItem>
-                    formItemList.push(LABEL)   
+                    formItemList.push(LABEL)
                 }else if(itemType==="caselect"){
                     const CASELECT= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
@@ -236,7 +267,7 @@ export default class BaseInfoForm extends React.Component{
                                                 />
                                         )}
                                 </FormItem>
-                    formItemList.push(CASELECT)   
+                    formItemList.push(CASELECT)
                 }else if(itemType==="relation") { //modelForm里面的关系下拉框
                     const SELECT = <FormItem label={title} key={field} className='labelcss'>
                         {getFieldDecorator("relation", {
@@ -336,22 +367,22 @@ export default class BaseInfoForm extends React.Component{
                                 )}
                         </FormItem>
 
-                    formItemList.push(decimal)   
+                    formItemList.push(decimal)
                 }else if(itemType==="int"){
                     const int= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
                                         getFieldDecorator(fieldName,{
                                             initialValue:fieldValue,
                                         })(
-                                            <InputNumber 
+                                            <InputNumber
                                                 placeholder={available?`请输入${title}`:"无需输入"}
-                                                style={{width:width}} 
+                                                style={{width:width}}
                                                 disabled={!available}
                                                 onKeyUp={this.changeInt}
                                                 min={0}/>
                                         )}
                                     </FormItem>
-                    formItemList.push(int)   
+                    formItemList.push(int)
                 }else if(itemType==="textarea"){
                     const textarea= <FormItem label={title} key={field} className='labelcss'>
                                         {type==="detail"?<span className="infoStyle">{fieldValue}</span>:
@@ -361,14 +392,14 @@ export default class BaseInfoForm extends React.Component{
                                                 required: true, message: `请选择${title}`,
                                             }]:"",
                                         })(
-                                            <TextArea 
+                                            <TextArea
                                                 placeholder={available?`请输入${title}`:"无需输入"}
-                                                style={{width:width}} 
+                                                style={{width:width}}
                                                 disabled={!available}
                                                 />
                                         )}
                                     </FormItem>
-                    formItemList.push(textarea)   
+                    formItemList.push(textarea)
                 } else if(itemType==="relselect" || itemType==="refselect" ){
                     let isRValue=fieldValue?fieldValue.indexOf('@R@')!=-1:false;
                     let value=fieldValue==null?null:fieldValue.split('@R@')[1];

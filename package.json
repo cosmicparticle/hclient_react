@@ -4,6 +4,7 @@
 	"private": true,
 	"homepage": "./",
 	"dependencies": {
+		"@ant-design/icons": "^4.3.0",
 		"@babel/core": "7.1.0",
 		"@svgr/webpack": "2.4.1",
 		"antd": "3.24.0",

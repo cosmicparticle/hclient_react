@@ -97,7 +97,7 @@ export default class PrintWeightDetail extends  React.Component{
                 }
              }
 
-debugger
+
             let maoWeight = null;
           if (arr.毛重过磅信息[0]){
               maoWeight = arr.毛重过磅信息[0].过磅重量;

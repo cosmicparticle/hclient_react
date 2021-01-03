@@ -78,7 +78,7 @@ export default {
         return page
     },
     getSelectArray(data){
-        debugger
+      //  debugger
         if(!data){
             return [];
         }
@@ -87,11 +87,11 @@ export default {
             options.push(item.title)
             return false
         })
-        debugger
+      //  debugger
         return options
     },
     getSelectList(data){
-        debugger
+       // debugger
         if(!data){
             return [];
         }

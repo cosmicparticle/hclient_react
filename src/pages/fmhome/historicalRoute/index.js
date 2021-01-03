@@ -1425,7 +1425,7 @@ singlePlay= async ()=>{
                    
             
             }
-            debugger
+           // debugger
 
             if ((len-2) <= this.state.playCount) {
                 message.info("轨迹播放完毕");
@@ -1436,7 +1436,7 @@ singlePlay= async ()=>{
                 })
                 return
             }   
-            debugger
+           // debugger
 }
 
 

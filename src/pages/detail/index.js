@@ -137,7 +137,7 @@ export default class Detail extends React.Component{
     loadRequest=(dtmplGroup,versionCode)=>{
         const {menuId,type,code,nodeId,fieldGroupId,ratmplId,rfieldId}=this.props.match?this.props.match.params:this.props
 
-        let url_=ratmplId?`api2${menuId}/detail/${ratmplId}/${code}`:
+        let url_=ratmplId?`api2/entity/${menuId}/detail/${ratmplId}/${code}`:
             `api2/entity/${menuId}/detail/${code}`;
             Super.super({
           url:url_,
